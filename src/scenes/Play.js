@@ -1,0 +1,464 @@
+import Phaser from "phaser";
+import BaseScene from "./BaseScene";
+import Player from "../entities/Player";
+import LevelManager from "../utils/LevelManager";
+import CoinDisplay from "../hud/CoinDisplay";
+import { getSavedLevel, saveLevel, getSavedPlayerHealth, getSavedCoins, savePlayerData } from "../utils/StorageManager";
+
+export default class Play extends BaseScene {
+  constructor() {
+    super("Play", {
+        width: 600,
+        height: 600,
+        fontSize: 20,
+        fontColor: 'white',
+        canGoBack: true,
+        backKey: 'back',
+        backScale: 0.5
+    });
+
+  }
+
+  create() {
+    super.create();
+
+    if (!this.registry.has('bgMusic')) {
+        this.registry.set('bgMusic', null)
+    };
+
+    this.setupLevelManager();
+
+    this.createItemAnimations();
+
+    const map = this.createMap();
+    this.playLevelMusic();
+    this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+    const savedCoins = getSavedCoins() || 0;
+    
+    this.registry.set('coins', savedCoins)
+
+    this.setupPlayer(map);
+
+    this.setupCoinDisplay();
+
+    this.player.checkTrapOverlap(this.spikeGroup);
+
+    this.setupPlayerOverlaps();
+
+    this.setupCollectibles();
+
+    this.setupCamera(map);
+  }
+
+  playLevelMusic() {
+    const currentLevelKey = this.levelManager.getCurrentLevelKey();
+    const levelData = this.levelManager.levelData[currentLevelKey];
+
+    if (!levelData) { return; };
+
+    const musicType = levelData.musicType;
+
+    let bgMusicEntry = this.registry.get('bgMusic');
+
+    if (!bgMusicEntry || bgMusicEntry.musicType !== musicType) {
+        if (bgMusicEntry && bgMusicEntry.instance) {
+            bgMusicEntry.instance.stop();
+        }
+
+        const music = this.sound.add(musicType + '-music', { loop: true, volume: 0.3 });
+        music.play();
+
+        this.registry.set('bgMusic', {instance: music, musicType})
+    }
+  }
+
+  setupCoinDisplay() {
+    const coins = this.registry.get('coins');
+    this.coinDisplay = new CoinDisplay(this, 210, 230, this.registry.get('coins'));
+  }
+
+  setupCamera(map) {
+    this.cameras.main.startFollow(this.player);
+
+    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels); 
+
+    this.cameras.main.fadeIn(500, 0, 0, 0);
+  }
+
+  setupCollectibles() {
+     this.collectibles = this.physics.add.group();
+
+    this.physics.add.overlap(
+        this.player,
+        this.collectibles,
+        this.handleCollectablePickup,
+        null,
+        this
+    );
+  }
+
+  setupPlayerOverlaps() {
+     this.physics.add.overlap(
+        this.player.swardHitbox,
+        this.breakableGroup,
+        (hitbox, breakable) => {
+            if (this.player.isSwinging) {
+                const x = breakable.x;
+                const y = breakable.y;
+
+                breakable.destroy();
+                this.itemSpawnDrop(x,y)
+            }
+        }
+    )
+
+    this.physics.add.overlap(
+        this.player.swardHitbox,
+        this.chestGroup,
+        (hitbox, chest) => {
+            if (this.player.isSwinging && !chest.isOpened) {
+                   chest.isOpened = true;
+                chest.play('chest-opening');
+                chest.on('animationcomplete', () => {
+                    for (let i = 0; i < 4; i++) {
+                        const offsetX = Phaser.Math.Between(-20, 20);
+                        const offsetY = Phaser.Math.Between(-22, 22);
+                        this.itemSpawnDrop(chest.x + offsetX, chest.y + offsetY);
+                    }
+                }) 
+            }
+        },
+        null,
+        this
+    )
+
+    this.time.delayedCall(1500, () => {
+        this.physics.add.overlap(this.player, this.endZones, (player, zone) => {
+        zone.destroy();
+
+        const nextLevel = zone.to_level;
+
+        if (nextLevel) {
+            const levelExists = this.levelManager.setLevel(nextLevel);
+            if (levelExists) {
+                saveLevel(this.levelManager.currentLevel);
+                savePlayerData(this.player.health, this.registry.get('coins'))
+              this.scene.restart();  
+            } else {
+                const popup = this.add.text(player.x, player.y - 20, "Not accessible yet", {
+                    font: '10px Arial',
+                    fill: '#070707',
+                    backgroundColor: '#fbfbfbaa',
+                    padding: {x: 5, y: 3},
+                }).setOrigin(0.5);
+
+                this.time.delayedCall(1500, () => popup.destroy())
+            }   
+        } else {
+            console.log("End of game!!!");
+        }
+    })
+    
+    });
+  }
+
+  setupPlayer(map) {
+    let savedHealth = getSavedPlayerHealth() || 100;
+    if (savedHealth <= 0) {
+        savedHealth = 100;
+    }
+    
+    // Creating Player
+    this.player = new Player(this, this.startPoint.x, this.startPoint.y, 'player', savedHealth);
+
+    
+    this.cameras.main.setZoom(3.7);
+    this.cameras.main.centerOn(map.widthInPixels/2, map.heightInPixels/2);
+    
+    
+
+    this.player.setCollideWorldBounds(true);
+    this.physics.add.collider(this.player, this.collisionLayer);
+  }
+
+  setupLevelManager() {
+    if (!this.registry.has('levelManager')) {
+        this.registry.set('levelManager', new LevelManager());
+    }
+    this.levelManager = this.registry.get('levelManager');
+
+    const savedLevel = getSavedLevel();
+    this.levelManager.currentLevel = savedLevel;
+  }
+
+    createMap() {
+        const map = this.make.tilemap({key: this.levelManager.getCurrentLevelKey()});
+
+        // Dongeon tilesets
+        const dungeonTileset = map.addTilesetImage('tileset-export', 'dungeon');
+
+        const doorTileset = map.addTilesetImage('Wooden door', 'door');
+
+        const torchTileset = map.addTilesetImage('Wall_decor', 'torch');
+
+        const mainTileset = map.addTilesetImage('tileset', 'tiles');
+
+        const mainTileset2 = map.addTilesetImage('Tileset2', 'tiles2');
+
+        const waterTileset = map.addTilesetImage('water', 'water');
+
+        const groundDecorTileset = map.addTilesetImage('decorations', 'ground_decor');
+
+        const natureDecorTileset = map.addTilesetImage('objects', 'nature_decor');
+
+        const trapTileset = map.addTilesetImage('spikes', 'spikes');
+
+        const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0);
+
+        const chestLayer = map.createStaticLayer('chests', mainTileset, 0, 0);
+        chestLayer.setVisible(false);
+        this.setupChests(map, chestLayer);
+
+        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0);
+
+        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0);
+
+        const natureLayer = map.createStaticLayer('nature', [natureDecorTileset, torchTileset], 0, 0);
+
+        const breakableLayer = map.createStaticLayer('breakables', [natureDecorTileset], 0, 0);
+
+        const trapLayer = map.createStaticLayer('traps', trapTileset, 0, 0);
+
+        this.spikeGroup = this.physics.add.group();
+
+        this.setupSpikes(trapLayer);
+
+        this.setupBreakables(breakableLayer);
+
+        const zoneLayer = map.getObjectLayer('player_zones');
+
+        this.zoneLayer = zoneLayer;
+
+        this.setupZones(zoneLayer);
+
+        this.collisionLayer = collisionLayer;
+        this.collisionLayer.setCollisionByProperty({colliders: true});
+        this.collisionLayer.setCollisionByExclusion([-1]);
+
+        const mapTypeProperty = map.properties.find(p => p.name === 'type');
+        this.mapType = mapTypeProperty ? mapTypeProperty.value : 'overground';
+
+        return map
+    }
+
+    setupZones(zoneLayer) {
+        const lastLevel = this.levelManager.lastLevel || 'level0'
+
+        let startPoint = zoneLayer.objects.find(obj => obj.name === 'start' && obj.properties.some(p => p.name === 'from_level' && p.value === lastLevel))
+
+        if (!startPoint) {
+            startPoint = zoneLayer.objects.find(obj => obj.name === 'start' )
+        }
+
+        this.startPoint = startPoint;
+
+        this.endPoints = zoneLayer.objects.filter(obj => obj.name === 'end');
+
+        this.endZones = this.physics.add.staticGroup();
+
+        this.endPoints.forEach(point => {
+            const zone = this.endZones.create(
+            point.x + point.width / 2,
+            point.y + point.height / 2,
+            null
+        );
+        zone.setSize(point.width, point.height);
+        zone.setVisible(false);
+        
+        const toLevelProp = point.properties.find(p => p.name === 'to_level');
+        zone.to_level = toLevelProp ? toLevelProp.value: null;
+    });
+    }
+
+    setupBreakables(breakableLayer) {
+        this.breakableGroup = this.physics.add.staticGroup();
+
+    breakableLayer.forEachTile(tile => {
+        if (tile.index !== -1) {
+            const frameIndex = tile.index - tile.tileset.firstgid;
+            const breakable = this.breakableGroup.create(
+                tile.getCenterX(),
+                tile.getCenterY(),
+                'breakable_sprites',
+                frameIndex
+            );
+            breakable.setOrigin(0.5);
+            tile.setCollision(false);
+            tile.setVisible(false);
+            }
+        });
+    }
+
+    setupSpikes(trapLayer) {
+          trapLayer.forEachTile(tile => {
+            if (tile.index !== -1) {
+                const spike = this.spikeGroup.create(tile.getCenterX(), tile.getCenterY(), 'spike-1');
+                spike.setOrigin(0.5);
+
+                spike.body.setAllowGravity(false);
+                spike.body.setImmovable(true);
+                spike.canDamage = true;
+                spike.damageCooldown = 1000;
+                spike.lastHitTime = 0;
+
+                spike.isUp = false;
+                spike.popDuration = 500;
+                spike.downDuration = 1000;
+
+                const spikeLoop = () => {
+                    spike.isUp = true;
+                    spike.play('spike-animation');
+
+                    this.time.delayedCall(spike.apopDuration, () => {
+                        spike.isUp = false;
+                        spike.setTexture('spike-1');
+
+                        this.time.delayedCall(spike.downDuration, spikeLoop)
+                    })
+                }
+
+                spikeLoop();
+                
+            }
+        })
+    }
+
+    setupChests(map, chestLayer) {
+        this.chestGroup = this.physics.add.staticGroup();    
+
+        chestLayer.forEachTile(tile => {
+            if (tile.index !== -1) {
+                const chest = this.chestGroup.create(
+                    tile.getCenterX(),
+                    tile.getCenterY(),
+                    'chest'
+                )
+                chest.setDepth(chest.y);
+                chest.setAlpha(1);
+                chest.setVisible(true);
+                chest.setSize(18, 18)
+                chest.setOrigin(0.5);
+                tile.setCollision(false);
+                chest.isOpened = false;
+            }
+        })
+    }
+
+    createItemAnimations() {
+        this.anims.create({
+        key: 'coin-spin',
+        frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 11 }),
+        frameRate: 8,
+        repeat: -1
+        });
+
+        this.anims.create({
+        key: 'potion-idle',
+        frames: this.anims.generateFrameNumbers('life-potion', { start: 0, end: 4 }),
+        frameRate: 2,
+        repeat: -1
+        });
+
+        this.anims.create({
+        key: 'spike-animation',
+        frames: [
+            {key: 'spike-1'},
+            {key: 'spike-2'},
+            {key: 'spike-3'},
+            {key: 'spike-4'},
+            {key: 'spike-3'},
+            {key: 'spike-2'},
+            {key: 'spike-1'},
+        ],
+        frameRate: 10,
+        repeat: 0,
+        });
+
+        this.anims.create({
+        key: 'chest-opening',
+        frames: this.anims.generateFrameNumbers('chest', { start: 0, end: 4 }),
+        frameRate: 4,
+        repeat: 0
+        });
+
+    }
+
+    itemSpawnDrop(x, y) {
+        const roll = Math.random();
+
+        if (roll < 0.4) {
+            this.spawnCoin(x, y);
+        } else if (roll < 0.6) {
+            this.spawnPotion(x, y);
+        }
+    }
+
+    spawnCoin(x, y) {
+        const coin = this.collectibles.create(x, y, 'coin');
+        coin.setScale(0.6);
+        coin.play('coin-spin');
+        coin.setDepth(5);
+
+        coin.type = 'coin';
+        coin.body.enable = false;
+
+        this.time.delayedCall(200, () => {
+        if (coin.active) {
+            coin.body.enable = true;
+        }
+    });
+}
+
+    spawnPotion(x, y) {
+        const potion = this.collectibles.create(x, y, 'life-potion');
+        potion.setScale(0.6);
+        potion.play('potion-idle');
+        potion.setDepth(5);
+
+        potion.type = 'potion';
+        potion.healAmount = Phaser.Math.Between(1, 10);
+
+        this.time.delayedCall(200, () => {
+        if (potion.active) {
+            potion.body.enable = true;
+        }
+    });
+}
+
+    handleCollectablePickup(player, item) {
+        let coins = this.registry.get('coins') || 0;
+        if (item.type === 'coin') {
+            coins += 1;
+            this.registry.set('coins', coins);
+            this.coinDisplay.addCoins(1)
+            this.sound.play('coin_collect', {volume: 0.1});
+
+        }
+        
+        if (item.type === 'potion') {
+            player.health += item.healAmount;
+            player.health = Math.min(player.health, 100);
+            player.healthBar.setHealth(player.health);
+            this.sound.play('item_collect', {volume: 0.1});
+        }
+        savePlayerData(player.health, coins);
+
+        item.destroy();
+    }
+
+    update() {
+        this.player.update();
+    }
+
+}
