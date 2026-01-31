@@ -14,6 +14,26 @@ export default class Preload extends Phaser.Scene {
     this.preloadSounds();
     this.preloadMusic();
     this.preloadTraps();
+    this.preloadObjects()
+  }
+
+  preloadObjects() {
+    this.load.image('bench', 'assets/objects/bench.png');
+    this.load.image('bush1', 'assets/objects/bush1.png');
+    this.load.image('bush2', 'assets/objects/bush2.png');
+    this.load.image('bush3', 'assets/objects/bush3.png');
+    this.load.image('bush4', 'assets/objects/bush4.png');
+    this.load.image('log', 'assets/objects/log.png');
+    this.load.image('plantPot', 'assets/objects/plantPot.png');
+    this.load.image('stone1', 'assets/objects/stone1.png');
+    this.load.image('stone2', 'assets/objects/stone2.png');
+    this.load.image('stone3', 'assets/objects/stone3.png');
+    this.load.image('stone4', 'assets/objects/stone4.png');
+    this.load.image('stone5', 'assets/objects/stone5.png');
+    this.load.image('tree1', 'assets/objects/tree1.png');
+    this.load.image('tree2', 'assets/objects/tree2.png');
+    this.load.image('treeStump1', 'assets/objects/treeStump1.png');
+    this.load.image('treeStump2', 'assets/objects/treeStump2.png');
   }
 
   preloadTilesets() {

@@ -200,7 +200,7 @@ export default class Play extends BaseScene {
 
         const doorTileset = map.addTilesetImage('Wooden door', 'door');
 
-        const torchTileset = map.addTilesetImage('Wall_decor', 'torch');
+        // const torchTileset = map.addTilesetImage('Wall_decor', 'torch');
 
         const mainTileset = map.addTilesetImage('tileset', 'tiles');
 
@@ -228,9 +228,7 @@ export default class Play extends BaseScene {
 
         const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0);
 
-        const natureLayer = map.createStaticLayer('nature', [natureDecorTileset, torchTileset], 0, 0);
-
-        const breakableLayer = map.createStaticLayer('breakables', [natureDecorTileset], 0, 0);
+        const breakableLayer = map.createStaticLayer('breakables', natureDecorTileset, 0, 0);
 
         const trapLayer = map.createStaticLayer('traps', trapTileset, 0, 0);
 
@@ -241,6 +239,10 @@ export default class Play extends BaseScene {
         this.setupBreakables(breakableLayer);
 
         const zoneLayer = map.getObjectLayer('player_zones');
+
+        const natureLayer = map.getObjectLayer('nature');
+
+        this.spawnNatureObjects(natureLayer);
 
         this.zoneLayer = zoneLayer;
 
@@ -254,6 +256,18 @@ export default class Play extends BaseScene {
         this.mapType = mapTypeProperty ? mapTypeProperty.value : 'overground';
 
         return map
+    }
+
+    spawnNatureObjects(layer) {
+        if (!layer) {return;};
+        
+        layer.objects.forEach(obj => {
+            const kind = obj.properties.find(p => p.name === 'kind')?.value;
+            if(kind) {
+                this.add.sprite(obj.x, obj.y, kind)
+                .setOrigin(0, 1)
+            }
+        })
     }
 
     setupZones(zoneLayer) {
