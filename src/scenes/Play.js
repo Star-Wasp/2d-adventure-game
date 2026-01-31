@@ -43,6 +43,7 @@ export default class Play extends BaseScene {
     this.setupCoinDisplay();
 
     this.player.checkTrapOverlap(this.spikeGroup);
+    
 
     this.setupPlayerOverlaps();
 
@@ -260,12 +261,16 @@ export default class Play extends BaseScene {
 
     spawnNatureObjects(layer) {
         if (!layer) {return;};
-        
+
         layer.objects.forEach(obj => {
             const kind = obj.properties.find(p => p.name === 'kind')?.value;
             if(kind) {
-                this.add.sprite(obj.x, obj.y, kind)
+                const sprite = this.add.sprite(obj.x, obj.y, kind)
                 .setOrigin(0, 1)
+                
+                let depthOffset = -28;
+
+                sprite.setDepth(obj.y + depthOffset)
             }
         })
     }

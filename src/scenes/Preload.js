@@ -14,7 +14,16 @@ export default class Preload extends Phaser.Scene {
     this.preloadSounds();
     this.preloadMusic();
     this.preloadTraps();
-    this.preloadObjects()
+    this.preloadObjects();
+    this.preloadAnims();
+  }
+
+  preloadAnims() {
+    // Door spritesheet
+    this.load.spritesheet('door', 'assets/anims/door_anim.png', {
+      frameWidth: 32,
+      frameHeight: 48,
+    });
   }
 
   preloadObjects() {

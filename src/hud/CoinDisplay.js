@@ -10,11 +10,13 @@ export default class CoinDisplay {
         this.background = scene.add.rectangle(x + 10, y + 10, 42, 18, 0x000000, 0.6)
         this.background.setOrigin(0, 0.5);
         this.background.setScrollFactor(0);
+        this.background.setDepth(1000)
 
         this.coinIcon = scene.add.sprite(x + 17, y + 10, 'coin');
         this.coinIcon.setScale(0.6);
         this.coinIcon.play('coin-spin');
         this.coinIcon.setScrollFactor(0);
+        this.coinIcon.setDepth(1000)
 
         this.text = scene.add.text(x + 23, y + 3, `${this.coins}`, {
             fontSize: '11px',
@@ -22,6 +24,7 @@ export default class CoinDisplay {
             fontFamily: 'Arial',
         })
         this.text.setScrollFactor(0);
+        this.text.setDepth(1000)
     }
 
     addCoins(amount) {

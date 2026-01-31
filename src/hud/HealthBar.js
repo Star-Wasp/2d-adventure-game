@@ -48,6 +48,7 @@ class HealthBar {
 
         this.bar.fillStyle(0xFFFFFF);
         this.bar.fillRect(this.x + margin, this.y + margin, width - margin, height - margin);
+        this.bar.setDepth(1000)
 
          const healthWidth = Math.floor(this.value * this.pixelPerHealth);
         if (healthWidth <= width / 1.5 && healthWidth > width / 3) {
