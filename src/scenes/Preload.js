@@ -20,7 +20,7 @@ export default class Preload extends Phaser.Scene {
 
   preloadAnims() {
     // Door spritesheet
-    this.load.spritesheet('door', 'assets/anims/door_anim.png', {
+    this.load.spritesheet('dungeon-door', 'assets/anims/door_anim.png', {
       frameWidth: 32,
       frameHeight: 48,
     });
@@ -119,9 +119,10 @@ export default class Preload extends Phaser.Scene {
   }
 
   preloadSounds() {
-    ['sward', 'walk', 'hurt', 'item_collect', 'coin_collect'].forEach(key => {
+    ['sward', 'walk', 'hurt', 'item_collect', 'coin_collect', 'door_close', 'door_open'].forEach(key => {
         this.load.audio(key, `assets/sounds/${key}.wav`);
     });
+
 }
 
   preloadMusic() {

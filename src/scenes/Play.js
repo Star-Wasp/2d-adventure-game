@@ -243,6 +243,10 @@ export default class Play extends BaseScene {
 
         const natureLayer = map.getObjectLayer('nature');
 
+        const doorLayer = map.getObjectLayer('doors');
+
+        this.spawnDoors(doorLayer);
+
         this.spawnNatureObjects(natureLayer);
 
         this.zoneLayer = zoneLayer;
@@ -257,6 +261,51 @@ export default class Play extends BaseScene {
         this.mapType = mapTypeProperty ? mapTypeProperty.value : 'overground';
 
         return map
+    }
+
+    spawnDoors(layer) {
+        if (!layer) { return; };
+
+        layer.objects.forEach(obj => {
+            const type = obj.properties.find(p => p.name === 'type')?.value;
+            if (type === 'dungeon_door') {
+                const door = this.add.sprite(obj.x, obj.y, 'dungeon-door')
+                    .setOrigin(0.5, 1);
+
+                door.setFrame(15);
+                door.isOpening = false;
+
+        this.time.addEvent({
+            delay: 100,
+            loop: true,
+            callback: () => {
+                const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, door.x, door.y);
+            if (!door.isOpening && distance < 60) {
+                this.openDoor(door);
+            }
+            }
+        })
+            }
+        })
+    }
+
+    openDoor(door) {
+        if (door.isOpening) {return;};
+
+        door.isOpening = true;
+
+        this.sound.play('door_open');
+        door.play('dungeon-door-open');
+
+        door.once('animationcomplete-dungeon-door-open', () => {
+            this.sound.play('door_close');
+            door.play('dungeon-door-close');
+
+            door.once('animationcomplete-dungeon-door-close', () => {
+                door.isOpening = false;
+                door.setFrame(15);
+            })
+        })
     }
 
     spawnNatureObjects(layer) {
@@ -439,6 +488,20 @@ export default class Play extends BaseScene {
         frames: this.anims.generateFrameNumbers('torch', { start: 0, end: 3 }),
         frameRate: 4,
         repeat: -1
+        });
+
+        this.anims.create({
+        key: 'dungeon-door-open',
+        frames: this.anims.generateFrameNumbers('dungeon-door', { start: 0, end: 8 }),
+        frameRate: 4,
+        repeat: 0
+        });
+
+        this.anims.create({
+        key: 'dungeon-door-close',
+        frames: this.anims.generateFrameNumbers('dungeon-door', { start: 9, end: 15 }),
+        frameRate: 4,
+        repeat: 0
         });
 
     }
