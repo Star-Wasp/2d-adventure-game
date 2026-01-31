@@ -220,6 +220,10 @@ export default class Play extends BaseScene {
         chestLayer.setVisible(false);
         this.setupChests(map, chestLayer);
 
+        const torchLayer = map.createStaticLayer('torches', mainTileset, 0, 0);
+        torchLayer.setVisible(false);
+        this.setupTorches(map, torchLayer);
+
         const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0);
 
         const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0);
@@ -355,6 +359,25 @@ export default class Play extends BaseScene {
         })
     }
 
+    setupTorches(torchLayer) {
+        this.torchGroup = this.physics.add.staticGroup();    
+
+        torchLayer.forEachTile(tile => {
+            if (tile.index !== -1) {
+                const torch = this.torchGroup.create(
+                    tile.getCenterX(),
+                    tile.getCenterY(),
+                    'torch'
+                )
+                torch.setOrigin(0.5);
+                torch.setDepth(torch.y);
+                torch.play('torch-flicker')
+                torch.setVisible(true);
+                tile.setCollision(false);
+            }
+        })
+    }
+
     createItemAnimations() {
         this.anims.create({
         key: 'coin-spin',
@@ -390,6 +413,13 @@ export default class Play extends BaseScene {
         frames: this.anims.generateFrameNumbers('chest', { start: 0, end: 4 }),
         frameRate: 4,
         repeat: 0
+        });
+
+        this.anims.create({
+        key: 'torch-flicker',
+        frames: this.anims.generateFrameNumbers('torch', { start: 0, end: 3 }),
+        frameRate: 4,
+        repeat: -1
         });
 
     }

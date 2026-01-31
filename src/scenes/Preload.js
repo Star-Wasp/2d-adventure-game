@@ -27,7 +27,6 @@ export default class Preload extends Phaser.Scene {
     // Dungeon tilesheets
     this.load.image('dungeon', 'assets/tileset-export.png');
     this.load.image('door', 'assets/Wooden door-Sheet.png');
-    this.load.image('torch', 'assets/Wall torch-Sheet.png');
   }
 
   preloadMaps() {
@@ -59,6 +58,12 @@ export default class Preload extends Phaser.Scene {
     this.load.spritesheet('chest', 'assets/Level2Chest.png', {
       frameWidth: 48,
       frameHeight: 47,
+    });
+
+    // Torch spritesheet
+    this.load.spritesheet('torch', 'assets/Wall_torch.png', {
+      frameWidth: 32,
+      frameHeight: 32,
     });
 
     //loading in collectibles
