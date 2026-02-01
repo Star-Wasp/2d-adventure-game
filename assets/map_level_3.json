@@ -169,6 +169,52 @@
                  "width":0,
                  "x":0,
                  "y":176
+                }, 
+                {
+                 "height":0,
+                 "id":41,
+                 "name":"end",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"isBuilding",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"to_level",
+                         "type":"string",
+                         "value":"hero_house"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":272,
+                 "y":224
+                }, 
+                {
+                 "height":0,
+                 "id":42,
+                 "name":"start",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"from_level",
+                         "type":"string",
+                         "value":"hero_house"
+                        }, 
+                        {
+                         "name":"isBuilding",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":272,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -780,7 +826,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":40,
+ "nextobjectid":43,
  "orientation":"orthogonal",
  "properties":[
         {

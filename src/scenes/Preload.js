@@ -156,6 +156,8 @@ export default class Preload extends Phaser.Scene {
     this.load.image('hero_house_closed', 'assets/player/hero-house2.png');
 
     this.load.image('hero_house_open', 'assets/player/hero-house1.png');
+
+    this.load.image('hero_house_halfopen', 'assets/player/hero-house3.png');
   }
 
   create() {

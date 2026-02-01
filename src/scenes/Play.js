@@ -159,6 +159,18 @@ export default class Play extends BaseScene {
         this
     )
 
+    // Trigger building door opening
+    this.physics.add.overlap(this.player, this.endZones, (player, zone) => {
+        if (zone.isBuilding) {
+            if (zone.to_level === 'hero_house') {
+                const building = this.buildingsGroup.getChildren().find(b => b.type === 'hero_house');
+                building.play('hero_house_opening_anim');
+                this.sound.play('door_open', {volume: 0.3});
+            }
+        }
+    })
+    
+    // Zone overlap
     this.time.delayedCall(1500, () => {
         this.physics.add.overlap(this.player, this.endZones, (player, zone) => {
         zone.destroy();
@@ -183,10 +195,10 @@ export default class Play extends BaseScene {
             }   
         } else {
             console.log("End of game!!!");
-        }
-    })
-    
+            }
+        })
     });
+
   }
 
   setupPlayer(map) {
@@ -309,10 +321,13 @@ export default class Play extends BaseScene {
                     .setScale(1.5)
                     
                 this.physics.world.enable(hero_house);
+                this.buildingsGroup.add(hero_house);
 
                 hero_house.body
                 .setSize(14, 15)
                 .setOffset(33, 33)
+
+                hero_house.type = type;
             }
         })
     }
@@ -401,6 +416,9 @@ export default class Play extends BaseScene {
         );
         zone.setSize(point.width, point.height);
         zone.setVisible(false);
+
+        const isBuildingProp = point.properties.find(p => p.name === 'isBuilding');
+        zone.isBuilding = isBuildingProp ? isBuildingProp.value : false;
         
         const toLevelProp = point.properties.find(p => p.name === 'to_level');
         zone.to_level = toLevelProp ? toLevelProp.value: null;
@@ -615,9 +633,10 @@ export default class Play extends BaseScene {
         key: 'hero_house_opening_anim',
         frames: [
             {key: 'hero_house_closed'},
+            {key: 'hero_house_halfopen'},
             {key: 'hero_house_open'},
         ],
-        frameRate: 3,
+        frameRate: 2,
         repeat: 0,
         });
 
@@ -625,9 +644,10 @@ export default class Play extends BaseScene {
         key: 'hero_house_closing_anim',
         frames: [
             {key: 'hero_house_open'},
+            {key: 'hero_house_halfopen'},
             {key: 'hero_house_closed'},
         ],
-        frameRate: 3,
+        frameRate: 2,
         repeat: 0,
         });
     }
@@ -680,7 +700,7 @@ export default class Play extends BaseScene {
             coins += 1;
             this.registry.set('coins', coins);
             this.coinDisplay.addCoins(1)
-            this.sound.play('coin_collect', {volume: 0.1});
+            this.sound.play('coin_collect', {volume: 0.3});
 
         }
         
@@ -688,7 +708,7 @@ export default class Play extends BaseScene {
             player.health += item.healAmount;
             player.health = Math.min(player.health, 100);
             player.healthBar.setHealth(player.health);
-            this.sound.play('item_collect', {volume: 0.1});
+            this.sound.play('item_collect', {volume: 0.3});
         }
         savePlayerData(player.health, coins);
 
