@@ -206,7 +206,7 @@ export default class Play extends BaseScene {
 
         const doorTileset = map.addTilesetImage('Wooden door', 'door');
 
-
+        // Tilesets
         const mainTileset = map.addTilesetImage('tileset', 'tiles');
 
         const mainTileset2 = map.addTilesetImage('Tileset2', 'tiles2');
@@ -219,6 +219,7 @@ export default class Play extends BaseScene {
 
         const trapTileset = map.addTilesetImage('spikes', 'spikes');
 
+        // Static Layers
         const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0).setDepth(0);
 
         const chestLayer = map.createStaticLayer('chests', mainTileset, 0, 0);
@@ -233,21 +234,22 @@ export default class Play extends BaseScene {
 
         const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
 
-        const breakableLayer = map.createStaticLayer('breakables', natureDecorTileset, 0, 0);
-
         const trapLayer = map.createStaticLayer('traps', trapTileset, 0, 0);
 
         this.spikeGroup = this.physics.add.group();
 
         this.setupSpikes(trapLayer);
 
-        this.setupBreakables(breakableLayer);
-
+        // Object Layers
         const zoneLayer = map.getObjectLayer('player_zones');
 
         const natureLayer = map.getObjectLayer('nature');
 
         const doorLayer = map.getObjectLayer('doors');
+
+        const breakableLayer = map.getObjectLayer('breakables');
+
+        this.setupBreakables(breakableLayer);
 
         this.spawnDoors(doorLayer);
 
@@ -358,22 +360,7 @@ export default class Play extends BaseScene {
     }
 
     setupBreakables(breakableLayer) {
-        this.breakableGroup = this.physics.add.staticGroup();
-
-    breakableLayer.forEachTile(tile => {
-        if (tile.index !== -1) {
-            const frameIndex = tile.index - tile.tileset.firstgid;
-            const breakable = this.breakableGroup.create(
-                tile.getCenterX(),
-                tile.getCenterY(),
-                'breakable_sprites',
-                frameIndex
-            );
-            breakable.setOrigin(0.5);
-            tile.setCollision(false);
-            tile.setVisible(false);
-            }
-        });
+        if (!breakableLayer) {return;};
     }
 
     setupSpikes(trapLayer) {
@@ -508,6 +495,33 @@ export default class Play extends BaseScene {
         repeat: 0
         });
 
+        // Breakables anims
+        this.anims.create({
+        key: 'box-idel',
+        frames: this.anims.generateFrameNumbers('box', { start: 0, end: 2 }),
+        frameRate: 4,
+        repeat: -1
+        });
+
+        this.anims.create({
+        key: 'box-break',
+        frames: this.anims.generateFrameNumbers('box', { start: 3, end: 6 }),
+        frameRate: 4,
+        repeat: 0
+        });
+        this.anims.create({
+        key: 'pot-idle',
+        frames: this.anims.generateFrameNumbers('pot', { start: 0, end: 2 }),
+        frameRate: 4,
+        repeat: 0
+        });
+
+        this.anims.create({
+        key: 'pot-break',
+        frames: this.anims.generateFrameNumbers('pot', { start: 3, end: 6 }),
+        frameRate: 4,
+        repeat: 0
+        });
     }
 
     itemSpawnDrop(x, y) {
