@@ -16,6 +16,7 @@ export default class Preload extends Phaser.Scene {
     this.preloadTraps();
     this.preloadObjects();
     this.preloadAnims();
+    this.preloadBuildings();
   }
 
   preloadAnims() {
@@ -148,6 +149,14 @@ export default class Preload extends Phaser.Scene {
 
     this.load.spritesheet('breakable_sprites', 'assets/Objects.png', { frameWidth: 16, frameHeight: 16 });
 }
+
+  preloadBuildings() {
+
+    // Preloading players house
+    this.image.add('hero_house_closed', 'assets/player/hero-house2.png');
+
+    this.image.add('hero_house_open', 'assets/player/hero-house1.png');
+  }
 
   create() {
     this.scene.start("MenuScene");

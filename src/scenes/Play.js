@@ -29,6 +29,7 @@ export default class Play extends BaseScene {
     this.setupLevelManager();
 
     this.createItemAnimations();
+    this.createBuildingAnimations();
 
     const map = this.createMap();
     this.playLevelMusic();
@@ -44,7 +45,6 @@ export default class Play extends BaseScene {
 
     this.player.checkTrapOverlap(this.spikeGroup);
     
-
     this.setupPlayerOverlaps();
 
     this.setupCollectibles();
@@ -105,20 +105,40 @@ export default class Play extends BaseScene {
   }
 
   setupPlayerOverlaps() {
+
+    // Breakables overlap
      this.physics.add.overlap(
         this.player.swardHitbox,
-        this.breakableGroup,
-        (hitbox, breakable) => {
-            if (this.player.isSwinging) {
-                const x = breakable.x;
-                const y = breakable.y;
-
-                breakable.destroy();
-                this.itemSpawnDrop(x,y)
+        this.breakablesGroup,
+        (hitbox, item) => {
+            if (this.player.isSwinging && !item.isBroken) {
+                item.isBroken = true;
+                if (item.type === 'box') {
+                    item.play('box-break');
+                    item.on('animationcomplete-box-break', () => {
+                    for (let i = 0; i < 3; i++) {
+                        const offsetX = Phaser.Math.Between(-20, 20);
+                        const offsetY = Phaser.Math.Between(-22, 22);
+                        this.itemSpawnDrop(item.x + offsetX, item.y + offsetY);
+                    } 
+                }) 
+                } else if (item.type === 'pot') {
+                    item.play('pot-break');
+                    item.on('animationcomplete-pot-break', () => {
+                    for (let i = 0; i < 2; i++) {
+                        const offsetX = Phaser.Math.Between(-20, 30);
+                        const offsetY = Phaser.Math.Between(-22, 32);
+                        this.itemSpawnDrop(item.x + offsetX, item.y + offsetY);
+                    } 
+                }) 
+            }  
             }
-        }
+        },
+        null,
+        this
     )
 
+    // Chest operlap
     this.physics.add.overlap(
         this.player.swardHitbox,
         this.chestGroup,
@@ -247,7 +267,15 @@ export default class Play extends BaseScene {
 
         const doorLayer = map.getObjectLayer('doors');
 
+        const buildingLayer = map.getObjectLayer('buildings');
+
+        this.buildingsGroup = this.physics.add.staticGroup();
+
+        this.setupBuildings(buildingLayer);
+
         const breakableLayer = map.getObjectLayer('breakables');
+
+        this.breakablesGroup = this.physics.add.group();
 
         this.setupBreakables(breakableLayer);
 
@@ -267,6 +295,10 @@ export default class Play extends BaseScene {
         this.mapType = mapTypeProperty ? mapTypeProperty.value : 'overground';
 
         return map
+    }
+
+    setupBuildings(buildingLayer) {
+
     }
 
     spawnDoors(layer) {
@@ -366,12 +398,20 @@ export default class Play extends BaseScene {
             const type = obj.properties.find(p => p.name === 'type')?.value;
             if (type) {
                 const sprite = this.add.sprite(obj.x, obj.y, type)
-                .setOrigin(0, 1)
+                .setOrigin(0, 1);
                 
                 let depthOffset = -35;
+                let offsetX = 25;
+                let offsetY = 10;
+                let bodyW = 20;
+                let bodyH = 20;
 
                 if (type === 'pot') {
                     depthOffset = -25;
+                    offsetX = 25;
+                    offsetY = 25
+                    bodyW = 15;
+                    bodyH = 15;
                 }
  
                 sprite
@@ -382,7 +422,13 @@ export default class Play extends BaseScene {
                 } else if (type === 'pot') {
                     sprite.play('pot-idle');
                 }
+            this.breakablesGroup.add(sprite);
+            this.physics.world.enable(sprite);
+            sprite.body.setSize(bodyW, bodyH).setOffset(offsetX, offsetY);
+            sprite.isBroken = false;
+            sprite.type = type;
             }
+            
         })
     }
 
@@ -548,12 +594,34 @@ export default class Play extends BaseScene {
         });
     }
 
+    createBuildingAnimations() {
+        this.anims.create({
+        key: 'hero_house_opening_anim',
+        frames: [
+            {key: 'hero_house_closed'},
+            {key: 'hero_house_open'},
+        ],
+        frameRate: 3,
+        repeat: 0,
+        });
+
+        this.anims.create({
+        key: 'hero_house_closing_anim',
+        frames: [
+            {key: 'hero_house_open'},
+            {key: 'hero_house_closed'},
+        ],
+        frameRate: 3,
+        repeat: 0,
+        });
+    }
+
     itemSpawnDrop(x, y) {
         const roll = Math.random();
 
-        if (roll < 0.4) {
+        if (roll < 0.7) {
             this.spawnCoin(x, y);
-        } else if (roll < 0.6) {
+        } else if (roll < 0.8) {
             this.spawnPotion(x, y);
         }
     }
