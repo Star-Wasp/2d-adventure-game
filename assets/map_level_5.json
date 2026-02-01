@@ -47,7 +47,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":464,
+                 "x":480,
                  "y":96
                 }, 
                 {
@@ -65,7 +65,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":240,
+                 "x":256,
                  "y":480
                 }, 
                 {
@@ -83,7 +83,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":272,
+                 "x":256,
                  "y":480
                 }, 
                 {
@@ -101,7 +101,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":16,
+                 "x":0,
                  "y":96
                 }, 
                 {
@@ -119,8 +119,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":16,
-                 "y":112
+                 "x":0,
+                 "y":96
                 }, 
                 {
                  "height":0,
@@ -137,8 +137,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":464,
-                 "y":112
+                 "x":480,
+                 "y":96
                 }, 
                 {
                  "height":0,
@@ -631,7 +631,7 @@
          "margin":0,
          "name":"Tileset2",
          "spacing":0,
-         "tilecount":1,
+         "tilecount":0,
          "tileheight":16,
          "tilewidth":16,
          "transparentcolor":"#ff0000"

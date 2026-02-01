@@ -24,7 +24,18 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48,
     });
-  }
+
+    // Breakables anims
+    this.load.spritesheet('box', 'assets/anims/break_box_anim.png', {
+      frameWidth: 64,
+      frameHeight: 48,
+    });
+
+    this.load.spritesheet('pot', 'assets/anims/break_pot_anim.png', {
+      frameWidth: 64,
+      frameHeight: 48,
+    });
+}
 
   preloadObjects() {
     this.load.image('bench', 'assets/objects/bench.png');

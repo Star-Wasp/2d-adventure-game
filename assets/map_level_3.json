@@ -60,7 +60,7 @@
                  "visible":true,
                  "width":0,
                  "x":288,
-                 "y":112
+                 "y":96
                 }, 
                 {
                  "height":0,
@@ -78,7 +78,7 @@
                  "visible":true,
                  "width":0,
                  "x":256,
-                 "y":464
+                 "y":480
                 }, 
                 {
                  "height":0,
@@ -95,8 +95,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":240,
-                 "y":464
+                 "x":256,
+                 "y":480
                 }, 
                 {
                  "height":0,
@@ -113,7 +113,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":16,
+                 "x":0,
                  "y":176
                 }, 
                 {
@@ -131,7 +131,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":464,
+                 "x":480,
                  "y":336
                 }, 
                 {
@@ -150,7 +150,7 @@
                  "visible":true,
                  "width":0,
                  "x":288,
-                 "y":112
+                 "y":96
                 }, 
                 {
                  "height":0,
@@ -167,8 +167,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":464,
-                 "y":352
+                 "x":480,
+                 "y":336
                 }, 
                 {
                  "height":0,
@@ -185,8 +185,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":16,
-                 "y":192
+                 "x":0,
+                 "y":176
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -587,7 +587,7 @@
                  "visible":true,
                  "width":0,
                  "x":96,
-                 "y":176
+                 "y":192
                 }, 
                 {
                  "height":0,

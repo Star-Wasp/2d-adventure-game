@@ -206,6 +206,7 @@ export default class Play extends BaseScene {
 
         const doorTileset = map.addTilesetImage('Wooden door', 'door');
 
+
         const mainTileset = map.addTilesetImage('tileset', 'tiles');
 
         const mainTileset2 = map.addTilesetImage('Tileset2', 'tiles2');
