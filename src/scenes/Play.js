@@ -251,6 +251,8 @@ export default class Play extends BaseScene {
 
         const trapTileset = map.addTilesetImage('spikes', 'spikes');
 
+        const interiorsTileset = map.addTilesetImage('interiors', 'interiors')
+
         // Static Layers
         const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0).setDepth(0);
 
@@ -262,9 +264,9 @@ export default class Play extends BaseScene {
         torchLayer.setVisible(false);
         this.setupTorches(map, torchLayer);
 
-        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
+        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
 
-        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
+        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
 
         const trapLayer = map.createStaticLayer('traps', trapTileset, 0, 0);
 
