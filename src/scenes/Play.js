@@ -297,8 +297,24 @@ export default class Play extends BaseScene {
         return map
     }
 
-    setupBuildings(buildingLayer) {
+    setupBuildings(layer) {
+        if (!layer) {return;};
 
+        layer.objects.forEach(obj => {
+            const type = obj.properties.find(p => p.name === 'type')?.value;
+            if (type === 'hero_house') {
+                const hero_house = this.add.sprite(obj.x, obj.y, 'hero_house_closed')
+                    .setOrigin(0.5, 1)
+                    .setDepth(obj.y -16)
+                    .setScale(1.5)
+                    
+                this.physics.world.enable(hero_house);
+
+                hero_house.body
+                .setSize(14, 15)
+                .setOffset(33, 33)
+            }
+        })
     }
 
     spawnDoors(layer) {
