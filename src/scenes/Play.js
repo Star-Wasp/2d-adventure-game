@@ -361,6 +361,29 @@ export default class Play extends BaseScene {
 
     setupBreakables(breakableLayer) {
         if (!breakableLayer) {return;};
+
+        breakableLayer.objects.forEach(obj => {
+            const type = obj.properties.find(p => p.name === 'type')?.value;
+            if (type) {
+                const sprite = this.add.sprite(obj.x, obj.y, type)
+                .setOrigin(0, 1)
+                
+                let depthOffset = -35;
+
+                if (type === 'pot') {
+                    depthOffset = -25;
+                }
+ 
+                sprite
+                .setDepth(obj.y + depthOffset);
+
+                if (type === 'box') {
+                    sprite.play('box-idle');
+                } else if (type === 'pot') {
+                    sprite.play('pot-idle');
+                }
+            }
+        })
     }
 
     setupSpikes(trapLayer) {
@@ -497,9 +520,9 @@ export default class Play extends BaseScene {
 
         // Breakables anims
         this.anims.create({
-        key: 'box-idel',
-        frames: this.anims.generateFrameNumbers('box', { start: 0, end: 2 }),
-        frameRate: 4,
+        key: 'box-idle',
+        frames: this.anims.generateFrameNumbers('box', { start: 0, end: 1 }),
+        frameRate: 2,
         repeat: -1
         });
 
@@ -509,11 +532,12 @@ export default class Play extends BaseScene {
         frameRate: 4,
         repeat: 0
         });
+
         this.anims.create({
         key: 'pot-idle',
-        frames: this.anims.generateFrameNumbers('pot', { start: 0, end: 2 }),
-        frameRate: 4,
-        repeat: 0
+        frames: this.anims.generateFrameNumbers('pot', { start: 0, end: 1 }),
+        frameRate: 2,
+        repeat: -1
         });
 
         this.anims.create({
