@@ -80,9 +80,14 @@ export default class Play extends BaseScene {
   }
 
   setupCamera(map) {
-    this.cameras.main.startFollow(this.player);
+    this.cameras.main.startFollow(this.player,true, 0.1, 0.1, 0, -20);
 
-    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels); 
+    this.cameras.main.setBounds(
+        0,
+        0, 
+        map.widthInPixels, 
+        map.heightInPixels
+    ); 
 
     this.cameras.main.fadeIn(500, 0, 0, 0);
   }
@@ -201,8 +206,6 @@ export default class Play extends BaseScene {
 
         const doorTileset = map.addTilesetImage('Wooden door', 'door');
 
-        // const torchTileset = map.addTilesetImage('Wall_decor', 'torch');
-
         const mainTileset = map.addTilesetImage('tileset', 'tiles');
 
         const mainTileset2 = map.addTilesetImage('Tileset2', 'tiles2');
@@ -215,7 +218,7 @@ export default class Play extends BaseScene {
 
         const trapTileset = map.addTilesetImage('spikes', 'spikes');
 
-        const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0);
+        const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0).setDepth(0);
 
         const chestLayer = map.createStaticLayer('chests', mainTileset, 0, 0);
         chestLayer.setVisible(false);
@@ -225,9 +228,9 @@ export default class Play extends BaseScene {
         torchLayer.setVisible(false);
         this.setupTorches(map, torchLayer);
 
-        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0);
+        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
 
-        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0);
+        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
 
         const breakableLayer = map.createStaticLayer('breakables', natureDecorTileset, 0, 0);
 

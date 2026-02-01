@@ -311,6 +311,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.handleSwinging();
 
         this.updateSwardHitbox();
-        this.setDepth(this.y)
+        this.setDepth(this.y + 1)
     }
 }
