@@ -45,7 +45,7 @@ class LevelManager {
 
     setLevel(levelKey) {
     if (this.levels.includes(levelKey)) {
-        this.lastLevel = this.getCurrentLevelKey(); // store previous level key string
+        this.lastLevel = this.getCurrentLevelKey();
         this.currentLevel = this.levels.indexOf(levelKey) + 1;
         return true;
     } else {

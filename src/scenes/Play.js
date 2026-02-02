@@ -27,7 +27,6 @@ export default class Play extends BaseScene {
     };
 
     this.setupLevelManager();
-
     this.createItemAnimations();
     this.createBuildingAnimations();
 
@@ -162,7 +161,7 @@ export default class Play extends BaseScene {
     // Trigger building door opening
     this.physics.add.overlap(this.player, this.endZones, (player, zone) => {
         if (zone.isBuilding) {
-            if (zone.to_level === 'hero_house') {
+            if (zone.to_level === 'level7') {
                 const building = this.buildingsGroup.getChildren().find(b => b.type === 'hero_house');
                 building.play('hero_house_opening_anim');
                 this.sound.play('door_open', {volume: 0.3});
@@ -231,6 +230,7 @@ export default class Play extends BaseScene {
   }
 
     createMap() {
+
         const map = this.make.tilemap({key: this.levelManager.getCurrentLevelKey()});
 
         // Dongeon tilesets
@@ -251,8 +251,6 @@ export default class Play extends BaseScene {
 
         const trapTileset = map.addTilesetImage('spikes', 'spikes');
 
-        const interiorsTileset = map.addTilesetImage('interiors', 'interiors')
-
         // Static Layers
         const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0).setDepth(0);
 
@@ -264,9 +262,9 @@ export default class Play extends BaseScene {
         torchLayer.setVisible(false);
         this.setupTorches(map, torchLayer);
 
-        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
+        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
 
-        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
+        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
 
         const trapLayer = map.createStaticLayer('traps', trapTileset, 0, 0);
 

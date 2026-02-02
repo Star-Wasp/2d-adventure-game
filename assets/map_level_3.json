@@ -53,7 +53,7 @@
                         {
                          "name":"from_level",
                          "type":"string",
-                         "value":"level7"
+                         "value":"level16"
                         }],
                  "rotation":0,
                  "type":"",
@@ -71,7 +71,7 @@
                         {
                          "name":"to_level",
                          "type":"string",
-                         "value":"level7"
+                         "value":"level16"
                         }],
                  "rotation":0,
                  "type":"",
@@ -184,7 +184,7 @@
                         {
                          "name":"to_level",
                          "type":"string",
-                         "value":"hero_house"
+                         "value":"level7"
                         }],
                  "rotation":0,
                  "type":"",
@@ -202,7 +202,7 @@
                         {
                          "name":"from_level",
                          "type":"string",
-                         "value":"hero_house"
+                         "value":"level7"
                         }, 
                         {
                          "name":"isBuilding",
