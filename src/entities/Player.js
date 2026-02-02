@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import HealthBar from "../hud/HealthBar";
+import { savePlayerData } from "../utils/StorageManager";
 
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -169,24 +170,45 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.hurtSound.play({volume: 0.3})
     }
 
-    die() {
-        this.setVelocity(0);
-        this.body.enable = false;
-        this.isSwinging = true;
-        this.anims.play('player-die');
+//     die() {
+//     const respawn = this.scene.levelManager;
 
-        this.scene.time.delayedCall(500, () => {
-           this.scene.cameras.main.fadeOut(500, 0, 0, 0); 
-        }) 
+//     this.setVelocity(0);
+//     this.body.enable = false;
+//     this.isSwinging = true;
+//     this.anims.play('player-die');
 
-        this.scene.cameras.main.once('camerafadeoutcomplete', () => {
-            console.log('dying, current level= ', this.scene.levelManager.currentLevel);
 
-            this.scene.levelManager.setLastLevel(this.scene.levelManager.currentLevel);
+//     this.scene.time.delayedCall(500, () => {
+//         this.scene.cameras.main.fadeOut(500, 0, 0, 0); 
+//     });
 
-            this.scene.scene.restart();
-        })
-    }
+//     this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+
+//         this.scene.levelManager.currentLevel = respawn.respawnLevel;
+
+//         this.scene.scene.restart();
+//     });
+// }
+
+die() {
+    this.setVelocity(0);
+    this.body.enable = false;
+    this.isSwinging = true;
+    this.anims.play('player-die');
+
+    this.scene.time.delayedCall(500, () => {
+        this.scene.cameras.main.fadeOut(500, 0, 0, 0);
+    });
+
+    this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+        // Mark that the next level load is a death respawn
+        this.scene.levelManager.isRespawningAfterDeath = true;
+
+        // Restart the scene (createMap will handle the actual respawn)
+        this.scene.scene.restart();
+    });
+}
 
     playIdle() {
         switch (this.facing) {

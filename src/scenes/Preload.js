@@ -83,6 +83,7 @@ export default class Preload extends Phaser.Scene {
 
     // Underground maps
     this.load.tilemapTiledJSON('level6', 'assets/map_level_6.json');
+    this.load.tilemapTiledJSON('level8', 'assets/map_level_8.json');
 
     // Interior maps
     //hero house

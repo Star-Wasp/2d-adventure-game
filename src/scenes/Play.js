@@ -27,6 +27,7 @@ export default class Play extends BaseScene {
     };
 
     this.setupLevelManager();
+    this.levelManager.deathRespawn();
     this.createItemAnimations();
     this.createBuildingAnimations();
 
@@ -350,7 +351,29 @@ export default class Play extends BaseScene {
         const mapTypeProperty = map.properties.find(p => p.name === 'type');
         this.mapType = mapTypeProperty ? mapTypeProperty.value : 'overground';
 
+        this.handleRespawn();
+
         return map
+    }
+
+    handleRespawn() {
+        if (this.levelManager.currentLevel === this.levelManager.respawnLevel) {
+        
+            this.player.x = this.levelManager.respawnX;
+            this.player.y = this.levelManager.respawnY;
+
+            this.player.health = 100;
+            this.player.healthBar.setHealth(this.player.health);
+
+            savePlayerData(this.player.health, this.registry.get('coins'));
+
+
+            this.cameras.main.fadeIn(500, 0, 0, 0);
+            this.cameras.main.once('camerafadeincomplete', () => {
+                this.player.body.enable = true;
+                this.player.isSwinging = false;
+            });
+        }
     }
 
     setupBuildings(layer) {
@@ -586,7 +609,7 @@ export default class Play extends BaseScene {
                     tile.getCenterY(),
                     'chest'
                 )
-                chest.setDepth(chest.y);
+                chest.setDepth(chest.y - 10);
                 chest.setAlpha(1);
                 chest.setVisible(true);
                 chest.setSize(18, 18)

@@ -4,7 +4,7 @@ class LevelManager {
     constructor() {
         this.currentLevel = 1;
         this.lastLevel = null;
-        this.levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7'];
+        this.levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7', 'level8'];
     }
 
     levelData = {
@@ -15,6 +15,7 @@ class LevelManager {
         level5: {key: 'level5', musicType: 'overground'},
         level6: {key: 'level6', musicType: 'dungeon'},
         level7: {key: 'level7', musicType: 'overground'},
+        level6: {key: 'level8', musicType: 'dungeon'},
     }
 
     getCurrentLevelKey() {
@@ -54,6 +55,12 @@ class LevelManager {
         return false;
     }
 }
+
+ deathRespawn() {
+    this.respawnLevel = 'level7';
+    this.respawnX = 100;
+    this.respawnY = 200;
+ }
 
 }
 
