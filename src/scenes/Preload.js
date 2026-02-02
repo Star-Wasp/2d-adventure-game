@@ -68,6 +68,9 @@ export default class Preload extends Phaser.Scene {
     // Dungeon tilesheets
     this.load.image('dungeon', 'assets/tileset-export.png');
     this.load.image('door', 'assets/Wooden door-Sheet.png');
+
+    // Interiors tilesheets
+    this.load.image('interiors', 'assets/Interiors.png');
   }
 
   preloadMaps() {
