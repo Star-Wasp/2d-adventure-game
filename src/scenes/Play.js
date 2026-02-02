@@ -267,7 +267,7 @@ export default class Play extends BaseScene {
 
         const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
 
-        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
+        const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
 
         const trapLayer = map.createStaticLayer('traps', trapTileset, 0, 0);
 
