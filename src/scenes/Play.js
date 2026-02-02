@@ -52,6 +52,8 @@ export default class Play extends BaseScene {
 
     this.playerInBuildingZone = false;
     this.currentBuilding = null;
+
+    this.currentInteractionZone = null;
   }
 
   playLevelMusic() {
@@ -205,6 +207,18 @@ export default class Play extends BaseScene {
         })
     });
 
+    // Checking for overlap with interactive zone objects
+    this.physics.add.overlap(this.player, this.InteractionZones, (player, zone) => {
+        if (this.currentInteractionZone !== zone) {
+            this.currentInteractionZone = zone;
+            if (zone.interactionType === 'bookshelf') {
+            console.log("Staring at books");
+            } else if (zone.interactionType === 'bed') {
+            console.log("I'm so tired...");
+            }
+        }
+    })
+
   }
 
   setupPlayer(map) {
@@ -314,6 +328,8 @@ export default class Play extends BaseScene {
 
         this.setupZones(zoneLayer);
 
+        this.setupInteractionZones(zoneLayer);
+
         this.collisionLayer = collisionLayer;
         this.collisionLayer.setCollisionByProperty({colliders: true});
         this.collisionLayer.setCollisionByExclusion([-1]);
@@ -408,7 +424,34 @@ export default class Play extends BaseScene {
         })
     }
 
+    setupInteractionZones(zoneLayer) {
+        let interactiveObjects = zoneLayer.objects.filter(obj =>
+            obj.name === 'interactive');
+
+        if (interactiveObjects.length > 0) {
+            this.InteractionZones = this.physics.add.staticGroup();
+        }
+        interactiveObjects.forEach(obj => {
+            const typeProp = obj.properties.find(p => p.name === 'type');
+
+            const zone = this.InteractionZones.create(
+                obj.x + obj.width / 2,
+                obj.y + obj.height / 2,
+                null
+            )
+            
+            zone.setSize(obj.width + 40, obj.height + 40);
+            zone.setVisible(false)
+
+            if (typeProp) {
+                zone.interactionType = typeProp.value;
+            }
+        })
+    }
+
     setupZones(zoneLayer) {
+
+        // Set up level start and end zones
         const lastLevel = this.levelManager.lastLevel || 'level0'
 
         this.cameFromLevel = lastLevel;
@@ -441,6 +484,7 @@ export default class Play extends BaseScene {
         const toLevelProp = point.properties.find(p => p.name === 'to_level');
         zone.to_level = toLevelProp ? toLevelProp.value: null;
     });
+
     }
 
     setupBreakables(breakableLayer) {
@@ -747,6 +791,16 @@ export default class Play extends BaseScene {
                     this.sound.play('door_close', {volume: 0.3})
                     this.currentBuilding = null;
                 }
+            }
+        }
+
+        if (this.currentInteractionZone) {
+            const zone = this.currentInteractionZone;
+            const playerBounds = this.player.getBounds();
+            const zoneBounds = zone.getBounds();
+
+            if (!Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, zoneBounds)) {
+                this.currentInteractionZone = null;
             }
         }
     }
