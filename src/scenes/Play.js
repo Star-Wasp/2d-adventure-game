@@ -238,6 +238,9 @@ export default class Play extends BaseScene {
 
         const doorTileset = map.addTilesetImage('Wooden door', 'door');
 
+        // Interiors tileset
+        const interiorsTileset = map.addTilesetImage('Interiors', 'interiors');
+
         // Tilesets
         const mainTileset = map.addTilesetImage('tileset', 'tiles');
 
@@ -262,7 +265,7 @@ export default class Play extends BaseScene {
         torchLayer.setVisible(false);
         this.setupTorches(map, torchLayer);
 
-        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
+        const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
 
         const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset], 0, 0).setDepth(0);
 
