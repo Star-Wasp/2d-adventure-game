@@ -1,0 +1,20 @@
+[33m6bf1021[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m adding interior decorations
+[33m10f60f5[m add collision layer to house
+[33m78645ac[m add walls to map, add interiorsTileset to higherLayer
+[33m8b12cae[m add hero house level (level7)
+[33m3cd0167[m add interiorsTileset and add to groundLayer
+[33m4040af7[m preload interiors tilesheet
+[33mdeca12a[m adjust hero house door functionality
+[33m8a4065f[m loading in interiors tilesheet
+[33m1b13008[m add door open functionality
+[33m5b0d896[m adding house. setting up roof colliders
+[33m5b78034[m add building object layer. preload hero-house images, create anims, start defining createBuildings method
+[33m5009268[m final polish on play.setupBreakables(), ajust animations
+[33m647f2b2[m add breakables object layer, load in anims, start working on setupBreakables() method
+[33m2c1596f[m preload breakable items assets
+[33mce4c5cf[m fix player depth
+[33m88ab978[m add dungeon door animation and sound
+[33meff8355[m fix nature decor. fix depth
+[33ma947984[m add object layer and spawn nature assets
+[33m936a996[m add wall torch functionality. add torches to dungeon level
+[33m2418a96[m Initial commit, Phaser game project
