@@ -49,6 +49,9 @@ export default class Play extends BaseScene {
     this.setupCollectibles();
 
     this.setupCamera(map);
+
+    this.playerInBuildingZone = false;
+    this.currentBuilding = null;
   }
 
   playLevelMusic() {
@@ -160,9 +163,13 @@ export default class Play extends BaseScene {
 
     // Trigger building door opening
     this.physics.add.overlap(this.player, this.endZones, (player, zone) => {
+        if (!this.playerInBuildingZone) {
+            this.playerInBuildingZone = true;
+        }
         if (zone.isBuilding) {
             if (zone.to_level === 'level7') {
                 const building = this.buildingsGroup.getChildren().find(b => b.type === 'hero_house');
+                this.currentBuilding = building;
                 building.play('hero_house_opening_anim');
                 this.sound.play('door_open', {volume: 0.3});
             }
@@ -403,6 +410,9 @@ export default class Play extends BaseScene {
 
     setupZones(zoneLayer) {
         const lastLevel = this.levelManager.lastLevel || 'level0'
+
+        this.cameFromLevel = lastLevel;
+        
 
         let startPoint = zoneLayer.objects.find(obj => obj.name === 'start' && obj.properties.some(p => p.name === 'from_level' && p.value === lastLevel))
 
@@ -725,6 +735,20 @@ export default class Play extends BaseScene {
 
     update() {
         this.player.update();
+
+        if (this.playerInBuildingZone) {
+            const stillOverlapping = this.physics.overlap(this.player, this.endZones);
+            
+            if (!stillOverlapping) {
+                this.playerInBuildingZone = false;
+
+                if (this.currentBuilding) {
+                    this.currentBuilding.play('hero_house_closing_anim');
+                    this.sound.play('door_close', {volume: 0.3})
+                    this.currentBuilding = null;
+                }
+            }
+        }
     }
 
 }
