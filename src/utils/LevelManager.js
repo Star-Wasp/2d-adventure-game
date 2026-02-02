@@ -4,7 +4,7 @@ class LevelManager {
     constructor() {
         this.currentLevel = 1;
         this.lastLevel = null;
-        this.levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6'];
+        this.levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7'];
     }
 
     levelData = {
@@ -14,6 +14,7 @@ class LevelManager {
         level4: {key: 'level4', musicType: 'overground'},
         level5: {key: 'level5', musicType: 'overground'},
         level6: {key: 'level6', musicType: 'dungeon'},
+        level7: {key: 'level7', musicType: 'overground'},
     }
 
     getCurrentLevelKey() {
