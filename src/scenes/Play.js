@@ -255,7 +255,10 @@ export default class Play extends BaseScene {
         const trapTileset = map.addTilesetImage('spikes', 'spikes');
 
         // Static Layers
-        const decorLayer = map.createStaticLayer('decor', interiorsTileset, 0, 0)
+        const decorLayer = map.createStaticLayer('decor', interiorsTileset, 0, 0);
+        if (decorLayer) {
+            decorLayer.setDepth(1)
+        }
 
         const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0).setDepth(0);
 
