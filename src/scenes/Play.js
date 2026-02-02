@@ -214,7 +214,20 @@ export default class Play extends BaseScene {
             if (zone.interactionType === 'bookshelf') {
             console.log("Staring at books");
             } else if (zone.interactionType === 'bed') {
-            console.log("I'm so tired...");
+                if (this.player.health < 100) {
+                    console.log("I'm so tired...");
+                    this.cameras.main.fadeOut(1000, 0, 0, 0);
+
+                    this.cameras.main.once('camerafadeoutcomplete', () => {
+                        this.player.health = 100;
+                        this.player.healthBar.setHealth(this.player.health);
+                        savePlayerData(this.player.health, this.registry.get('coins'));
+                        console.log('Health restored!');
+                        this.cameras.main.fadeIn(1000, 0, 0, 0)
+                    })
+                } else {
+                  console.log("Fully rested! Lets go explore!");  
+                }
             }
         }
     })
@@ -425,12 +438,13 @@ export default class Play extends BaseScene {
     }
 
     setupInteractionZones(zoneLayer) {
+        this.InteractionZones = this.physics.add.staticGroup();
+
+        this.InteractionZones.clear(true, true);
+
         let interactiveObjects = zoneLayer.objects.filter(obj =>
             obj.name === 'interactive');
 
-        if (interactiveObjects.length > 0) {
-            this.InteractionZones = this.physics.add.staticGroup();
-        }
         interactiveObjects.forEach(obj => {
             const typeProp = obj.properties.find(p => p.name === 'type');
 
