@@ -233,6 +233,16 @@ export default class Play extends BaseScene {
         }
     })
 
+    // Checkpoint functionality
+    this.physics.add.overlap(this.player, this.checkpointLayer, (player, checkpoint) => {
+        if (!checkpoint) {return; };
+        this.currentCheckpointX = checkpoint.x;
+        this.currentCheckpointY = checkpoint.y;
+
+        console.log("overlap with checkpoint, ", checkpoint.x, checkpoint.y)
+
+})
+
   }
 
   setupPlayer(map) {
@@ -374,7 +384,8 @@ export default class Play extends BaseScene {
     }
 
     setupCheckpoints(checkpointLayer) {
-        this.checkpointGroup = this.physics.add.staticGroup();    
+        if (checkpointLayer) {
+             this.checkpointGroup = this.physics.add.staticGroup();    
 
         checkpointLayer.forEachTile(tile => {
             if (tile.index !== -1) {
@@ -392,6 +403,8 @@ export default class Play extends BaseScene {
                 tile.setCollision(false);
             }
         })
+        }
+       
     }
 
     handleRespawn() {
