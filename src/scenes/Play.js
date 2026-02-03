@@ -149,7 +149,7 @@ export default class Play extends BaseScene {
         this.player.swardHitbox,
         this.chestGroup,
         (hitbox, chest) => {
-            if (this.player.isSwinging && !chest.isOpened) {
+            if (this.player.isSwinging && !chest.isOpened && !this.player.isJumping) {
                    chest.isOpened = true;
                 chest.play('chest-opening');
                 chest.on('animationcomplete', () => {

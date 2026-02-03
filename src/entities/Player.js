@@ -52,9 +52,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     init() {
     this.cursors = this.scene.input.keyboard.createCursorKeys();
-    this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.SwingKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
-    this.Shiftkey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+    this.Jumpkey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
     }
 
@@ -282,7 +282,7 @@ die() {
     }
 
     handleJumping() {
-        if(Phaser.Input.Keyboard.JustDown(this.Shiftkey) && !this.isSwinging && !this.isJumping) {
+        if(Phaser.Input.Keyboard.JustDown(this.Jumpkey) && !this.isSwinging && !this.isJumping) {
             this.isJumping = true;
             this.isSwinging = true;
 
@@ -310,7 +310,7 @@ die() {
 }
 
     handleSwinging() {
-        if(Phaser.Input.Keyboard.JustDown(this.spaceKey) && !this.isSwinging) {
+        if(Phaser.Input.Keyboard.JustDown(this.SwingKey) && !this.isSwinging) {
             this.isSwinging = true;
 
             if (this.facing === 'up') {
@@ -350,7 +350,6 @@ die() {
             this.swardHitbox.setPosition(this.x, this.y);
         }
     }
-
 
     update() {
 
