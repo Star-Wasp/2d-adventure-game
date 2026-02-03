@@ -31,6 +31,8 @@ export default class Play extends BaseScene {
     this.createItemAnimations();
     this.createBuildingAnimations();
 
+    this.checkpointGroup = this.physics.add.staticGroup();  
+
     const map = this.createMap();
     this.playLevelMusic();
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -44,6 +46,8 @@ export default class Play extends BaseScene {
     this.setupCoinDisplay();
 
     this.player.checkTrapOverlap(this.spikeGroup);
+
+    
     
     this.setupPlayerOverlaps();
 
@@ -235,12 +239,15 @@ export default class Play extends BaseScene {
     })
 
     // Checkpoint functionality
-    this.physics.add.overlap(this.player, this.checkpointLayer, (player, checkpoint) => {
+    this.physics.add.overlap(this.player, this.checkpointGroup, (player, checkpoint) => {
         if (!checkpoint) {return; };
-        this.currentCheckpointX = checkpoint.x;
-        this.currentCheckpointY = checkpoint.y;
+        if (!checkpoint.wasOverlapping) {
+            checkpoint.wasOverlapping = true;
+            this.currentCheckpointX = checkpoint.x;
+            this.currentCheckpointY = checkpoint.y;
 
-        console.log("overlap with checkpoint, ", checkpoint.x, checkpoint.y)
+        console.log("overlap with checkpoint, ", checkpoint.x, checkpoint.y);
+        }
         })
     }
 
@@ -374,6 +381,8 @@ export default class Play extends BaseScene {
         this.collisionLayer.setCollisionByProperty({colliders: true});
         this.collisionLayer.setCollisionByExclusion([-1]);
 
+       
+
         const mapTypeProperty = map.properties.find(p => p.name === 'type');
         this.mapType = mapTypeProperty ? mapTypeProperty.value : 'overground';
 
@@ -384,8 +393,6 @@ export default class Play extends BaseScene {
 
     setupCheckpoints(checkpointLayer) {
         if (checkpointLayer) {
-             this.checkpointGroup = this.physics.add.staticGroup();    
-
         checkpointLayer.forEachTile(tile => {
             if (tile.index !== -1) {
                 const checkpoint = this.checkpointGroup.create(
@@ -398,6 +405,7 @@ export default class Play extends BaseScene {
                 checkpoint.setVisible(true);
                 checkpoint.setDepth(checkpoint.y - 5);
                 checkpoint.setScale(1.3);
+                checkpoint.wasOverlapping = false;
                 tile.setVisible(false)
                 tile.setCollision(false);
                 }
@@ -911,6 +919,14 @@ export default class Play extends BaseScene {
                 this.currentInteractionZone = null;
             }
         }
-    }
 
+        const playerBounds = this.player.getBounds();
+        this.checkpointGroup.getChildren().forEach((checkpoint) => {
+            const checkpointBounds = checkpoint.getBounds();
+            if (!Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, checkpointBounds)) {
+                checkpoint.wasOverlapping = false;
+            }
+        })
+        
+    }
 }
