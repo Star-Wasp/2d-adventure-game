@@ -25,6 +25,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.facing = 'down';
     this.isSwinging = false;
+    this.isJumping = false;
 
     // Animation setup
     this.createAnimations(scene);
@@ -51,6 +52,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     init() {
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+    this.Akey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
     }
 
@@ -137,22 +140,22 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     scene.anims.create({
         key: 'player-jump-down',
-        frames: scene.anims.generateFrameNumbers('player-jump-down-sheet', {start: 0, end: 9}),
-        frameRate: 3,
+        frames: scene.anims.generateFrameNumbers('player-jump-down-sheet', {start: 0, end: 8}),
+        frameRate: 15,
         repeat: 0,
     });
 
     scene.anims.create({
         key: 'player-jump-side',
-        frames: scene.anims.generateFrameNumbers('player-jump-side-sheet', {start: 0, end: 9}),
-        frameRate: 3,
+        frames: scene.anims.generateFrameNumbers('player-jump-side-sheet', {start: 0, end: 8}),
+        frameRate: 15,
         repeat: 0,
     });
 
     scene.anims.create({
         key: 'player-jump-up',
-        frames: scene.anims.generateFrameNumbers('player-jump-up-sheet', {start: 0, end: 9}),
-        frameRate: 3,
+        frames: scene.anims.generateFrameNumbers('player-jump-up-sheet', {start: 0, end: 8}),
+        frameRate: 15,
         repeat: 0,
     });
     }
@@ -265,6 +268,7 @@ die() {
 
     updateMovementAnimation() {
         if (this.isSwinging) { return; };
+        if (this.isJumping) {return; };
         if (this.body.velocity.y < 0) {
             this.anims.play('player-walk-up', true);
         } else if (this.body.velocity.y > 0) {
@@ -275,6 +279,30 @@ die() {
             this.playIdle();
         }
     }
+
+    handleJumping() {
+        if(Phaser.Input.Keyboard.JustDown(this.Akey) && !this.isSwinging && !this.isJumping) {
+            this.isJumping = true;
+            this.isSwinging = true;
+
+            if (this.facing === 'up') {
+                this.anims.play('player-jump-up');
+
+            } else if (this.facing === 'down') {
+                this.anims.play('player-jump-down');
+
+            } else if (this.facing === 'side') {
+                this.anims.play('player-jump-side');
+            }
+            this.once('animationcomplete', (anim) => {
+                if (anim.key.startsWith('player-jump')) {
+                    this.isJumping = false;
+                    this.isSwinging = false;
+                    this.playIdle();
+                }
+            })
+    }
+}
 
     handleSwinging() {
         if(Phaser.Input.Keyboard.JustDown(this.spaceKey) && !this.isSwinging) {
@@ -332,6 +360,7 @@ die() {
         this.updateMovementAnimation();
 
         this.handleSwinging();
+        this.handleJumping();
 
         this.updateSwardHitbox();
         this.setDepth(this.y + 1)
