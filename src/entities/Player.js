@@ -51,6 +51,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     init() {
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
     }
 
     cleanupSounds(scene) {
@@ -135,8 +136,22 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     });
 
     scene.anims.create({
-        key: 'player-jump',
-        frames: scene.anims.generateFrameNumbers('player-jump-sheet', {start: 0, end: 9}),
+        key: 'player-jump-down',
+        frames: scene.anims.generateFrameNumbers('player-jump-down-sheet', {start: 0, end: 9}),
+        frameRate: 3,
+        repeat: 0,
+    });
+
+    scene.anims.create({
+        key: 'player-jump-side',
+        frames: scene.anims.generateFrameNumbers('player-jump-side-sheet', {start: 0, end: 9}),
+        frameRate: 3,
+        repeat: 0,
+    });
+
+    scene.anims.create({
+        key: 'player-jump-up',
+        frames: scene.anims.generateFrameNumbers('player-jump-up-sheet', {start: 0, end: 9}),
         frameRate: 3,
         repeat: 0,
     });
@@ -176,27 +191,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
         this.hurtSound.play({volume: 0.3})
     }
-
-//     die() {
-//     const respawn = this.scene.levelManager;
-
-//     this.setVelocity(0);
-//     this.body.enable = false;
-//     this.isSwinging = true;
-//     this.anims.play('player-die');
-
-
-//     this.scene.time.delayedCall(500, () => {
-//         this.scene.cameras.main.fadeOut(500, 0, 0, 0); 
-//     });
-
-//     this.scene.cameras.main.once('camerafadeoutcomplete', () => {
-
-//         this.scene.levelManager.currentLevel = respawn.respawnLevel;
-
-//         this.scene.scene.restart();
-//     });
-// }
 
 die() {
     this.setVelocity(0);

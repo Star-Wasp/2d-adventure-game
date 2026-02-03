@@ -103,10 +103,20 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 48,
     });
 
-    this.load.spritesheet('player-jump-sheet', 'assets/player/player_jump.png', {
+    this.load.spritesheet('player-jump-down-sheet', 'assets/player/player_jump_down.png', {
       frameWidth: 48,
       frameHeight: 48,
     });
+
+    this.load.spritesheet('player-jump-side-sheet', 'assets/player/player_jump_side.png', {
+      frameWidth: 48,
+      frameHeight: 48,
+  });
+
+  this.load.spritesheet('player-jump-up-sheet', 'assets/player/up.png', {
+      frameWidth: 48,
+      frameHeight: 48,
+  });
 
   }
 
