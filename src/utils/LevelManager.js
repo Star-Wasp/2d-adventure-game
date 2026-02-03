@@ -15,7 +15,7 @@ class LevelManager {
         level5: {key: 'level5', musicType: 'overground'},
         level6: {key: 'level6', musicType: 'dungeon'},
         level7: {key: 'level7', musicType: 'overground'},
-        level6: {key: 'level8', musicType: 'dungeon'},
+        level8: {key: 'level8', musicType: 'dungeon'},
     }
 
     getCurrentLevelKey() {

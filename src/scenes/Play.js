@@ -303,9 +303,14 @@ export default class Play extends BaseScene {
 
         // Static Layers
         const decorLayer = map.createStaticLayer('decor', interiorsTileset, 0, 0);
-        if (decorLayer) {
-            decorLayer.setDepth(1)
+
+        const checkpointLayer = map.createStaticLayer('safe_point', mainTileset, 0, 0);
+        if (checkpointLayer) {
+            checkpointLayer
+            .setDepth(1)
         }
+
+        this.setupCheckpoints(checkpointLayer);
 
         const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0).setDepth(0);
 
@@ -366,6 +371,27 @@ export default class Play extends BaseScene {
         this.handleRespawn();
 
         return map
+    }
+
+    setupCheckpoints(checkpointLayer) {
+        this.checkpointGroup = this.physics.add.staticGroup();    
+
+        checkpointLayer.forEachTile(tile => {
+            if (tile.index !== -1) {
+                const checkpoint = this.checkpointGroup.create(
+                    tile.getCenterX(),
+                    tile.getCenterY(),
+                    'checkpoint'
+                )
+                checkpoint.setOrigin(0.5);
+                checkpoint.play('flag');
+                checkpoint.setVisible(true);
+                checkpoint.setDepth(checkpoint.y - 5);
+                checkpoint.setScale(1.3);
+                tile.setVisible(false)
+                tile.setCollision(false);
+            }
+        })
     }
 
     handleRespawn() {
@@ -754,7 +780,7 @@ export default class Play extends BaseScene {
 
         // Checkpoint anim
         this.anims.create({
-        key: 'pot-break',
+        key: 'flag',
         frames: this.anims.generateFrameNumbers('checkpoint', { start: 0, end: 9 }),
         frameRate: 10,
         repeat: -1
