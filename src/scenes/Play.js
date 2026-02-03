@@ -328,6 +328,14 @@ export default class Play extends BaseScene {
 
         this.setupCheckpoints(checkpointLayer);
 
+        const jumpableColliders = map.createStaticLayer('can_jump_over', mainTileset, 0, 0);
+        if (jumpableColliders) {
+            this.jumpableColliders = jumpableColliders;
+            this.jumpableColliders.setCollisionByProperty({colliders: true});
+            this.jumpableColliders.setCollisionByExclusion([-1]);
+        }
+        
+
         const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0).setDepth(0);
 
         const chestLayer = map.createStaticLayer('chests', mainTileset, 0, 0);
