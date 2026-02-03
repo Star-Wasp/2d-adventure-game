@@ -54,7 +54,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-    this.Akey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    this.Shiftkey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 
     }
 
@@ -235,7 +235,7 @@ die() {
 
         if (moving && !this.walkSound.isPlaying) {
             this.walkSound.play({ volume: 0.3, loop: true, rate: 1.5 });
-        } else if (!moving && this.walkSound.isPlaying) {
+        } else if (!moving && this.walkSound.isPlaying || this.isJumping) {
             this.walkSound.stop();
         }
     }
@@ -282,7 +282,7 @@ die() {
     }
 
     handleJumping() {
-        if(Phaser.Input.Keyboard.JustDown(this.Akey) && !this.isSwinging && !this.isJumping) {
+        if(Phaser.Input.Keyboard.JustDown(this.Shiftkey) && !this.isSwinging && !this.isJumping) {
             this.isJumping = true;
             this.isSwinging = true;
 
