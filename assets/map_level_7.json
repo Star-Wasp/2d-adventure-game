@@ -85,6 +85,24 @@
                  "width":0,
                  "x":96,
                  "y":48
+                }, 
+                {
+                 "height":0,
+                 "id":16,
+                 "name":"start",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"respawn",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":144,
+                 "y":80
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -205,7 +223,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":16,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "properties":[
         {

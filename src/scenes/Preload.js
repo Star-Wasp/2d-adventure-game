@@ -36,6 +36,12 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 48,
     });
+
+    // Flag check point anim
+    this.load.spritesheet('checkpoint', 'assets/anims/checkpoint.png', {
+      frameWidth: 16,
+      frameHeight: 24,
+    });
 }
 
   preloadObjects() {

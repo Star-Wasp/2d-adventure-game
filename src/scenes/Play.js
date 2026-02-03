@@ -237,6 +237,12 @@ export default class Play extends BaseScene {
 
   setupPlayer(map) {
     let savedHealth = getSavedPlayerHealth() || 100;
+    
+    if (this.levelManager.justRespawned) {
+        savedHealth = 100;
+        this.levelManager.justRespawned = false;
+    }
+    
     if (savedHealth <= 0) {
         savedHealth = 100;
     }
@@ -246,12 +252,14 @@ export default class Play extends BaseScene {
 
     
     this.cameras.main.setZoom(3.7);
-    this.cameras.main.centerOn(map.widthInPixels/2, map.heightInPixels/2);
+    this.cameras.main.centerOn(map.widthInPixels/2, map.widthInPixels/2);
     
     
 
     this.player.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, this.collisionLayer);
+    
+    savePlayerData(savedHealth, this.registry.get('coins'));
   }
 
   setupLevelManager() {
@@ -260,8 +268,12 @@ export default class Play extends BaseScene {
     }
     this.levelManager = this.registry.get('levelManager');
 
-    const savedLevel = getSavedLevel();
-    this.levelManager.currentLevel = savedLevel;
+    if (this.levelManager.isRespawningAfterDeath) { 
+        this.levelManager.setLevel('level7');
+    } else {
+        const savedLevel = getSavedLevel();
+        this.levelManager.currentLevel = savedLevel;
+    }
   }
 
     createMap() {
@@ -494,7 +506,21 @@ export default class Play extends BaseScene {
         this.cameFromLevel = lastLevel;
         
 
-        let startPoint = zoneLayer.objects.find(obj => obj.name === 'start' && obj.properties.some(p => p.name === 'from_level' && p.value === lastLevel))
+        let startPoint;
+   
+        if (this.levelManager.isRespawningAfterDeath) {
+       
+            startPoint = zoneLayer.objects.find(obj => 
+                obj.name === 'start' && 
+                obj.properties.some(p => p.name === 'respawn' && p.value === true)
+            );       
+            this.levelManager.isRespawningAfterDeath = false;
+            this.levelManager.justRespawned = true;
+        }
+        
+        if (!startPoint) {
+            startPoint = zoneLayer.objects.find(obj => obj.name === 'start' && obj.properties.some(p => p.name === 'from_level' && p.value === lastLevel))
+        }
 
         if (!startPoint) {
             startPoint = zoneLayer.objects.find(obj => obj.name === 'start' )
@@ -724,6 +750,14 @@ export default class Play extends BaseScene {
         frames: this.anims.generateFrameNumbers('pot', { start: 3, end: 6 }),
         frameRate: 4,
         repeat: 0
+        });
+
+        // Checkpoint anim
+        this.anims.create({
+        key: 'pot-break',
+        frames: this.anims.generateFrameNumbers('checkpoint', { start: 0, end: 9 }),
+        frameRate: 10,
+        repeat: -1
         });
     }
 
