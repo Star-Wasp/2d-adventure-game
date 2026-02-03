@@ -43,6 +43,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.walkSound = scene.sound.add('walk');
     this.swardSound = scene.sound.add('sward');
     this.hurtSound = scene.sound.add('hurt');
+    this.jumpSound = scene.sound.add('jump');
     // End setting player properties and sound
 
     this.init();
@@ -164,7 +165,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.add.overlap(this, spikeGroup, (player, spike) => {
         const now = this.scene.time.now;
 
-        if (spike.anims.currentFrame.index >= 3 && spike.canDamage && now - spike.lastHitTime > spike.damageCooldown) {
+        if (spike.anims.currentFrame.index >= 3 && spike.canDamage && now - spike.lastHitTime > spike.damageCooldown && !this.isJumping) {
             player.takeDamage(10);
             spike.lastHitTime = now;
 
@@ -287,18 +288,22 @@ die() {
 
             if (this.facing === 'up') {
                 this.anims.play('player-jump-up');
+                this.jumpSound.play({volume: 0.3})
 
             } else if (this.facing === 'down') {
                 this.anims.play('player-jump-down');
+                this.jumpSound.play({volume: 0.3})
 
             } else if (this.facing === 'side') {
                 this.anims.play('player-jump-side');
+                this.jumpSound.play({volume: 0.3})
             }
             this.once('animationcomplete', (anim) => {
                 if (anim.key.startsWith('player-jump')) {
                     this.isJumping = false;
                     this.isSwinging = false;
                     this.playIdle();
+                    this.jumpSound.stop();
                 }
             })
     }

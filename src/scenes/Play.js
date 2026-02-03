@@ -55,6 +55,7 @@ export default class Play extends BaseScene {
     this.currentBuilding = null;
 
     this.currentInteractionZone = null;
+    this.currentCheckpoint = null;
   }
 
   playLevelMusic() {
@@ -116,7 +117,7 @@ export default class Play extends BaseScene {
         this.player.swardHitbox,
         this.breakablesGroup,
         (hitbox, item) => {
-            if (this.player.isSwinging && !item.isBroken) {
+            if (this.player.isSwinging && !item.isBroken && !this.player.isJumping) {
                 item.isBroken = true;
                 if (item.type === 'box') {
                     item.play('box-break');
@@ -240,10 +241,8 @@ export default class Play extends BaseScene {
         this.currentCheckpointY = checkpoint.y;
 
         console.log("overlap with checkpoint, ", checkpoint.x, checkpoint.y)
-
-})
-
-  }
+        })
+    }
 
   setupPlayer(map) {
     let savedHealth = getSavedPlayerHealth() || 100;
@@ -401,10 +400,9 @@ export default class Play extends BaseScene {
                 checkpoint.setScale(1.3);
                 tile.setVisible(false)
                 tile.setCollision(false);
-            }
-        })
-        }
-       
+                }
+            })
+        }   
     }
 
     handleRespawn() {
