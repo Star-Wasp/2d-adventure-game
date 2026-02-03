@@ -133,6 +133,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         frameRate: 3,
         repeat: 0,
     });
+
+    scene.anims.create({
+        key: 'player-jump',
+        frames: scene.anims.generateFrameNumbers('player-jump-sheet', {start: 0, end: 9}),
+        frameRate: 3,
+        repeat: 0,
+    });
     }
 
     checkTrapOverlap(spikeGroup) {
