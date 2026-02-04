@@ -47,7 +47,7 @@ export default class Play extends BaseScene {
 
     this.player.checkTrapOverlap(this.spikeGroup);
 
-    
+    this.setupJumpableColliders();
     
     this.setupPlayerOverlaps();
 
@@ -273,9 +273,12 @@ export default class Play extends BaseScene {
     
 
     this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, this.collisionLayer);
+    if (this.collisionLayer) {
+        this.physics.add.collider(this.player, this.collisionLayer);
+    }
     
     savePlayerData(savedHealth, this.registry.get('coins'));
+
   }
 
   setupLevelManager() {
@@ -318,7 +321,6 @@ export default class Play extends BaseScene {
         const trapTileset = map.addTilesetImage('spikes', 'spikes');
 
         // Static Layers
-        const decorLayer = map.createStaticLayer('decor', interiorsTileset, 0, 0);
 
         const checkpointLayer = map.createStaticLayer('safe_point', mainTileset, 0, 0);
         if (checkpointLayer) {
@@ -333,11 +335,16 @@ export default class Play extends BaseScene {
             this.jumpableColliders = jumpableColliders;
             this.jumpableColliders.setCollisionByProperty({colliders: true});
             this.jumpableColliders.setCollisionByExclusion([-1]);
+        }        
+
+        const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0)
+        if (collisionLayer) {
+            this.collisionLayer = collisionLayer;
+            this.collisionLayer.setDepth(0);
+            this.collisionLayer.setCollisionByProperty({colliders: true});
+            this.collisionLayer.setCollisionByExclusion([-1]);
         }
-        
-
-        const collisionLayer = map.createStaticLayer('collisions', mainTileset, 0, 0).setDepth(0);
-
+            
         const chestLayer = map.createStaticLayer('chests', mainTileset, 0, 0);
         chestLayer.setVisible(false);
         this.setupChests(map, chestLayer);
@@ -349,6 +356,8 @@ export default class Play extends BaseScene {
         const groundLayer = map. createStaticLayer('ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
 
         const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
+
+        const decorLayer = map.createStaticLayer('decor', interiorsTileset, 0, 0);
 
         const trapLayer = map.createStaticLayer('traps', trapTileset, 0, 0);
 
@@ -385,18 +394,18 @@ export default class Play extends BaseScene {
 
         this.setupInteractionZones(zoneLayer);
 
-        this.collisionLayer = collisionLayer;
-        this.collisionLayer.setCollisionByProperty({colliders: true});
-        this.collisionLayer.setCollisionByExclusion([-1]);
-
-       
-
         const mapTypeProperty = map.properties.find(p => p.name === 'type');
         this.mapType = mapTypeProperty ? mapTypeProperty.value : 'overground';
 
         this.handleRespawn();
 
         return map
+    }
+
+    setupJumpableColliders() {
+        if (!this.jumpableColliders) {return;};
+
+        this.jumpableCollider = this.physics.add.collider(this.player, this.jumpableColliders);
     }
 
     setupCheckpoints(checkpointLayer) {
@@ -935,6 +944,9 @@ export default class Play extends BaseScene {
                 checkpoint.wasOverlapping = false;
             }
         })
+        if (this.jumpableCollider && this.jumpableColliders) {
+            this.jumpableCollider.active = !this.player.isJumping;
+        }
         
     }
 }
