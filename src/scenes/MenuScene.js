@@ -42,6 +42,7 @@ class MenuScene extends BaseScene {
 
         textGO.on('pointerup', () => {
             if (menuItem.scene) {
+                this.registry.set('startedFromMenu', true);
                 this.scene.start(menuItem.scene);
             } else if (menuItem.text === 'Exit') {
                 this.game.destroy(true);

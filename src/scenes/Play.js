@@ -3,7 +3,7 @@ import BaseScene from "./BaseScene";
 import Player from "../entities/Player";
 import LevelManager from "../utils/LevelManager";
 import CoinDisplay from "../hud/CoinDisplay";
-import { getSavedLevel, saveLevel, getSavedPlayerHealth, getSavedCoins, savePlayerData } from "../utils/StorageManager";
+import { getSavedLevel, saveLevel, getSavedPlayerHealth, getSavedCoins, savePlayerData, saveCheckpoint, getSavedCheckpoint} from "../utils/StorageManager";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -245,15 +245,25 @@ export default class Play extends BaseScene {
             checkpoint.wasOverlapping = true;
             this.currentCheckpointX = checkpoint.x;
             this.currentCheckpointY = checkpoint.y;
-
-        console.log("overlap with checkpoint, ", checkpoint.x, checkpoint.y);
-        }
+            const level = this.levelManager.getCurrentLevelKey();
+            saveCheckpoint(checkpoint.x, checkpoint.y, level);
+            console.log("overlap with checkpoint, ", checkpoint.x, checkpoint.y);
+            }
         })
     }
 
   setupPlayer(map) {
     let savedHealth = getSavedPlayerHealth() || 100;
-    
+    const currentLevel = this.levelManager.getCurrentLevelKey();
+
+    let respawnX;
+    let respawnY;
+
+    const checkpoint = getSavedCheckpoint();
+    if (checkpoint) {
+        respawnX = checkpoint.coordinateX;
+        respawnY = checkpoint.coordinateY;
+    }
     if (this.levelManager.justRespawned) {
         savedHealth = 100;
         this.levelManager.justRespawned = false;
@@ -264,7 +274,14 @@ export default class Play extends BaseScene {
     }
     
     // Creating Player
-    this.player = new Player(this, this.startPoint.x, this.startPoint.y, 'player', savedHealth);
+    if (checkpoint && checkpoint.level === currentLevel && this.spawnFromCheckpoint) {
+        this.spawnFromCheckpoint = false;
+        this.player = new Player(this, respawnX, respawnY, 'player', savedHealth);
+    } else {
+        this.spawnFromCheckpoint = false;
+        this.player = new Player(this, this.startPoint.x, this.startPoint.y, 'player', savedHealth); 
+    }
+    
 
     
     this.cameras.main.setZoom(3.7);
@@ -285,10 +302,19 @@ export default class Play extends BaseScene {
     if (!this.registry.has('levelManager')) {
         this.registry.set('levelManager', new LevelManager());
     }
+
     this.levelManager = this.registry.get('levelManager');
 
-    if (this.levelManager.isRespawningAfterDeath) { 
-        this.levelManager.setLevel('level7');
+    const savedCheckpoint = getSavedCheckpoint();
+    const startedFromMenu = this.registry.get('startedFromMenu');
+    this.registry.set('startedFromMenu', false)
+    if (savedCheckpoint && !this.levelManager.isRespawningAfterDeath && startedFromMenu) {
+        this.spawnFromCheckpoint = true;
+    }
+    
+
+    if ((this.levelManager.isRespawningAfterDeath && savedCheckpoint) || (this.spawnFromCheckpoint && savedCheckpoint)) { 
+        this.levelManager.setLevel(savedCheckpoint.level);
     } else {
         const savedLevel = getSavedLevel();
         this.levelManager.currentLevel = savedLevel;
@@ -571,6 +597,8 @@ export default class Play extends BaseScene {
         let startPoint;
    
         if (this.levelManager.isRespawningAfterDeath) {
+
+            this.spawnFromCheckpoint = true;
        
             startPoint = zoneLayer.objects.find(obj => 
                 obj.name === 'start' && 

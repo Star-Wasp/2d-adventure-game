@@ -7,6 +7,20 @@ export function getSavedLevel() {
     return level ? parseInt(level) : 1;
 }
 
+export function saveCheckpoint(x, y, levelKey) {
+    const checkpointData = JSON.stringify({
+       coordinateX: x,
+       coordinateY: y,
+       level: levelKey
+    });
+    localStorage.setItem('checkpoint', checkpointData);
+}
+
+export function getSavedCheckpoint() {
+    const checkpointData = localStorage.getItem('checkpoint');
+    return checkpointData ? JSON.parse(checkpointData) : null;
+}
+
 export function savePlayerData(health, coins) {
     localStorage.setItem('playerHealth', health);
     localStorage.setItem('coins', coins);
