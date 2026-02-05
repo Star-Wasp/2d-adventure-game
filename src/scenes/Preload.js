@@ -192,44 +192,9 @@ export default class Preload extends Phaser.Scene {
 
   preloadCat() {
     // Preload Cat spritesheets
-    this.load.spritesheet('cat-idle-left', 'assets/fury/cat-idle-left.png', {
+    this.load.spritesheet('cat', 'assets/fury/cat.png', {
       frameWidth: 48,
       frameHeight: 48,
-    });
-
-      this.load.spritesheet('cat-idle-right', 'assets/fury/cat-idle-right.png', {
-        frameWidth: 48,
-        frameHeight: 48,
-    });
-
-      this.load.spritesheet('cat-idle-down', 'assets/fury/cat-idle-down.png', {
-        frameWidth: 48,
-        frameHeight: 48,
-    });
-
-      this.load.spritesheet('cat-idle-up', 'assets/fury/cat-idle-up.png', {
-        frameWidth: 48,
-        frameHeight: 48,
-    });
-
-      this.load.spritesheet('cat-walk-left', 'assets/fury/cat-walk-left.png', {
-        frameWidth: 48,
-        frameHeight: 48,
-    });
-
-    this.load.spritesheet('cat-walk-right', 'assets/fury/cat-walk-right.png', {
-        frameWidth: 48,
-        frameHeight: 48,
-    });
-
-    this.load.spritesheet('cat-walk-down', 'assets/fury/cat-walk-down.png', {
-        frameWidth: 48,
-        frameHeight: 48,
-    });
-
-    this.load.spritesheet('cat-walk-up', 'assets/fury/cat-walk-up.png', {
-        frameWidth: 48,
-        frameHeight: 48,
     });
   }
 
