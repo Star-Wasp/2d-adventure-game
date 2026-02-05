@@ -1,10 +1,10 @@
-// Cat entity file named Furry in honor of my kitty cat.
+// Cat entity file named Fury in honor of my kitty cat.
 
 import Phaser from "phaser";
 
 export default class Furry extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture = 'cat') {
-        super(scene, x, y, 'player');
+        super(scene, x, y, 'cat');
 
         // Physics setup
         scene.add.existing(this);
@@ -16,7 +16,7 @@ export default class Furry extends Phaser.Physics.Arcade.Sprite {
         this.facing = 'down';
 
         this.createAnimations(scene);
-        this.anims.play('cat-idle');
+        this.anims.play('cat-idle-down');
         }
 
     createAnimations(scene) {
@@ -56,7 +56,7 @@ export default class Furry extends Phaser.Physics.Arcade.Sprite {
     });
 
     scene.anims.create({
-        key: 'cat-walk-sideways',
+        key: 'cat-walk-side',
         frames: scene.anims.generateFrameNumbers('cat', {start: 18, end: 20}),
         frameRate: 1,
         repeat: -1,
