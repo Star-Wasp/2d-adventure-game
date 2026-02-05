@@ -4,6 +4,7 @@ import Player from "../entities/Player";
 import LevelManager from "../utils/LevelManager";
 import CoinDisplay from "../hud/CoinDisplay";
 import { getSavedLevel, saveLevel, getSavedPlayerHealth, getSavedCoins, savePlayerData, saveCheckpoint, getSavedCheckpoint} from "../utils/StorageManager";
+import Fury from "../entities/Fury";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -277,21 +278,23 @@ export default class Play extends BaseScene {
     if (checkpoint && checkpoint.level === currentLevel && this.spawnFromCheckpoint) {
         this.spawnFromCheckpoint = false;
         this.player = new Player(this, respawnX, respawnY, 'player', savedHealth);
+        this.fury = new Fury(this, this.player.x + 30, this.player.y + 10, 'cat');
+        this.fury.setTarget(this.player);
     } else {
         this.spawnFromCheckpoint = false;
         this.player = new Player(this, this.startPoint.x, this.startPoint.y, 'player', savedHealth); 
+        this.fury = new Fury(this, this.player.x + 30, this.player.y + 10, 'cat');
+        this.fury.setTarget(this.player);
     }
-    
-
     
     this.cameras.main.setZoom(3.7);
     this.cameras.main.centerOn(map.widthInPixels/2, map.widthInPixels/2);
     
-    
-
     this.player.setCollideWorldBounds(true);
+    this.fury.setCollideWorldBounds(true);
     if (this.collisionLayer) {
         this.physics.add.collider(this.player, this.collisionLayer);
+        this.physics.add.collider(this.fury, this.collisionLayer);
     }
     
     savePlayerData(savedHealth, this.registry.get('coins'));

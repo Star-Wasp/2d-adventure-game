@@ -196,24 +196,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.hurtSound.play({volume: 0.3})
     }
 
-die() {
-    this.setVelocity(0);
-    this.body.enable = false;
-    this.isSwinging = true;
-    this.anims.play('player-die');
+    die() {
+        this.setVelocity(0);
+        this.body.enable = false;
+        this.isSwinging = true;
+        this.anims.play('player-die');
 
-    this.scene.time.delayedCall(500, () => {
-        this.scene.cameras.main.fadeOut(500, 0, 0, 0);
-    });
+        this.scene.time.delayedCall(500, () => {
+            this.scene.cameras.main.fadeOut(500, 0, 0, 0);
+        });
 
-    this.scene.cameras.main.once('camerafadeoutcomplete', () => {
-        // Mark that the next level load is a death respawn
-        this.scene.levelManager.isRespawningAfterDeath = true;
+        this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+            // Mark that the next level load is a death respawn
+            this.scene.levelManager.isRespawningAfterDeath = true;
 
-        // Restart the scene (createMap will handle the actual respawn)
-        this.scene.scene.restart();
-    });
-}
+            // Restart the scene (createMap will handle the actual respawn)
+            this.scene.scene.restart();
+        });
+    }
 
     playIdle() {
         switch (this.facing) {
@@ -230,7 +230,7 @@ die() {
     }
 
     handleWalkSound() {
-        const velocityThreshold = 1; // 
+        const velocityThreshold = 1;
         const moving = Math.abs(this.body.velocity.x) > velocityThreshold || Math.abs(this.body.velocity.y) > velocityThreshold;
 
         if (moving && !this.walkSound.isPlaying) {
