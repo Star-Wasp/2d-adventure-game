@@ -42,6 +42,8 @@ export default class Play extends BaseScene {
     
     this.registry.set('coins', savedCoins)
 
+    this.furyIsOverJumpable = false;
+
     this.setupPlayer(map);
 
     this.setupCoinDisplay();
@@ -297,16 +299,6 @@ export default class Play extends BaseScene {
         this.physics.add.collider(this.fury, this.collisionLayer);
     }
 
-    if (this.jumpableColliders) {
-        this.physics.add.overlap(this.fury, this.jumpableColliders, () => {
-            if (this.fury.isJumping) {
-                return;
-            } else {
-                this.fury.startJumpingOver();
-            }
-        })
-    }
-    
     savePlayerData(savedHealth, this.registry.get('coins'));
 
   }
@@ -986,6 +978,24 @@ export default class Play extends BaseScene {
                 checkpoint.wasOverlapping = false;
             }
         })
+
+        if (this.jumpableColliders) {
+            const furyBounds = this.fury.getBounds();
+            const overlapping = this.jumpableColliders.getTilesWithinWorldXY(
+                furyBounds.x,
+                furyBounds.y,
+                furyBounds.width,
+                furyBounds.height
+            ).some(tile => tile.index !== -1);
+
+            if (overlapping && !this.furyIsOverJumpable && !this.fury.isJumping) {
+                this.furyIsOverJumpable = true;
+                this.fury.startJumpingOver();
+            } else if (!overlapping && this.furyIsOverJumpable) {
+                this.furyIsOverJumpable = false;
+            }
+        }
+
         if (this.jumpableCollider && this.jumpableColliders) {
             this.jumpableCollider.active = !this.player.isJumping;
         }

@@ -13,16 +13,17 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.body.setSize(this.width / 2, this.height);
-        this.body.setOffset(10, 0);
+        this.body.setSize(this.width / 3, this.height / 2);
+        this.body.setOffset(20, 25);
 
         this.facing = 'down';
         this.isJumping = false;
+        this.lastMoveX = 1;
 
         this.createAnimations(scene);
         this.anims.play('cat-idle-down');
 
-        this.speed = 80;
+        this.speed = 100;
         this.setScale(0.4);
         }
 
@@ -103,11 +104,12 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
             this.anims.play('cat-jump-up', true);
         } else if (this.facing === 'down') {
             this.anims.play('cat-jump-down', true);
-        } else if (this.facing === 'side' && this.body.velocity.x < 0) {
-            this.setFlipX(true);
-            this.anims.play('cat-jump-side', true);
-        } else if (this.facing === 'side' && this.body.velocity.x > 0) {
-            this.setFlipX(false);
+        } else if (this.facing === 'side') {
+            if (this.lastMoveX < 0) {
+                this.setFlipX(true);
+            } else {
+                this.setFlipX(false);
+            }
             this.anims.play('cat-jump-side', true);
         }
     }
@@ -118,7 +120,15 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         this.isJumping = true;
         this.handleJumping();
         
-        this.once('animationcomplete', () => {
+        this.once('animationcomplete-cat-jump-up', () => {
+            this.isJumping = false;
+        })
+
+        this.once('animationcomplete-cat-jump-down', () => {
+            this.isJumping = false;
+        })
+
+        this.once('animationcomplete-cat-jump-side', () => {
             this.isJumping = false;
         })
         
@@ -163,10 +173,12 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         } else if (absX > absY) {
             if (this.body.velocity.x < 0) {
                 this.setFlipX(true);
+                this.lastMoveX = -1;
                 this.facing = 'side';
                 this.anims.play('cat-walk-side', true);
             } else if (this.body.velocity.x > 0) {
                 this.setFlipX(false);
+                this.lastMoveX = 1;
                 this.facing = 'side';
                 this.anims.play('cat-walk-side', true);
             }
