@@ -53,21 +53,21 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
     scene.anims.create({
         key: 'cat-walk-down',
         frames: scene.anims.generateFrameNumbers('cat', {start: 12, end: 14}),
-        frameRate: 2,
+        frameRate: 4,
         repeat: -1,
     });
 
     scene.anims.create({
         key: 'cat-walk-up',
         frames: scene.anims.generateFrameNumbers('cat', {start: 15, end: 17}),
-        frameRate: 2,
+        frameRate: 4,
         repeat: -1,
     });
 
     scene.anims.create({
         key: 'cat-walk-side',
         frames: scene.anims.generateFrameNumbers('cat', {start: 18, end: 20}),
-        frameRate: 2,
+        frameRate: 4,
         repeat: -1,
     });
 
@@ -124,6 +124,32 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
     //     })
     // }
 
+    updateMovementAnimation() {
+        const absX = Math.abs(this.body.velocity.x);
+        const absY = Math.abs(this.body.velocity.y);
+        if (absX === 0 && absY === 0) {
+            this.playIdle();
+        } else if (absX > absY) {
+            if (this.body.velocity.x < 0) {
+                this.setFlipX(true);
+                this.facing = 'side';
+                this.anims.play('cat-walk-side', true);
+            } else if (this.body.velocity.x > 0) {
+                this.setFlipX(false);
+                this.facing = 'side';
+                this.anims.play('cat-walk-side', true);
+            }
+        } else {
+            if (this.body.velocity.y < 0) {
+                this.facing = 'up';
+                this.anims.play('cat-walk-up', true);
+            } else {
+                this.facing = 'down';
+                this.anims.play('cat-walk-down', true);
+            }
+        }
+    }
+
     update() {
         //Code for cat sounds to add later
         // this.handleWalkSound();
@@ -133,15 +159,26 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
+        
+
         const distanceX = this.target.x - this.x;
         const distanceY = this.target.y - this.y;
         const distance = Math.hypot(distanceX, distanceY);
         const desiredDistance = this.scene.mapType === 'dungeon' ? 18 : 50;
+        
+        let directionX;
+        let directionY;
 
-        if (distance > desiredDistance) {
-            this.setVelocityX(distanceX);
-            this.setVelocityY(distanceY)
+        if (distance > desiredDistance && distance > 0) {
+            directionX = distanceX / distance;
+            directionY = distanceY / distance; 
+            this.setVelocityX(directionX * this.speed);
+            this.setVelocityY(directionY * this.speed);
+        } else {
+            this.setVelocity(0);
         }
+
+        this.updateMovementAnimation();
 
     }
 
