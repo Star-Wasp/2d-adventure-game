@@ -307,7 +307,7 @@ export default class Play extends BaseScene {
 
     const savedCheckpoint = getSavedCheckpoint();
     const startedFromMenu = this.registry.get('startedFromMenu');
-    this.registry.set('startedFromMenu', false)
+    this.registry.set('startedFromMenu', false);
     if (savedCheckpoint && !this.levelManager.isRespawningAfterDeath && startedFromMenu) {
         this.spawnFromCheckpoint = true;
     }
