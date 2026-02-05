@@ -13,8 +13,8 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.body.setSize(this.width / 3, this.height / 2);
-        this.body.setOffset(20, 25);
+        this.body.setSize(this.width, this.height);
+        this.body.setOffset(0, 0);
 
         this.facing = 'down';
         this.isJumping = false;
@@ -24,6 +24,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         this.anims.play('cat-idle-down');
 
         this.speed = 100;
+        this.baseSpeed = this.speed;
         this.setScale(0.4);
         }
 
@@ -118,18 +119,22 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         if (this.isJumping) {return; };
 
         this.isJumping = true;
+        this.speed = this.baseSpeed * 1.5
         this.handleJumping();
         
         this.once('animationcomplete-cat-jump-up', () => {
             this.isJumping = false;
+            this.speed = this.baseSpeed;
         })
 
         this.once('animationcomplete-cat-jump-down', () => {
             this.isJumping = false;
+            this.speed = this.baseSpeed;
         })
 
         this.once('animationcomplete-cat-jump-side', () => {
             this.isJumping = false;
+            this.speed = this.baseSpeed;
         })
         
     }
@@ -198,7 +203,12 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         // this.handleWalkSound();
 
         if (!this.target) {
-            this.setDepth(this.y + 1);
+            this.setDepth(this.y -3);
+            return;
+        }
+
+        if (this.isJumping) {
+            this.setDepth(this.y -3);
             return;
         }
 
