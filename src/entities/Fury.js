@@ -17,6 +17,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(10, 0);
 
         this.facing = 'down';
+        this.isJumping = false;
 
         this.createAnimations(scene);
         this.anims.play('cat-idle-down');
@@ -74,28 +75,57 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
     // Cat jump anims
     scene.anims.create({
         key: 'cat-jump-down',
-        frames: scene.anims.generateFrameNumbers('cat-jump', {start: 0, end: 4}),
-        frameRate: 2,
-        repeat: -1,
+        frames: scene.anims.generateFrameNumbers('cat-jump', {start: 0, end: 6}),
+        frameRate: 10,
+        repeat: 0,
     });
 
     scene.anims.create({
         key: 'cat-jump-up',
-        frames: scene.anims.generateFrameNumbers('cat-jump', {start: 5, end: 9}),
-        frameRate: 2,
-        repeat: -1,
+        frames: scene.anims.generateFrameNumbers('cat-jump', {start: 7, end: 13}),
+        frameRate: 10,
+        repeat: 0,
     });
 
     scene.anims.create({
         key: 'cat-jump-side',
-        frames: scene.anims.generateFrameNumbers('cat-jump', {start: 10, end: 14}),
-        frameRate: 2,
-        repeat: -1,
+        frames: scene.anims.generateFrameNumbers('cat-jump', {start: 14, end: 20}),
+        frameRate: 10,
+        repeat: 0,
     });
 
     }
 
+    handleJumping() {
+        if (!this.isJumping) { return; };
+
+        if (this.facing === 'up') {
+            this.anims.play('cat-jump-up', true);
+        } else if (this.facing === 'down') {
+            this.anims.play('cat-jump-down', true);
+        } else if (this.facing === 'side' && this.body.velocity.x < 0) {
+            this.setFlipX(true);
+            this.anims.play('cat-jump-side', true);
+        } else if (this.facing === 'side' && this.body.velocity.x > 0) {
+            this.setFlipX(false);
+            this.anims.play('cat-jump-side', true);
+        }
+    }
+
+    startJumpingOver() {
+        if (this.isJumping) {return; };
+
+        this.isJumping = true;
+        this.handleJumping();
+        
+        this.once('animationcomplete', () => {
+            this.isJumping = false;
+        })
+        
+    }
+
     playIdle() {
+        if (this.isJumping) {return;};
         switch (this.facing) {
             case 'up':
                 this.anims.play('cat-idle-up', true);
@@ -125,6 +155,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
     // }
 
     updateMovementAnimation() {
+        if (this.isJumping) {return;};
         const absX = Math.abs(this.body.velocity.x);
         const absY = Math.abs(this.body.velocity.y);
         if (absX === 0 && absY === 0) {

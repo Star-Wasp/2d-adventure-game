@@ -298,7 +298,13 @@ export default class Play extends BaseScene {
     }
 
     if (this.jumpableColliders) {
-        this.physics.add.collider(this.fury, this.jumpableColliders);
+        this.physics.add.overlap(this.fury, this.jumpableColliders, () => {
+            if (this.fury.isJumping) {
+                return;
+            } else {
+                this.fury.startJumpingOver();
+            }
+        })
     }
     
     savePlayerData(savedHealth, this.registry.get('coins'));

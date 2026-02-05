@@ -199,7 +199,7 @@ export default class Preload extends Phaser.Scene {
 
     this.load.spritesheet('cat-jump', 'assets/fury/cat-jump.png', {
       frameWidth: 48,
-      frameHeight: 48,
+      frameHeight: 64,
     });
 
   }
