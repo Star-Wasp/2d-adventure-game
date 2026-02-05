@@ -296,6 +296,10 @@ export default class Play extends BaseScene {
         this.physics.add.collider(this.player, this.collisionLayer);
         this.physics.add.collider(this.fury, this.collisionLayer);
     }
+
+    if (this.jumpableColliders) {
+        this.physics.add.collider(this.fury, this.jumpableColliders);
+    }
     
     savePlayerData(savedHealth, this.registry.get('coins'));
 
@@ -943,6 +947,7 @@ export default class Play extends BaseScene {
 
     update() {
         this.player.update();
+        this.fury.update();
 
         if (this.playerInBuildingZone) {
             const stillOverlapping = this.physics.overlap(this.player, this.endZones);
