@@ -16,6 +16,7 @@ export default class Furry extends Phaser.Physics.Arcade.Sprite {
         this.facing = 'down';
 
         this.createAnimations(scene);
+        this.anims.play('cat-idle');
         }
 
     createAnimations(scene) {
@@ -34,15 +35,8 @@ export default class Furry extends Phaser.Physics.Arcade.Sprite {
     });
 
     scene.anims.create({
-        key: 'cat-idle-right',
+        key: 'cat-idle-side',
         frames: scene.anims.generateFrameNumbers('cat', {start: 6, end: 8}),
-        frameRate: 1,
-        repeat: -1,
-    });
-
-    scene.anims.create({
-        key: 'cat-idle-left',
-        frames: scene.anims.generateFrameNumbers('cat', {start: 9, end: 11}),
         frameRate: 1,
         repeat: -1,
     });
@@ -62,19 +56,26 @@ export default class Furry extends Phaser.Physics.Arcade.Sprite {
     });
 
     scene.anims.create({
-        key: 'cat-walk-right',
+        key: 'cat-walk-sideways',
         frames: scene.anims.generateFrameNumbers('cat', {start: 18, end: 20}),
         frameRate: 1,
         repeat: -1,
     });
 
-    scene.anims.create({
-        key: 'cat-walk-left',
-        frames: scene.anims.generateFrameNumbers('cat', {start: 21, end: 23}),
-        frameRate: 1,
-        repeat: -1,
-    });
+    }
 
+    playIdle() {
+        switch (this.facing) {
+            case 'up':
+                this.anims.play('cat-idle-up', true);
+                break;
+            case 'down':
+                this.anims.play('cat-idle-down', true);
+                break;
+            case 'side':
+                this.anims.play('cat-idle-side', true);
+                break;
+        }
     }
 
 }
