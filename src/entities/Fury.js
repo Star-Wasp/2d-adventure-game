@@ -7,7 +7,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, 'cat');
 
         //Code for cat sounds to add later
-        // this.cleanupSounds(scene);
+        this.cleanupSounds(scene);
 
         // Physics setup
         scene.add.existing(this);
@@ -20,12 +20,21 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         this.isJumping = false;
         this.lastMoveX = 1;
 
+        // Setup wandering behaviour
+        this.wanderTimer = 0;
+        this.wanderInterval = 1000;
+        this.wanderVelocityX = 0;
+        this.wanderVelocityY = 0;
+        this.isWandering = false;
+
         this.createAnimations(scene);
         this.anims.play('cat-idle-down');
 
         this.speed = 100;
         this.baseSpeed = this.speed;
         this.setScale(0.4);
+
+        this.catWalkSound = scene.sound.add('cat-walk');
         }
 
     createAnimations(scene) {
@@ -160,14 +169,14 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
     }
 
     //Code for cat sounds to add later
-    // cleanupSounds(scene) {
-    //     scene.sound.getAll().forEach(s => {
-    //     if (s.key === 'walk') {
-    //         s.stop();
-    //         s.destroy();
-    //         }
-    //     })
-    // }
+    cleanupSounds(scene) {
+        scene.sound.getAll().forEach(s => {
+        if (s.key === 'cat-walk') {
+            s.stop();
+            s.destroy();
+            }
+        })
+    }
 
     updateMovementAnimation() {
         if (this.isJumping) {return;};
@@ -198,9 +207,20 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    handleWalkSound() {
+        const velocityThreshold = 1;
+        const moving = Math.abs(this.body.velocity.x) > velocityThreshold || Math.abs(this.body.velocity.y) > velocityThreshold;
+
+        if (moving && !this.catWalkSound.isPlaying) {
+            this.catWalkSound.play({ volume: 0.1, loop: true, rate: 1 });
+        } else if (!moving && this.catWalkSound.isPlaying || this.isJumping) {
+            this.catWalkSound.stop();
+        }
+    }
+
     update() {
         //Code for cat sounds to add later
-        // this.handleWalkSound();
+        this.handleWalkSound();
 
         if (!this.target) {
             this.setDepth(this.y -3);
@@ -228,7 +248,25 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(directionX * this.speed);
             this.setVelocityY(directionY * this.speed);
         } else {
-            this.setVelocity(0);
+            const currentTime = this.scene.time.now;
+
+            if (currentTime - this.wanderTimer > this.wanderInterval) {
+                this.wanderTimer = currentTime;
+                if (Math.random() > 0.5) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const wanderSpeed = this.speed * 0.2;
+
+                    this.wanderVelocityX = Math.cos(angle) * wanderSpeed;
+                    this.wanderVelocityY = Math.sin(angle) * wanderSpeed;
+                    this.isWandering = true;
+                } else {
+                    this.wanderVelocityX = 0;
+                    this.wanderVelocityY = 0;
+                    this.isWandering = false;
+                }
+            this.setVelocityX(this.wanderVelocityX);
+            this.setVelocityY(this.wanderVelocityY);
+            }
         }
 
         this.updateMovementAnimation();

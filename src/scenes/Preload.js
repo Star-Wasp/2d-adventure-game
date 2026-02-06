@@ -168,7 +168,7 @@ export default class Preload extends Phaser.Scene {
 
     // Preload mp3 sounds
     ['cat-purring', 'cat-scared'].forEach(key => {
-      this.load.audio(key, `assets/sounds/cat-sounds/${key}.mp3`)
+      this.load.audio(key, `assets/sounds/${key}.mp3`)
     })
 
 }

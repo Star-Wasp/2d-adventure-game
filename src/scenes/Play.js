@@ -81,7 +81,7 @@ export default class Play extends BaseScene {
             bgMusicEntry.instance.stop();
         }
 
-        const music = this.sound.add(musicType + '-music', { loop: true, volume: 0.3 });
+        const music = this.sound.add(musicType + '-music', { loop: true, volume: 0.1 });
         music.play();
 
         this.registry.set('bgMusic', {instance: music, musicType})
