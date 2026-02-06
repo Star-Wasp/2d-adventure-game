@@ -128,6 +128,28 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
             frameRate: 6,
             repeat: 0,
         });
+
+        // Slime1 attack anims
+        scene.anims.create({
+            key: 'slime1-attack-down',
+            frames: scene.anims.generateFrameNumbers('slime1-attack', {start: 0, end: 9}),
+            frameRate: 6,
+            repeat: 0,
+        });
+
+        scene.anims.create({
+            key: 'slime1-attack-up',
+            frames: scene.anims.generateFrameNumbers('slime1-attack', {start: 10, end: 19}),
+            frameRate: 6,
+            repeat: 0,
+        });
+
+        scene.anims.create({
+            key: 'slime1-attack-side',
+            frames: scene.anims.generateFrameNumbers('slime1-attack', {start: 30, end: 39}),
+            frameRate: 6,
+            repeat: 0,
+        });
     }
 
     playIdle() {
