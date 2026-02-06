@@ -26,6 +26,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.facing = 'down';
     this.isSwinging = false;
     this.isJumping = false;
+    this.isStunned = false;
 
     // Animation setup
     this.createAnimations(scene);
@@ -180,7 +181,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(amount) {
-        console.log("player hit", amount)
+        if (!this.isStunned) {
+            this.isStunned = true;
+        this.scene.time.delayedCall(150, () => {
+            this.isStunned = false;
+        })
+        }
+
         this.health -= amount;
         this.healthBar.decrease(this.health);
 
@@ -355,6 +362,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
+        if (this.isStunned) {return;};
 
         this.handleWalkSound();
 

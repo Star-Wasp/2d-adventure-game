@@ -271,7 +271,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
                     this.wanderVelocityX = 0;
                     this.wanderVelocityY = 0;
                     this.isWandering = false;
-                    this.catPurrSound.play({volume: 0.05});
+                    this.catPurrSound.play({volume: 0.03});
                 }
             this.setVelocityX(this.wanderVelocityX);
             this.setVelocityY(this.wanderVelocityY);

@@ -31,7 +31,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         this.lastHitTime = 0;
         this.hitCooldown = 500;
         
-        this.attackRange = 50;
+        this.attackRange = 25;
         this.lastAttackTime = 0;
         this.attackCooldown = 500;
         this.isAttacking = false;
@@ -337,16 +337,29 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         if (this.target) {
             const distanceX = this.target.x - this.x;
             const distanceY = this.target.y - this.y;
+            let playerDirection;
+            const isSide = Math.abs(distanceX) > Math.abs(distanceY);
+            if (isSide) {
+                playerDirection = 'side'
+            } else {
+                if (distanceY < 0) {
+                    playerDirection = 'up'
+                } else {
+                    playerDirection = 'down'
+                }
+            }
+            
+
             const distance = Math.hypot(distanceX, distanceY);
             const now = this.scene.time.now;
 
-            if (distance <= this.attackRange && now - this.lastAttackTime > this.attackCooldown) {
+            if (distance <= this.attackRange && now - this.lastAttackTime > this.attackCooldown && this.facing === playerDirection) {
                 this.lastAttackTime = now;
                 this.attackPlayer();
                 const damageAmount = Phaser.Math.Between(1, 5);
                 this.target.takeDamage(damageAmount);
                 if (distance > 0) {
-                    const knockbackStrength = 40;
+                    const knockbackStrength = 100;
                     const knockbackX = (distanceX / distance) * knockbackStrength;
                     const knockbackY = (distanceY / distance) * knockbackStrength;
                     this.target.setVelocity(knockbackX, knockbackY); 
