@@ -18,6 +18,7 @@ export default class Preload extends Phaser.Scene {
     this.preloadAnims();
     this.preloadBuildings();
     this.preloadCat();
+    this.preloadEnemies();
   }
 
   preloadAnims() {
@@ -208,6 +209,40 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 64,
     });
 
+  }
+
+  preloadEnemies() {
+
+    // Preload slime1 spritesheets
+    this.load.spritesheet('slime1-idle', 'assets/enemies/slime1/Slime1_Idle.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime1-walk', 'assets/enemies/slime1/Slime1_Walk.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime1-run', 'assets/enemies/slime1/Slime1_Run.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime1-hurt', 'assets/enemies/slime1/Slime1_Hurt.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime1-death', 'assets/enemies/slime1/Slime1_Death.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime1-attack', 'assets/enemies/slime1/Slime1_Attack.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
   }
 
   create() {
