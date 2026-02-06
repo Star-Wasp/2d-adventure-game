@@ -20,6 +20,8 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         this.isJumping = false;
         this.lastMoveX = 1;
 
+        this.soundVolume = 0.05;
+
         // Setup wandering behaviour
         this.wanderTimer = 0;
         this.wanderInterval = 1000;
@@ -35,6 +37,8 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         this.setScale(0.4);
 
         this.catWalkSound = scene.sound.add('cat-walk');
+        this.catJumpSound = scene.sound.add('cat-jump');
+        this.catPurrSound = scene.sound.add('cat-purring');
         }
 
     createAnimations(scene) {
@@ -112,8 +116,10 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
 
         if (this.facing === 'up') {
             this.anims.play('cat-jump-up', true);
+            this.catJumpSound.play({volume: this.soundVolume});
         } else if (this.facing === 'down') {
             this.anims.play('cat-jump-down', true);
+            this.catJumpSound.play({volume: this.soundVolume});
         } else if (this.facing === 'side') {
             if (this.lastMoveX < 0) {
                 this.setFlipX(true);
@@ -121,6 +127,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
                 this.setFlipX(false);
             }
             this.anims.play('cat-jump-side', true);
+            this.catJumpSound.play({volume: this.soundVolume});
         }
     }
 
@@ -212,7 +219,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         const moving = Math.abs(this.body.velocity.x) > velocityThreshold || Math.abs(this.body.velocity.y) > velocityThreshold;
 
         if (moving && !this.catWalkSound.isPlaying) {
-            this.catWalkSound.play({ volume: 0.1, loop: true, rate: 1 });
+            this.catWalkSound.play({ volume: this.soundVolume1, loop: true, rate: 1 });
         } else if (!moving && this.catWalkSound.isPlaying || this.isJumping) {
             this.catWalkSound.stop();
         }

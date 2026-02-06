@@ -18,6 +18,9 @@ export default class Play extends BaseScene {
         backScale: 0.5
     });
 
+    this.musicVolume = 0.01;
+    this.soundVolume = 0.02;
+
   }
 
   create() {
@@ -81,7 +84,7 @@ export default class Play extends BaseScene {
             bgMusicEntry.instance.stop();
         }
 
-        const music = this.sound.add(musicType + '-music', { loop: true, volume: 0.01 });
+        const music = this.sound.add(musicType + '-music', { loop: true, volume: this.musicVolume });
         music.play();
 
         this.registry.set('bgMusic', {instance: music, musicType})
@@ -183,7 +186,7 @@ export default class Play extends BaseScene {
                 const building = this.buildingsGroup.getChildren().find(b => b.type === 'hero_house');
                 this.currentBuilding = building;
                 building.play('hero_house_opening_anim');
-                this.sound.play('door_open', {volume: 0.02});
+                this.sound.play('door_open', {volume: this.soundVolume});
             }
         }
     })
@@ -931,7 +934,7 @@ export default class Play extends BaseScene {
             coins += 1;
             this.registry.set('coins', coins);
             this.coinDisplay.addCoins(1)
-            this.sound.play('coin_collect', {volume: 0.02});
+            this.sound.play('coin_collect', {volume: this.soundVolume});
 
         }
         
@@ -939,7 +942,7 @@ export default class Play extends BaseScene {
             player.health += item.healAmount;
             player.health = Math.min(player.health, 100);
             player.healthBar.setHealth(player.health);
-            this.sound.play('item_collect', {volume: 0.02});
+            this.sound.play('item_collect', {volume: this.soundVolume});
         }
         savePlayerData(player.health, coins);
 
@@ -958,7 +961,7 @@ export default class Play extends BaseScene {
 
                 if (this.currentBuilding) {
                     this.currentBuilding.play('hero_house_closing_anim');
-                    this.sound.play('door_close', {volume: 0.02})
+                    this.sound.play('door_close', {volume: this.soundVolume})
                     this.currentBuilding = null;
                 }
             }
