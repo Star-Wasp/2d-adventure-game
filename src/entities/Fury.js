@@ -260,6 +260,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
             if (currentTime - this.wanderTimer > this.wanderInterval) {
                 this.wanderTimer = currentTime;
                 if (Math.random() > 0.5) {
+                    this.catPurrSound.stop();
                     const angle = Math.random() * Math.PI * 2;
                     const wanderSpeed = this.speed * 0.5;
 
@@ -270,6 +271,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
                     this.wanderVelocityX = 0;
                     this.wanderVelocityY = 0;
                     this.isWandering = false;
+                    this.catPurrSound.play({volume: 0.05});
                 }
             this.setVelocityX(this.wanderVelocityX);
             this.setVelocityY(this.wanderVelocityY);
