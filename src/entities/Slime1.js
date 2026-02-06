@@ -33,6 +33,8 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
 
         this.isHurt = false;
 
+        this.maxHealth = 50;
+
         }
 
     createAnimations(scene) {
@@ -99,6 +101,28 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         scene.anims.create({
             key: 'slime1-hurt-side',
             frames: scene.anims.generateFrameNumbers('slime1-hurt', {start: 15, end: 19}),
+            frameRate: 6,
+            repeat: 0,
+        });
+
+        // Slime1 death anims
+        scene.anims.create({
+            key: 'slime1-death-down',
+            frames: scene.anims.generateFrameNumbers('slime1-death', {start: 0, end: 9}),
+            frameRate: 6,
+            repeat: 0,
+        });
+
+        scene.anims.create({
+            key: 'slime1-death-up',
+            frames: scene.anims.generateFrameNumbers('slime1-death', {start: 10, end: 19}),
+            frameRate: 6,
+            repeat: 0,
+        });
+
+        scene.anims.create({
+            key: 'slime1-death-side',
+            frames: scene.anims.generateFrameNumbers('slime1-death', {start: 30, end: 39}),
             frameRate: 6,
             repeat: 0,
         });
