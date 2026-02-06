@@ -219,7 +219,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         const moving = Math.abs(this.body.velocity.x) > velocityThreshold || Math.abs(this.body.velocity.y) > velocityThreshold;
 
         if (moving && !this.catWalkSound.isPlaying) {
-            this.catWalkSound.play({ volume: this.soundVolume1, loop: true, rate: 1 });
+            this.catWalkSound.play({ volume: this.soundVolume, loop: true, rate: 1 });
         } else if (!moving && this.catWalkSound.isPlaying || this.isJumping) {
             this.catWalkSound.stop();
         }
