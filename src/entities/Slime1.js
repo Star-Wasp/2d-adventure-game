@@ -9,8 +9,8 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.body.setSize(this.width, this.height);
-        this.body.setOffset(0, 0);
+        this.body.setSize(this.width / 3, this.height / 3);
+        this.body.setOffset(22, 20);
 
         this.facing = 'down';
 
@@ -19,7 +19,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
 
         this.speed = 100;
         this.baseSpeed = this.speed;
-        this.setScale(0.4);
+        this.setScale(0.7);
 
         }
 

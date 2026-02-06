@@ -5,6 +5,7 @@ import LevelManager from "../utils/LevelManager";
 import CoinDisplay from "../hud/CoinDisplay";
 import { getSavedLevel, saveLevel, getSavedPlayerHealth, getSavedCoins, savePlayerData, saveCheckpoint, getSavedCheckpoint} from "../utils/StorageManager";
 import Fury from "../entities/Fury";
+import Slime1 from "../entities/Slime1";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -407,6 +408,12 @@ export default class Play extends BaseScene {
 
         const doorLayer = map.getObjectLayer('doors');
 
+        const enemyZoneLayer = map.getObjectLayer('enemy_zones');
+
+        this.EnemyGroup = this.physics.add.group();
+
+        this.setupEnemyZoneLayer(enemyZoneLayer);
+
         const buildingLayer = map.getObjectLayer('buildings');
 
         this.buildingsGroup = this.physics.add.staticGroup();
@@ -435,6 +442,17 @@ export default class Play extends BaseScene {
         this.handleRespawn();
 
         return map
+    }
+
+    setupEnemyZoneLayer(enemyZoneLayer) {
+        if (!enemyZoneLayer) {return;};
+
+        enemyZoneLayer.objects.forEach(obj => {
+            if (obj.name === 'slime1') {
+                const slime1 = new Slime1(this, obj.x, obj.y);
+                this.EnemyGroup.add(slime1);
+            }
+        });
     }
 
     setupJumpableColliders() {
