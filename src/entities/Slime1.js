@@ -25,8 +25,8 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         this.patrolDirectionTimer = 1000;
         this.isMoving = false;
         this.patrolTimer = 0;
-        this.patrolVelocityX =0;
-        this.patrolVelocityY =0;
+        this.patrolVelocityX = 0;
+        this.patrolVelocityY = 0;
 
         this.lastHitTime = 0;
         this.hitCooldown = 500;
@@ -34,6 +34,8 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         this.isHurt = false;
 
         this.maxHealth = 50;
+        this.health = this.maxHealth;
+        this.isDead = false;
 
         }
 
@@ -129,6 +131,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
     }
 
     playIdle() {
+        if (this.isDead) {return;};
         switch (this.facing) {
             case 'up':
                 this.anims.play('slime1-idle-up', true);
@@ -144,6 +147,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
 
     handlePatrol() {
         if (this.isHurt) {return;};
+        if (this.isDead) {return;};
 
         const currentTime = this.scene.time.now;
 
@@ -172,6 +176,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
 
     enemyTakesHit() {
         if (this.isHurt) {return;};
+        if (this.isDead) {return;};
 
         this.isHurt = true;
         this.setVelocity(0);
@@ -197,8 +202,48 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         })
     }
 
+    takeDamage(amount) {
+        if (this.isDead) {return;};
+
+        this.health -= amount;
+        this.enemyTakesHit();
+
+        if (this.health <= 0) {
+            this.die();
+        }
+    }
+
+    die() {
+        if (this.isDead) {return;};
+
+        this.isDead = true;
+        this.setVelocity(0);
+
+        if (this.facing === 'side') {
+            this.anims.play('slime1-death-side', true);
+        } else if (this.facing === 'down') {
+            this.anims.play('slime1-death-down', true);
+        } else if (this.facing === 'up') {
+            this.anims.play('slime1-death-up', true);
+        }
+
+        this.once('animationcomplete-slime1-death-side', () => {
+            this.destroy();
+        })
+
+        this.once('animationcomplete-slime1-death-up', () => {
+            this.destroy();
+        })
+
+        this.once('animationcomplete-slime1-death-down', () => {
+            this.destroy();
+        })
+            
+    }
+
     updateMovementAnimation() {
         if (this.isHurt) {return;};
+        if (this.isDead) {return;};
 
         const absX = Math.abs(this.body.velocity.x);
         const absY = Math.abs(this.body.velocity.y);
