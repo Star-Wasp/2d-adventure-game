@@ -28,6 +28,11 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         this.patrolVelocityX =0;
         this.patrolVelocityY =0;
 
+        this.lastHitTime = 0;
+        this.hitCooldown = 500;
+
+        this.isHurt = false;
+
         }
 
     createAnimations(scene) {
@@ -78,24 +83,24 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
 
         // Slime1 hurt anims
         scene.anims.create({
-            key: 'slime1-walk-down',
-            frames: scene.anims.generateFrameNumbers('slime1-walk', {start: 0, end: 4}),
-            frameRate: 2,
-            repeat: -1,
+            key: 'slime1-hurt-down',
+            frames: scene.anims.generateFrameNumbers('slime1-hurt', {start: 0, end: 4}),
+            frameRate: 6,
+            repeat: 0,
         });
 
         scene.anims.create({
-            key: 'slime1-walk-up',
-            frames: scene.anims.generateFrameNumbers('slime1-walk', {start: 5, end: 9}),
-            frameRate: 2,
-            repeat: -1,
+            key: 'slime1-hurt-up',
+            frames: scene.anims.generateFrameNumbers('slime1-hurt', {start: 5, end: 9}),
+            frameRate: 6,
+            repeat: 0,
         });
 
         scene.anims.create({
-            key: 'slime1-walk-side',
-            frames: scene.anims.generateFrameNumbers('slime1-walk', {start: 15, end: 19}),
-            frameRate: 2,
-            repeat: -1,
+            key: 'slime1-hurt-side',
+            frames: scene.anims.generateFrameNumbers('slime1-hurt', {start: 15, end: 19}),
+            frameRate: 6,
+            repeat: 0,
         });
     }
 
@@ -114,6 +119,8 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
     }
 
     handlePatrol() {
+        if (this.isHurt) {return;};
+
         const currentTime = this.scene.time.now;
 
         if (currentTime - this.patrolTimer > this.patrolDirectionTimer) {
@@ -139,7 +146,36 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
    
     }
 
+    enemyTakesHit() {
+        if (this.isHurt) {return;};
+
+        this.isHurt = true;
+        this.setVelocity(0);
+
+        if (this.facing === 'side') {
+            this.anims.play('slime1-hurt-side', true);
+        } else if (this.facing === 'down') {
+            this.anims.play('slime1-hurt-down', true);
+        } else if (this.facing === 'up') {
+            this.anims.play('slime1-hurt-up', true);
+        }
+
+        this.once('animationcomplete-slime1-hurt-side', () => {
+            this.isHurt = false;
+        })
+
+        this.once('animationcomplete-slime1-hurt-down', () => {
+            this.isHurt = false;
+        })
+
+        this.once('animationcomplete-slime1-hurt-up', () => {
+            this.isHurt = false;
+        })
+    }
+
     updateMovementAnimation() {
+        if (this.isHurt) {return;};
+
         const absX = Math.abs(this.body.velocity.x);
         const absY = Math.abs(this.body.velocity.y);
         if (absX === 0 && absY === 0) {

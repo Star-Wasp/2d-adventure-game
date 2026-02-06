@@ -17,7 +17,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.body.setSize(this.width/4, this.height/3);
     this.body.setOffset(19, 25);
 
-    this.swardHitbox = this.scene.add.rectangle(this.x, this.y, 35, 35, 0xff0000, 0);
+    this.swardHitbox = this.scene.add.rectangle(this.x, this.y, 25, 25, 0xff0000, 0);
     this.scene.physics.add.existing(this.swardHitbox);
     this.swardHitbox.body.setAllowGravity(false);
     this.swardHitbox.body.setImmovable(true);

@@ -258,6 +258,18 @@ export default class Play extends BaseScene {
             console.log("overlap with checkpoint, ", checkpoint.x, checkpoint.y);
             }
         })
+
+        // Overlap with enemies
+        this.physics.add.overlap(
+        this.player.swardHitbox,
+        this.EnemyGroup,
+        (hitbox, item) => {
+            const now = this.time.now;
+            if (this.player.isSwinging && now - item.lastHitTime > item.hitCooldown) {
+                item.enemyTakesHit();
+                item.lastHitTime = now;
+            }
+        })
     }
 
   setupPlayer(map) {
