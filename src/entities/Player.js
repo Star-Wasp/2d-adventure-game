@@ -180,6 +180,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(amount) {
+        console.log("player hit", amount)
         this.health -= amount;
         this.healthBar.decrease(this.health);
 

@@ -30,6 +30,11 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
 
         this.lastHitTime = 0;
         this.hitCooldown = 500;
+        
+        this.attackRange = 50;
+        this.lastAttackTime = 0;
+        this.attackCooldown = 500;
+        this.isAttacking = false;
 
         this.isHurt = false;
 
@@ -133,27 +138,28 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         scene.anims.create({
             key: 'slime1-attack-down',
             frames: scene.anims.generateFrameNumbers('slime1-attack', {start: 0, end: 9}),
-            frameRate: 6,
+            frameRate: 10,
             repeat: 0,
         });
 
         scene.anims.create({
             key: 'slime1-attack-up',
             frames: scene.anims.generateFrameNumbers('slime1-attack', {start: 10, end: 19}),
-            frameRate: 6,
+            frameRate: 10,
             repeat: 0,
         });
 
         scene.anims.create({
             key: 'slime1-attack-side',
             frames: scene.anims.generateFrameNumbers('slime1-attack', {start: 30, end: 39}),
-            frameRate: 6,
+            frameRate: 10,
             repeat: 0,
         });
     }
 
     playIdle() {
         if (this.isDead) {return;};
+        if (this.isAttacking) {return;};
         switch (this.facing) {
             case 'up':
                 this.anims.play('slime1-idle-up', true);
@@ -170,6 +176,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
     handlePatrol() {
         if (this.isHurt) {return;};
         if (this.isDead) {return;};
+        if (this.isAttacking) {return;};
 
         const currentTime = this.scene.time.now;
 
@@ -263,9 +270,41 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
             
     }
 
+    setTarget(target) {
+        this.target = target;
+    }
+
+    attackPlayer() {
+        if (this.isAttacking) {return;};
+
+        this.isAttacking = true;
+        this.setVelocity(0);
+
+        if (this.facing === 'side') {
+            this.anims.play('slime1-attack-side', true);
+        } else if (this.facing === 'down') {
+            this.anims.play('slime1-attack-down', true);
+        } else if (this.facing === 'up') {
+            this.anims.play('slime1-attack-up', true);
+        }
+
+        this.once('animationcomplete-slime1-attack-side', () => {
+            this.isAttacking = false;
+        })
+
+        this.once('animationcomplete-slime1-attack-down', () => {
+            this.isAttacking = false;
+        })
+
+        this.once('animationcomplete-slime1-attack-up', () => {
+            this.isAttacking = false;
+        })
+    }
+
     updateMovementAnimation() {
         if (this.isHurt) {return;};
         if (this.isDead) {return;};
+        if (this.isAttacking) {return;};
 
         const absX = Math.abs(this.body.velocity.x);
         const absY = Math.abs(this.body.velocity.y);
@@ -293,6 +332,28 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
+        if (this.isHurt || this.isDead) {return;};
+
+        if (this.target) {
+            const distanceX = this.target.x - this.x;
+            const distanceY = this.target.y - this.y;
+            const distance = Math.hypot(distanceX, distanceY);
+            const now = this.scene.time.now;
+
+            if (distance <= this.attackRange && now - this.lastAttackTime > this.attackCooldown) {
+                this.lastAttackTime = now;
+                this.attackPlayer();
+                const damageAmount = Phaser.Math.Between(1, 5);
+                this.target.takeDamage(damageAmount);
+                if (distance > 0) {
+                    const knockbackStrength = 40;
+                    const knockbackX = (distanceX / distance) * knockbackStrength;
+                    const knockbackY = (distanceY / distance) * knockbackStrength;
+                    this.target.setVelocity(knockbackX, knockbackY); 
+                }
+            }
+        }
+        
         this.handlePatrol();
     }
 

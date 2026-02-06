@@ -51,6 +51,8 @@ export default class Play extends BaseScene {
 
     this.setupPlayer(map);
 
+    this.setupEnemyZoneLayer(this.enemyZoneLayer);
+
     this.setupCoinDisplay();
 
     this.player.checkTrapOverlap(this.spikeGroup);
@@ -265,7 +267,7 @@ export default class Play extends BaseScene {
         this.EnemyGroup,
         (hitbox, item) => {
             const now = this.time.now;
-            if (this.player.isSwinging && now - item.lastHitTime > item.hitCooldown) {
+            if (this.player.isSwinging && now - item.lastHitTime > item.hitCooldown && !this.player.isJumping) {
                 const damageAmount = Phaser.Math.Between(0, 10);
                 item.takeDamage(damageAmount)
                 item.lastHitTime = now;
@@ -421,11 +423,9 @@ export default class Play extends BaseScene {
 
         const doorLayer = map.getObjectLayer('doors');
 
-        const enemyZoneLayer = map.getObjectLayer('enemy_zones');
+        this.enemyZoneLayer = map.getObjectLayer('enemy_zones');
 
         this.EnemyGroup = this.physics.add.group();
-
-        this.setupEnemyZoneLayer(enemyZoneLayer);
 
         const buildingLayer = map.getObjectLayer('buildings');
 
@@ -464,6 +464,7 @@ export default class Play extends BaseScene {
             if (obj.name === 'slime1') {
                 const slime1 = new Slime1(this, obj.x, obj.y);
                 this.EnemyGroup.add(slime1);
+                slime1.setTarget(this.player);
                 if (this.collisionLayer) {
                     this.physics.add.collider(slime1, this.collisionLayer);
                 }
