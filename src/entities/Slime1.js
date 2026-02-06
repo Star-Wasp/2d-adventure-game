@@ -18,7 +18,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         this.createAnimations(scene);
         this.anims.play('slime1-idle-down');
 
-        this.speed = 40;
+        this.speed = 50;
         this.baseSpeed = this.speed;
         this.setScale(0.7);
 
