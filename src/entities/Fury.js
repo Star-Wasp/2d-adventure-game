@@ -217,7 +217,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
         const distanceX = this.target.x - this.x;
         const distanceY = this.target.y - this.y;
         const distance = Math.hypot(distanceX, distanceY);
-        const desiredDistance = this.scene.mapType === 'dungeon' ? 18 : 50;
+        const desiredDistance = this.scene.mapType === 'dungeon' ? 20 : 70;
         
         let directionX;
         let directionY;

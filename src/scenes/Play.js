@@ -43,6 +43,7 @@ export default class Play extends BaseScene {
     this.registry.set('coins', savedCoins)
 
     this.furyIsOverJumpable = false;
+    this.furyIsOverTrap = false;
 
     this.setupPlayer(map);
 
@@ -993,6 +994,18 @@ export default class Play extends BaseScene {
                 this.fury.startJumpingOver();
             } else if (!overlapping && this.furyIsOverJumpable) {
                 this.furyIsOverJumpable = false;
+            }
+        }
+
+        if (this.spikeGroup) {
+            const furyBounds = this.fury.getBounds();
+            const overlapping = this.physics.overlap(this.fury, this.spikeGroup)
+
+            if (overlapping && !this.furyIsOverTrap && !this.fury.isJumping) {
+                this.furyIsOverTrap = true;
+                this.fury.startJumpingOver();
+            } else if (!overlapping && this.furyIsOverTrap) {
+                this.furyIsOverTrap = false;
             }
         }
 
