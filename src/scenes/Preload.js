@@ -161,9 +161,15 @@ export default class Preload extends Phaser.Scene {
   }
 
   preloadSounds() {
-    ['sward', 'walk', 'hurt', 'item_collect', 'coin_collect', 'door_close', 'door_open', 'jump'].forEach(key => {
+    // Preload wav sounds
+    ['sward', 'walk', 'hurt', 'item_collect', 'coin_collect', 'door_close', 'door_open', 'jump', 'cat-walk'].forEach(key => {
         this.load.audio(key, `assets/sounds/${key}.wav`);
     });
+
+    // Preload mp3 sounds
+    ['cat-purring', 'cat-scared'].forEach(key => {
+      this.load.audio(key, `assets/sounds/cat-sounds/${key}.mp3`)
+    })
 
 }
 
