@@ -81,7 +81,7 @@ export default class Play extends BaseScene {
             bgMusicEntry.instance.stop();
         }
 
-        const music = this.sound.add(musicType + '-music', { loop: true, volume: 0.1 });
+        const music = this.sound.add(musicType + '-music', { loop: true, volume: 0.01 });
         music.play();
 
         this.registry.set('bgMusic', {instance: music, musicType})
@@ -183,7 +183,7 @@ export default class Play extends BaseScene {
                 const building = this.buildingsGroup.getChildren().find(b => b.type === 'hero_house');
                 this.currentBuilding = building;
                 building.play('hero_house_opening_anim');
-                this.sound.play('door_open', {volume: 0.3});
+                this.sound.play('door_open', {volume: 0.02});
             }
         }
     })
@@ -454,6 +454,8 @@ export default class Play extends BaseScene {
                 checkpoint.setVisible(true);
                 checkpoint.setDepth(checkpoint.y - 5);
                 checkpoint.setScale(1.3);
+                checkpoint.setSize(40, 40);
+                checkpoint.setOffset(-10, -10);
                 checkpoint.wasOverlapping = false;
                 tile.setVisible(false)
                 tile.setCollision(false);
@@ -929,7 +931,7 @@ export default class Play extends BaseScene {
             coins += 1;
             this.registry.set('coins', coins);
             this.coinDisplay.addCoins(1)
-            this.sound.play('coin_collect', {volume: 0.3});
+            this.sound.play('coin_collect', {volume: 0.02});
 
         }
         
@@ -937,7 +939,7 @@ export default class Play extends BaseScene {
             player.health += item.healAmount;
             player.health = Math.min(player.health, 100);
             player.healthBar.setHealth(player.health);
-            this.sound.play('item_collect', {volume: 0.3});
+            this.sound.play('item_collect', {volume: 0.02});
         }
         savePlayerData(player.health, coins);
 
@@ -956,7 +958,7 @@ export default class Play extends BaseScene {
 
                 if (this.currentBuilding) {
                     this.currentBuilding.play('hero_house_closing_anim');
-                    this.sound.play('door_close', {volume: 0.3})
+                    this.sound.play('door_close', {volume: 0.02})
                     this.currentBuilding = null;
                 }
             }

@@ -208,7 +208,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleWalkSound() {
-        const velocityThreshold = 1;
+        const velocityThreshold = 0.5;
         const moving = Math.abs(this.body.velocity.x) > velocityThreshold || Math.abs(this.body.velocity.y) > velocityThreshold;
 
         if (moving && !this.catWalkSound.isPlaying) {
@@ -254,7 +254,7 @@ export default class Fury extends Phaser.Physics.Arcade.Sprite {
                 this.wanderTimer = currentTime;
                 if (Math.random() > 0.5) {
                     const angle = Math.random() * Math.PI * 2;
-                    const wanderSpeed = this.speed * 0.2;
+                    const wanderSpeed = this.speed * 0.5;
 
                     this.wanderVelocityX = Math.cos(angle) * wanderSpeed;
                     this.wanderVelocityY = Math.sin(angle) * wanderSpeed;

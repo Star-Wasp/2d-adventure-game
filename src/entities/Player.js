@@ -193,7 +193,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.health <= 0) {
             this.die();
         }
-        this.hurtSound.play({volume: 0.3})
+        this.hurtSound.play({volume: 0.02})
     }
 
     die() {
@@ -234,7 +234,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         const moving = Math.abs(this.body.velocity.x) > velocityThreshold || Math.abs(this.body.velocity.y) > velocityThreshold;
 
         if (moving && !this.walkSound.isPlaying) {
-            this.walkSound.play({ volume: 0.3, loop: true, rate: 1.5 });
+            this.walkSound.play({ volume: 0.02, loop: true, rate: 1.5 });
         } else if (!moving && this.walkSound.isPlaying || this.isJumping) {
             this.walkSound.stop();
         }
@@ -288,15 +288,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             if (this.facing === 'up') {
                 this.anims.play('player-jump-up');
-                this.jumpSound.play({volume: 0.3})
+                this.jumpSound.play({volume: 0.02})
 
             } else if (this.facing === 'down') {
                 this.anims.play('player-jump-down');
-                this.jumpSound.play({volume: 0.3})
+                this.jumpSound.play({volume: 0.02})
 
             } else if (this.facing === 'side') {
                 this.anims.play('player-jump-side');
-                this.jumpSound.play({volume: 0.3})
+                this.jumpSound.play({volume: 0.02})
             }
             this.once('animationcomplete', (anim) => {
                 if (anim.key.startsWith('player-jump')) {
@@ -315,13 +315,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             if (this.facing === 'up') {
                 this.anims.play('player-sward-up');
-                this.swardSound.play({volume: 0.3});
+                this.swardSound.play({volume: 0.02});
             } else if (this.facing === 'down') {
                 this.anims.play('player-sward-down');
-                this.swardSound.play({volume: 0.3});
+                this.swardSound.play({volume: 0.02});
             } else if (this.facing === 'side') {
                 this.anims.play('player-sward-side');
-                this.swardSound.play({volume: 0.3});
+                this.swardSound.play({volume: 0.02});
             }
             this.once('animationcomplete', (anim) => {
                 if (anim.key.startsWith('player-sward')) {
