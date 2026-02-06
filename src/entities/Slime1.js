@@ -8,6 +8,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         // Physics setup
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.setCollideWorldBounds(true);
 
         this.body.setSize(this.width / 3, this.height / 3);
         this.body.setOffset(22, 20);
@@ -17,9 +18,15 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         this.createAnimations(scene);
         this.anims.play('slime1-idle-down');
 
-        this.speed = 100;
+        this.speed = 40;
         this.baseSpeed = this.speed;
         this.setScale(0.7);
+
+        this.patrolDirectionTimer = 1000;
+        this.isMoving = false;
+        this.patrolTimer = 0;
+        this.patrolVelocityX =0;
+        this.patrolVelocityY =0;
 
         }
 
@@ -68,6 +75,28 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
             frameRate: 2,
             repeat: -1,
         });
+
+        // Slime1 hurt anims
+        scene.anims.create({
+            key: 'slime1-walk-down',
+            frames: scene.anims.generateFrameNumbers('slime1-walk', {start: 0, end: 4}),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        scene.anims.create({
+            key: 'slime1-walk-up',
+            frames: scene.anims.generateFrameNumbers('slime1-walk', {start: 5, end: 9}),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        scene.anims.create({
+            key: 'slime1-walk-side',
+            frames: scene.anims.generateFrameNumbers('slime1-walk', {start: 15, end: 19}),
+            frameRate: 2,
+            repeat: -1,
+        });
     }
 
     playIdle() {
@@ -84,8 +113,60 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    handlePatrol() {
+        const currentTime = this.scene.time.now;
+
+        if (currentTime - this.patrolTimer > this.patrolDirectionTimer) {
+            this.patrolTimer = currentTime;
+            const newDirection = Phaser.Math.Between(0, 3);
+            if (newDirection === 0) {
+                this.patrolVelocityX = 0;
+                this.patrolVelocityY = -this.speed;
+            } else if (newDirection === 1) {
+                this.patrolVelocityX = 0;
+                this.patrolVelocityY = this.speed;
+            } else if (newDirection === 2) {
+                this.patrolVelocityX = -this.speed;
+                this.patrolVelocityY = 0;
+            } else if (newDirection === 3) {
+                this.patrolVelocityX = this.speed;
+                this.patrolVelocityY = 0;
+            }
+        }
+        this.setVelocity(this.patrolVelocityX,  this.patrolVelocityY);
+
+        this.updateMovementAnimation();
+   
+    }
+
+    updateMovementAnimation() {
+        const absX = Math.abs(this.body.velocity.x);
+        const absY = Math.abs(this.body.velocity.y);
+        if (absX === 0 && absY === 0) {
+            this.playIdle();
+        } else if (absX > absY) {
+            if (this.body.velocity.x < 0) {
+                this.setFlipX(true);
+                this.facing = 'side';
+                this.anims.play('slime1-walk-side', true);
+            } else if (this.body.velocity.x > 0) {
+                this.setFlipX(false);
+                this.facing = 'side';
+                this.anims.play('slime1-walk-side', true);
+            }
+        } else {
+            if (this.body.velocity.y < 0) {
+                this.facing = 'up';
+                this.anims.play('slime1-walk-up', true);
+            } else {
+                this.facing = 'down';
+                this.anims.play('slime1-walk-down', true);
+            }
+        }
+    }
+
     update() {
-        
+        this.handlePatrol();
     }
 
 }

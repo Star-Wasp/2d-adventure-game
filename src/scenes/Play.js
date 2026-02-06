@@ -451,6 +451,9 @@ export default class Play extends BaseScene {
             if (obj.name === 'slime1') {
                 const slime1 = new Slime1(this, obj.x, obj.y);
                 this.EnemyGroup.add(slime1);
+                if (this.collisionLayer) {
+                    this.physics.add.collider(slime1, this.collisionLayer);
+                }
             }
         });
     }
@@ -970,6 +973,9 @@ export default class Play extends BaseScene {
     update() {
         this.player.update();
         this.fury.update();
+        this.EnemyGroup.getChildren().forEach(enemy => {
+            enemy.update();
+        })
 
         if (this.playerInBuildingZone) {
             const stillOverlapping = this.physics.overlap(this.player, this.endZones);
