@@ -10,12 +10,19 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
 
     this.body.setSize(this.width / 3, this.height / 3);
     this.body.setOffset(10, 20);
-    this.setScale(0.9);
 
     this.facing = 'down';
 
     this.createAnimations(scene);
     this.anims.play('health-merchant-idle-down');
+
+    this.paseDirectionTimer = 1000;
+    this.paseTimer = 0;
+    this.paseVelocityX = 0;
+    this.paseVelocityY = 0;
+    this.speed = 10;
+
+    this.setCollideWorldBounds();
 
     }
 
@@ -66,6 +73,74 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
-    update() {}
+    handlePasing() {    
+        const currentTime = this.scene.time.now;
+
+        if (currentTime - this.paseTimer > this.paseDirectionTimer) {
+            this.paseTimer = currentTime;
+            const newDirection = Phaser.Math.Between(0, 3);
+            if (newDirection === 0) {
+                this.paseVelocityX = 0;
+                this.paseVelocityY = -this.speed;
+            } else if (newDirection === 1) {
+                this.paseVelocityX = 0;
+                this.paseVelocityY = this.speed;
+            } else if (newDirection === 2) {
+                this.paseVelocityX = -this.speed;
+                this.paseVelocityY = 0;
+            } else if (newDirection === 3) {
+                this.paseVelocityX = this.speed;
+                this.paseVelocityY = 0;
+            }
+        }
+        this.setVelocity(this.paseVelocityX,  this.paseVelocityY);
+
+        this.updateMovementAnimation();   
+    }
+
+    playIdle() {
+        switch (this.facing) {
+            case 'up':
+                this.anims.play('health-merchant-idle-up', true);
+                break;
+            case 'down':
+                this.anims.play('health-merchant-idle-down', true);
+                break;
+            case 'side':
+                this.anims.play('health-merchant-idle-side', true);
+                break;
+        }
+    }
+
+    updateMovementAnimation() {
+        const absX = Math.abs(this.body.velocity.x);
+        const absY = Math.abs(this.body.velocity.y);
+        if (absX === 0 && absY === 0) {
+            this.playIdle();
+        } else if (absX > absY) {
+            if (this.body.velocity.x < 0) {
+                this.setFlipX(false);
+                this.facing = 'side';
+                this.anims.play('health-merchant-walk-side', true);
+            } else if (this.body.velocity.x > 0) {
+                this.setFlipX(true);
+                this.facing = 'side';
+                this.anims.play('health-merchant-walk-side', true);
+            }
+        } else {
+            if (this.body.velocity.y < 0) {
+                this.facing = 'up';
+                this.anims.play('health-merchant-walk-up', true);
+            } else {
+                this.facing = 'down';
+                this.anims.play('health-merchant-walk-down', true);
+            }
+        }
+    }
+
+    update() {
+
+        this.handlePasing()
+    }
 
 }

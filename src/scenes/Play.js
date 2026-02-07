@@ -475,6 +475,10 @@ export default class Play extends BaseScene {
                 const healthMerchant = new HealthMerchant(this, obj.x, obj.y);
                 this.npcGroup.add(healthMerchant);
             }
+            if (this.collisionLayer) {
+              this.physics.add.collider(this.npcGroup, this.collisionLayer);  
+            }
+            
         })
     }
 
@@ -1063,6 +1067,9 @@ export default class Play extends BaseScene {
         this.fury.update();
         this.EnemyGroup.getChildren().forEach(enemy => {
             enemy.update();
+        })
+        this.npcGroup.getChildren().forEach(npc => {
+            npc.update();
         })
 
         if (this.playerInBuildingZone) {
