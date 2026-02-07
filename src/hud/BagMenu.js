@@ -21,6 +21,8 @@ export default class BagMenu {
         this.isOpen = false;
         this.inventoryPanel = null;
 
+        this.slots = [];
+
     }
 
     toggleInventory() {
@@ -37,6 +39,31 @@ export default class BagMenu {
         this.inventoryPanel.setScrollFactor(0);
         this.inventoryPanel.setDepth(999);
         this.inventoryPanel.setScale(1.5);
+
+        this.createInventorySlots();
+    }
+
+    createInventorySlots(rows = 4, cols = 4, startX = 262, startY = 272, spacing = 25) {
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                const slot = this.scene.add.rectangle(
+                    startX + col * spacing,
+                    startY + row * spacing,
+                    22,
+                    22,
+                    0x00ff00,
+                    0.3
+                );
+                slot
+                .setScrollFactor(0)
+                .setDepth(1000)
+                .setInteractive({ useHandCursor: true})
+                .on('pointerdown', () => {
+                    alert(`slot clicked at row ${row + 1}, col ${col + 1}`);
+                })
+                this.slots.push(slot)
+            }
+        }
     }
 
     hideInventory() {
@@ -44,6 +71,11 @@ export default class BagMenu {
             this.inventoryPanel.destroy();
             this.inventoryPanel = null;
         }
+
+        this.slots.forEach(slot => {
+            slot.destroy();
+        })
+        this.slots = [];
     }
 
 }
