@@ -23,7 +23,7 @@
                         {
                          "name":"to_level",
                          "type":"string",
-                         "value":"level12"
+                         "value":"level9"
                         }],
                  "rotation":0,
                  "type":"",
@@ -113,7 +113,7 @@
                         {
                          "name":"from_level",
                          "type":"string",
-                         "value":"level12"
+                         "value":"level9"
                         }],
                  "rotation":0,
                  "type":"",

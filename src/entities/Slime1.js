@@ -33,7 +33,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         
         this.attackRange = 25;
         this.lastAttackTime = 0;
-        this.attackCooldown = 500;
+        this.attackCooldown = 1000;
         this.isAttacking = false;
 
         this.isHurt = false;

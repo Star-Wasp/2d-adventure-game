@@ -88,6 +88,7 @@ export default class Preload extends Phaser.Scene {
     this.load.tilemapTiledJSON('level3', 'assets/map_level_3.json');
     this.load.tilemapTiledJSON('level4', 'assets/map_level_4.json');
     this.load.tilemapTiledJSON('level5', 'assets/map_level_5.json');
+    this.load.tilemapTiledJSON('level9', 'assets/map_level_9.json');
 
     // Underground maps
     this.load.tilemapTiledJSON('level6', 'assets/map_level_6.json');
@@ -190,11 +191,18 @@ export default class Preload extends Phaser.Scene {
   preloadBuildings() {
 
     // Preloading players house
-    this.load.image('hero_house_closed', 'assets/player/hero-house2.png');
+    this.load.image('hero_house_closed', 'assets/buildings/hero-house2.png');
 
-    this.load.image('hero_house_open', 'assets/player/hero-house1.png');
+    this.load.image('hero_house_open', 'assets/buildings/hero-house1.png');
 
-    this.load.image('hero_house_halfopen', 'assets/player/hero-house3.png');
+    this.load.image('hero_house_halfopen', 'assets/buildings/hero-house3.png');
+
+    // Preloading health shop
+    this.load.image('health_shop_closed', 'assets/buildings/health-shop2.png');
+
+    this.load.image('health_shop_open', 'assets/buildings/health-shop1.png');
+
+    this.load.image('health_shop_halfopen', 'assets/buildings/health-shop3.png');
   }
 
   preloadCat() {

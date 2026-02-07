@@ -59,14 +59,14 @@
                         {
                          "name":"to_level",
                          "type":"string",
-                         "value":"level9"
+                         "value":"level12"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
                  "x":480,
-                 "y":128
+                 "y":144
                 }, 
                 {
                  "height":0,
@@ -95,14 +95,14 @@
                         {
                          "name":"from_level",
                          "type":"string",
-                         "value":"level9"
+                         "value":"level12"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
                  "x":480,
-                 "y":128
+                 "y":144
                 }],
          "opacity":1,
          "type":"objectgroup",
