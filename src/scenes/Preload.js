@@ -19,6 +19,7 @@ export default class Preload extends Phaser.Scene {
     this.preloadBuildings();
     this.preloadCat();
     this.preloadEnemies();
+    this.preloadNPCs();
   }
 
   preloadAnims() {
@@ -314,6 +315,16 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     })
+  }
+
+  preloadNPCs() {
+
+    // Preloading merchant spritesheet
+    this.load.spritesheet('health-merchant', 'assets/npc/merchant1.png', {
+      frameWidth: 32,
+      frameHeight: 48,
+    })
+    
   }
 
   create() {
