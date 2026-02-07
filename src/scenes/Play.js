@@ -8,6 +8,7 @@ import Fury from "../entities/Fury";
 import Slime1 from "../entities/Slime1";
 import Slime2 from "../entities/Slime2";
 import Slime3 from "../entities/Slime3";
+import HealthMerchant from "../entities/HealthMerchant";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -420,6 +421,12 @@ export default class Play extends BaseScene {
         this.setupSpikes(trapLayer);
 
         // Object Layers
+        const npcLayer = map.getObjectLayer('npc');
+
+        this.npcGroup = this.physics.add.group();
+
+        this.setupNpc(npcLayer);
+
         const zoneLayer = map.getObjectLayer('player_zones');
 
         const natureLayer = map.getObjectLayer('nature');
@@ -458,6 +465,17 @@ export default class Play extends BaseScene {
         this.handleRespawn();
 
         return map
+    }
+
+    setupNpc(npcLayer) {
+        if (!npcLayer) {return;};
+
+        npcLayer.objects.forEach(obj => {
+            if (obj.name === 'health_merchant') {
+                const healthMerchant = new HealthMerchant(this, obj.x, obj.y);
+                this.npcGroup.add(healthMerchant);
+            }
+        })
     }
 
     setupEnemyZoneLayer(enemyZoneLayer) {

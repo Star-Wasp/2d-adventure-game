@@ -9,7 +9,8 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.body.setSize(this.width / 3, this.height / 3);
-    this.body.setOffset(22, 20);
+    this.body.setOffset(10, 20);
+    this.setScale(0.9);
 
     this.facing = 'down';
 
@@ -64,5 +65,7 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
             repeat: -1,
         });
     }
+
+    update() {}
 
 }
