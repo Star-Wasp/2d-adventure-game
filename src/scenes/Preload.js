@@ -20,6 +20,7 @@ export default class Preload extends Phaser.Scene {
     this.preloadCat();
     this.preloadEnemies();
     this.preloadNPCs();
+    this.preloadIcons();
   }
 
   preloadAnims() {
@@ -159,9 +160,12 @@ export default class Preload extends Phaser.Scene {
     this.load.image('back', 'assets/bg/back.png');
 
     // Loading hud assets
-    this.load.image('full-heart', 'assets/hud/Heart.png')
-    this.load.image('half-heart', 'assets/hud/Half_a_heart.png')
-    this.load.image('empty-heart', 'assets/hud/Heart0.png')
+    this.load.image('full-heart', 'assets/hud/Heart.png');
+    this.load.image('half-heart', 'assets/hud/Half_a_heart.png');
+    this.load.image('empty-heart', 'assets/hud/Heart0.png');
+
+    // Inventory menu
+    this.load.image('inventory-menu', 'assets/hud/inverntory-menu.png');
   }
 
   preloadSounds() {
@@ -324,7 +328,12 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48,
     })
-    
+
+  }
+
+  preloadIcons() {
+    // bag
+    this.load.image('bag', 'assets/icons/bag.png');
   }
 
   create() {

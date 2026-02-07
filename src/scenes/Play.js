@@ -9,6 +9,7 @@ import Slime1 from "../entities/Slime1";
 import Slime2 from "../entities/Slime2";
 import Slime3 from "../entities/Slime3";
 import HealthMerchant from "../entities/HealthMerchant";
+import BagMenu from "../hud/BagMenu";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -58,6 +59,8 @@ export default class Play extends BaseScene {
 
     this.setupCoinDisplay();
 
+    this.setupBagMenuDisplay();
+
     this.player.checkTrapOverlap(this.spikeGroup);
 
     this.setupJumpableColliders();
@@ -100,6 +103,10 @@ export default class Play extends BaseScene {
   setupCoinDisplay() {
     const coins = this.registry.get('coins');
     this.coinDisplay = new CoinDisplay(this, 210, 230, this.registry.get('coins'));
+  }
+
+  setupBagMenuDisplay() {
+    this.bagMenu = new BagMenu(this, 272, 240);
   }
 
   setupCamera(map) {
