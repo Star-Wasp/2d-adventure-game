@@ -69,6 +69,11 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"isBuilding",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"to_level",
                          "type":"string",
                          "value":"level10"
@@ -90,6 +95,11 @@
                          "name":"from_level",
                          "type":"string",
                          "value":"level10"
+                        }, 
+                        {
+                         "name":"isBuilding",
+                         "type":"bool",
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",

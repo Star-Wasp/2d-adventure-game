@@ -184,11 +184,16 @@ export default class Play extends BaseScene {
         }
         if (zone.isBuilding) {
             if (zone.to_level === 'level7') {
-                const building = this.buildingsGroup.getChildren().find(b => b.type === 'hero_house');
+                const building = this.buildingsGroup.getChildren().find(b => b.buildingType === 'hero_house');
                 this.currentBuilding = building;
                 building.play('hero_house_opening_anim');
                 this.sound.play('door_open', {volume: this.soundVolume});
-            }
+            } else if (zone.to_level === 'level10') {
+                const building = this.buildingsGroup.getChildren().find(b => b.buildingType === 'health_shop');
+                this.currentBuilding = building;
+                building.play('health_shop_opening_anim');
+                this.sound.play('door_open', {volume: this.soundVolume});
+        }
         }
     })
     
@@ -552,7 +557,7 @@ export default class Play extends BaseScene {
                 .setSize(14, 15)
                 .setOffset(33, 33)
 
-                hero_house.type = type;
+                hero_house.buildingType = type;
             } else if (type === 'health_shop') {
                 const health_shop = this.add.sprite(obj.x, obj.y, 'health_shop_closed')
                     .setOrigin(0.5, 1)
@@ -566,7 +571,7 @@ export default class Play extends BaseScene {
                 .setSize(14, 15)
                 .setOffset(33, 33)
 
-                health_shop.type = type;
+                health_shop.buildingType = type;
             }
         })
     }
@@ -924,6 +929,8 @@ export default class Play extends BaseScene {
     }
 
     createBuildingAnimations() {
+
+        // Hero house anims
         this.anims.create({
         key: 'hero_house_opening_anim',
         frames: [
@@ -941,6 +948,29 @@ export default class Play extends BaseScene {
             {key: 'hero_house_open'},
             {key: 'hero_house_halfopen'},
             {key: 'hero_house_closed'},
+        ],
+        frameRate: 2,
+        repeat: 0,
+        });
+
+        // Health shop anims
+        this.anims.create({
+        key: 'health_shop_opening_anim',
+        frames: [
+            {key: 'health_shop_closed'},
+            {key: 'health_shop_halfopen'},
+            {key: 'health_shop_open'},
+        ],
+        frameRate: 2,
+        repeat: 0,
+        });
+
+        this.anims.create({
+        key: 'health_shop_closing_anim',
+        frames: [
+            {key: 'health_shop_open'},
+            {key: 'health_shop_halfopen'},
+            {key: 'health_shop_closed'},
         ],
         frameRate: 2,
         repeat: 0,
@@ -1024,7 +1054,7 @@ export default class Play extends BaseScene {
                 this.playerInBuildingZone = false;
 
                 if (this.currentBuilding) {
-                    this.currentBuilding.play('hero_house_closing_anim');
+                    this.currentBuilding.play(this.currentBuilding.buildingType + '_closing_anim');
                     this.sound.play('door_close', {volume: this.soundVolume})
                     this.currentBuilding = null;
                 }
