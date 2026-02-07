@@ -137,18 +137,14 @@ export default class Play extends BaseScene {
                     item.play('box-break');
                     item.on('animationcomplete-box-break', () => {
                     for (let i = 0; i < 3; i++) {
-                        const offsetX = Phaser.Math.Between(-20, 20);
-                        const offsetY = Phaser.Math.Between(-22, 22);
-                        this.itemSpawnDrop(item.x + offsetX, item.y + offsetY);
+                        this.itemSpawnDrop(item.x, item.y);
                     } 
                 }) 
                 } else if (item.type === 'pot') {
                     item.play('pot-break');
                     item.on('animationcomplete-pot-break', () => {
                     for (let i = 0; i < 2; i++) {
-                        const offsetX = Phaser.Math.Between(-20, 30);
-                        const offsetY = Phaser.Math.Between(-22, 32);
-                        this.itemSpawnDrop(item.x + offsetX, item.y + offsetY);
+                        this.itemSpawnDrop(item.x, item.y);
                     } 
                 }) 
             }  

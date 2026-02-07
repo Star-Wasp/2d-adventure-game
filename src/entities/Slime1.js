@@ -18,7 +18,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         this.createAnimations(scene);
         this.anims.play('slime1-idle-down');
 
-        this.speed = 50;
+        this.speed = 35;
         this.baseSpeed = this.speed;
         this.setScale(0.7);
 
@@ -38,7 +38,7 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
 
         this.isHurt = false;
 
-        this.maxHealth = 50;
+        this.maxHealth = 20;
         this.health = this.maxHealth;
         this.isDead = false;
 
@@ -257,14 +257,47 @@ export default class Slime1 extends Phaser.Physics.Arcade.Sprite {
         }
 
         this.once('animationcomplete-slime1-death-side', () => {
+            this.scene.spawnCoin(this.x , this.y);
+            this.scene.spawnCoin(this.x + 5 , this.y);
+            this.scene.spawnCoin(this.x + 10 , this.y);
+
+            const healthChance = Math.random();
+            if (healthChance > 0.5) {
+                this.scene.spawnPotion(this.x - 5 , this.y);
+            } else {
+                this.scene.spawnCoin(this.x - 5 , this.y);
+            }
+
             this.destroy();
         })
 
         this.once('animationcomplete-slime1-death-up', () => {
+            this.scene.spawnCoin(this.x , this.y);
+            this.scene.spawnCoin(this.x + 5 , this.y);
+            this.scene.spawnCoin(this.x + 10 , this.y);
+
+            const healthChance = Math.random();
+            if (healthChance > 0.5) {
+                this.scene.spawnPotion(this.x - 5 , this.y);
+            } else {
+                this.scene.spawnCoin(this.x - 5 , this.y);
+            }
+
             this.destroy();
         })
 
         this.once('animationcomplete-slime1-death-down', () => {
+            this.scene.spawnCoin(this.x , this.y);
+            this.scene.spawnCoin(this.x + 5 , this.y);
+            this.scene.spawnCoin(this.x + 10 , this.y);
+
+            const healthChance = Math.random();
+            if (healthChance > 0.5) {
+                this.scene.spawnPotion(this.x - 5 , this.y);
+            } else {
+                this.scene.spawnCoin(this.x - 5 , this.y);
+            }
+
             this.destroy();
         })
             
