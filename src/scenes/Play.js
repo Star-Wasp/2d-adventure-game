@@ -553,6 +553,20 @@ export default class Play extends BaseScene {
                 .setOffset(33, 33)
 
                 hero_house.type = type;
+            } else if (type === 'health_shop') {
+                const health_shop = this.add.sprite(obj.x, obj.y, 'health_shop_closed')
+                    .setOrigin(0.5, 1)
+                    .setDepth(obj.y -16)
+                    .setScale(1.5)
+                    
+                this.physics.world.enable(health_shop);
+                this.buildingsGroup.add(health_shop);
+
+                health_shop.body
+                .setSize(14, 15)
+                .setOffset(33, 33)
+
+                health_shop.type = type;
             }
         })
     }

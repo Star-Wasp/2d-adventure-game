@@ -61,6 +61,42 @@
                  "width":0,
                  "x":0,
                  "y":224
+                }, 
+                {
+                 "height":0,
+                 "id":76,
+                 "name":"end",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"to_level",
+                         "type":"string",
+                         "value":"level10"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":48
+                }, 
+                {
+                 "height":0,
+                 "id":77,
+                 "name":"start",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"from_level",
+                         "type":"string",
+                         "value":"level10"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":240,
+                 "y":48
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -315,7 +351,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":208,
+                 "x":224,
                  "y":64
                 }],
          "opacity":1,
@@ -426,7 +462,7 @@
          "y":0
         }],
  "nextlayerid":18,
- "nextobjectid":76,
+ "nextobjectid":78,
  "orientation":"orthogonal",
  "properties":[
         {
