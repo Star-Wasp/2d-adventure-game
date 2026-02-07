@@ -243,6 +243,68 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     })
+
+    // Preload slime2 spritesheets
+    this.load.spritesheet('slime2-idle', 'assets/enemies/slime2/Slime2_Idle.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime2-walk', 'assets/enemies/slime2/Slime2_Walk.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime2-run', 'assets/enemies/slime2/Slime2_Run.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime2-hurt', 'assets/enemies/slime2/Slime2_Hurt.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime2-death', 'assets/enemies/slime2/Slime2_Death.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime2-attack', 'assets/enemies/slime2/Slime2_Attack.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    // Preload slime3 spritesheets
+    this.load.spritesheet('slime3-idle', 'assets/enemies/slime3/Slime3_Idle.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime3-walk', 'assets/enemies/slime3/Slime3_Walk.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime3-run', 'assets/enemies/slime3/Slime3_Run.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime3-hurt', 'assets/enemies/slime3/Slime3_Hurt.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime3-death', 'assets/enemies/slime3/Slime3_Death.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
+    this.load.spritesheet('slime3-attack', 'assets/enemies/slime3/Slime3_Attack.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
   }
 
   create() {
