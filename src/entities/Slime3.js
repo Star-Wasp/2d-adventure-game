@@ -18,7 +18,7 @@ export default class Slime3 extends Phaser.Physics.Arcade.Sprite {
         this.createAnimations(scene);
         this.anims.play('slime3-idle-down');
 
-        this.speed = 35;
+        this.speed = 15;
         this.baseSpeed = this.speed;
         this.setScale(0.7);
 
@@ -31,14 +31,14 @@ export default class Slime3 extends Phaser.Physics.Arcade.Sprite {
         this.lastHitTime = 0;
         this.hitCooldown = 500;
         
-        this.attackRange = 25;
+        this.attackRange = 30;
         this.lastAttackTime = 0;
         this.attackCooldown = 500;
         this.isAttacking = false;
 
         this.isHurt = false;
 
-        this.maxHealth = 20;
+        this.maxHealth = 30;
         this.health = this.maxHealth;
         this.isDead = false;
 

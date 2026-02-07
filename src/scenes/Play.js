@@ -6,6 +6,8 @@ import CoinDisplay from "../hud/CoinDisplay";
 import { getSavedLevel, saveLevel, getSavedPlayerHealth, getSavedCoins, savePlayerData, saveCheckpoint, getSavedCheckpoint} from "../utils/StorageManager";
 import Fury from "../entities/Fury";
 import Slime1 from "../entities/Slime1";
+import Slime2 from "../entities/Slime2";
+import Slime3 from "../entities/Slime3";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -463,6 +465,20 @@ export default class Play extends BaseScene {
                 slime1.setTarget(this.player);
                 if (this.collisionLayer) {
                     this.physics.add.collider(slime1, this.collisionLayer);
+                }
+            } else if (obj.name === 'slime2') {
+                const slime2 = new Slime2(this, obj.x, obj.y);
+                this.EnemyGroup.add(slime2);
+                slime2.setTarget(this.player);
+                if (this.collisionLayer) {
+                    this.physics.add.collider(slime2, this.collisionLayer);
+                }
+            } else if (obj.name === 'slime3') {
+                const slime3 = new Slime3(this, obj.x, obj.y);
+                this.EnemyGroup.add(slime3);
+                slime3.setTarget(this.player);
+                if (this.collisionLayer) {
+                    this.physics.add.collider(slime3, this.collisionLayer);
                 }
             }
         });
