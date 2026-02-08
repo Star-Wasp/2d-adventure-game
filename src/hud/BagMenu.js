@@ -1,4 +1,5 @@
-import Phaser from "phaser"
+import Phaser from "phaser";
+import { saveInventory, getSavedInventory } from "../utils/StorageManager"
 
 export default class BagMenu {
     constructor(scene, x, y) {
@@ -23,6 +24,11 @@ export default class BagMenu {
 
         this.slots = [];
         this.inventory = Array(16).fill(null);
+
+        const saved = getSavedInventory();
+        if (saved) {
+            this.inventory = saved.map(item => item ? {...item, sprite: null, text: null} : null)
+        }
 
     }
 
@@ -157,8 +163,6 @@ export default class BagMenu {
 
 
             itemSprite.on('pointerdown', () => {
-                console.log("clicked", slotIndex, this.inventory[slotIndex]);
-                // const index = itemSprite.sourceSlot;
                 const item = this.inventory[slotIndex];
 
                 if (!item) {return;};
@@ -171,11 +175,11 @@ export default class BagMenu {
 
                 item.count--;
 
-                if (item.text) {
-                    item.text.setText(item.count);
-                }
-
-                if (item.count <= 0) {
+                if (item.count > 0) {
+                    if (item.text) {
+                        item.text.setText(item.count);
+                    }
+                } else {
                     if (item.sprite) {
                         item.sprite.destroy();
                         item.sprite = null;
@@ -184,8 +188,13 @@ export default class BagMenu {
                         item.text.destroy();
                         item.text = null;
                     }
-                    this.inventory[index] = null;
+                    this.inventory[slotIndex] = null;
                 }
+                const inventoryToSave = this.inventory.map(item => {
+                    if (!item || item.count <= 0) {return null;}
+                    return {type: item.type, count: item.count};
+                })
+                saveInventory(inventoryToSave);
             });
     }
 
