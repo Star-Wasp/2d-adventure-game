@@ -137,9 +137,7 @@ export default class BagMenu {
             .setScrollFactor(0)
             .setDepth(1001)
             .setScale(0.7)
-            .setInteractive({draggable: true, useHandCursor: true});
-
-            
+            .setInteractive({useHandCursor: true});
 
             this.scene.input.setDraggable(itemSprite);
             itemSprite.sourceSlot = slotIndex;
@@ -159,15 +157,17 @@ export default class BagMenu {
 
 
             itemSprite.on('pointerdown', () => {
-                const index = itemSprite.sourceSlot;
-                const item = this.inventory[index];
+                console.log("clicked", slotIndex, this.inventory[slotIndex]);
+                // const index = itemSprite.sourceSlot;
+                const item = this.inventory[slotIndex];
 
                 if (!item) {return;};
-                if (item.type !== 'potion') {return;};
-                if (this.scene.player.health >= 100) {return;};
+                if (item.type !== 'inventory-potion') {return;};
 
-                this.scene.player.health = Math.min(this.scene.player.health + 10, 100);
-                this.scene.player.healthBar.setHealth(this.scene.player.health);
+                // if (this.scene.player.health >= 100) {return;};
+
+                // this.scene.player.health = Math.min(this.scene.player.health + 10, 100);
+                // this.scene.player.healthBar.setHealth(this.scene.player.health);
 
                 item.count--;
 
@@ -185,69 +185,6 @@ export default class BagMenu {
                         item.text = null;
                     }
                     this.inventory[index] = null;
-                }
-            });
-
-            itemSprite.on('dragstart', () => {
-                itemSprite.setDepth(1003);
-            })
-
-            itemSprite.on('drag', (pointer, dragX, dragY) => {
-                itemSprite.x = dragX;
-                itemSprite.y = dragY;
-
-                if (countText) {
-                    countText.x = dragX + 7;
-                    countText.y = dragY + 4;
-                }
-            });
-
-            itemSprite.on('dragend', (pointer) => {
-                const sourceIndex = itemSprite.sourceSlot;
-                let targetSlot = null;
-
-                for (let s of this.slots) {
-                    if (Phaser.Geom.Rectangle.Contains(s.getBounds(), itemSprite.x, itemSprite.y)) {
-                        targetSlot = s;
-                        break;
-                    }
-                }
-
-                if (!targetSlot) {
-                    // Snap back to original
-                    itemSprite.x = this.slots[sourceIndex].x;
-                    itemSprite.y = this.slots[sourceIndex].y;
-                    if (countText) {
-                        countText.x = this.slots[sourceIndex].x + 7;
-                        countText.y = this.slots[sourceIndex].y + 4;
-                    }
-                    return;
-                }
-
-                const targetIndex = targetSlot.inventoryIndex;
-
-                if (this.inventory[targetIndex] === null) {
-                    // Move item to empty slot
-                    this.inventory[targetIndex] = this.inventory[sourceIndex];
-                    this.inventory[sourceIndex] = null;
-
-                    // Snap sprite + text to target slot
-                    itemSprite.x = targetSlot.x;
-                    itemSprite.y = targetSlot.y;
-                    if (countText) {
-                        countText.x = targetSlot.x + 7;
-                        countText.y = targetSlot.y + 4;
-                    }
-
-                    itemSprite.sourceSlot = targetIndex;
-                } else {
-                    // Target slot occupied → snap back
-                    itemSprite.x = this.slots[sourceIndex].x;
-                    itemSprite.y = this.slots[sourceIndex].y;
-                    if (countText) {
-                        countText.x = this.slots[sourceIndex].x + 7;
-                        countText.y = this.slots[sourceIndex].y + 4;
-                    }
                 }
             });
     }
