@@ -18,13 +18,14 @@ export default class CoinDisplay {
         this.coinIcon.setScrollFactor(0);
         this.coinIcon.setDepth(1000)
 
-        this.text = scene.add.text(x + 23, y + 3, `${this.coins}`, {
-            fontSize: '11px',
+        this.text = scene.add.text(x + 23, y + 4, `${this.coins}`, {
+            fontSize: '22px',
             fill: '#ffffff',
             fontFamily: 'Arial',
         })
         this.text.setScrollFactor(0);
         this.text.setDepth(1000)
+        this.text.setScale(0.5)
     }
 
     addCoins(amount) {

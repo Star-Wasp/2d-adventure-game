@@ -872,7 +872,7 @@ export default class Play extends BaseScene {
 
         this.anims.create({
         key: 'potion-idle',
-        frames: this.anims.generateFrameNumbers('life-potion', { start: 0, end: 4 }),
+        frames: this.anims.generateFrameNumbers('life-potion', { start: 0, end: 2 }),
         frameRate: 2,
         repeat: -1
         });
@@ -1035,7 +1035,7 @@ export default class Play extends BaseScene {
 
     spawnPotion(x, y) {
         const potion = this.collectibles.create(x, y, 'life-potion');
-        potion.setScale(0.6);
+        potion.setScale(0.4);
         potion.play('potion-idle');
         potion.setDepth(5);
 

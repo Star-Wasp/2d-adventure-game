@@ -68,6 +68,7 @@ export default class BagMenu {
             slot.inventoryIndex = slotIndex;
 
             slot
+                .setOrigin(0.5)
                 .setScrollFactor(0)
                 .setDepth(1000)
                 .setInteractive({ useHandCursor: true })
@@ -77,8 +78,25 @@ export default class BagMenu {
 
                     if (!item) {
                         alert(`Slot ${index} is currently empty.`);
-                    } else {
-                        alert(`Slot ${index} contains a ${item.type}${item.count ? ` (x${item.count})` : ''}`);
+                        return;
+                    }
+
+                    item.count--;
+
+                    if (item.text) {
+                        item.text.setText(item.count);
+                    }
+
+                    if (item.count <= 0) {
+                        if (item.sprite) {
+                            item.sprite.destroy();
+                            item.sprite = null;
+                        }
+                        if (item.text) {
+                            item.text.destroy();
+                            item.text = null;
+                        }
+                        this.inventory[index] = null;
                     }
                 });
 
@@ -104,10 +122,25 @@ export default class BagMenu {
                 item.sprite.destroy();
                 item.sprite = null;
             }
+            if (item && item.text) {
+                item.text.destroy();
+                item.text = null;
+            }
         })
     }
 
     addItem(itemType) {
+
+        const existingSlotIndex = this.inventory.findIndex(slot => slot && slot.type === itemType);
+
+        if (existingSlotIndex !== -1) {
+            this.inventory[existingSlotIndex].count++;
+            if (this.isOpen && this.inventory[existingSlotIndex].text) {
+                this.inventory[existingSlotIndex].text.setText(this.inventory[existingSlotIndex].count);
+            }
+            return true;
+        }
+
         const emptySlotIndex = this.inventory.findIndex(slot => slot === null);
 
         if (emptySlotIndex === -1) {
@@ -115,7 +148,7 @@ export default class BagMenu {
             return false;
         }
 
-        this.inventory[emptySlotIndex] = { type: itemType };
+        this.inventory[emptySlotIndex] = { type: itemType, count: 1, sprite: null, text: null };
 
         if (this.isOpen) {
             this.addItemSpriteToSlot(emptySlotIndex, itemType);
@@ -131,8 +164,86 @@ export default class BagMenu {
             .setScrollFactor(0)
             .setDepth(1001)
             .setScale(0.7)
+            .setInteractive({draggable: true});
+
+            this.scene.input.setDraggable(itemSprite);
+            itemSprite.sourceSlot = slotIndex;
+
+            const countText = this.scene.add.text(
+                slot.x + 7,
+                slot.y + 4,
+                this.inventory[slotIndex].count,
+                { fontSize: '16px', fill: '#ffffff' }
+                )
+                .setScrollFactor(0)
+                .setDepth(1002)
+                .setScale(0.5)
 
             this.inventory[slotIndex].sprite = itemSprite;
+            this.inventory[slotIndex].text = countText;
+
+            itemSprite.on('dragstart', () => {
+                itemSprite.setDepth(1003);
+            })
+
+            itemSprite.on('drag', (pointer, dragX, dragY) => {
+                itemSprite.x = dragX;
+                itemSprite.y = dragY;
+
+                if (countText) {
+                    countText.x = dragX + 7;
+                    countText.y = dragY + 4;
+                }
+            });
+
+            itemSprite.on('dragend', (pointer) => {
+                const sourceIndex = itemSprite.sourceSlot;
+                let targetSlot = null;
+
+                for (let s of this.slots) {
+                    if (Phaser.Geom.Rectangle.Contains(s.getBounds(), itemSprite.x, itemSprite.y)) {
+                        targetSlot = s;
+                        break;
+                    }
+                }
+
+                if (!targetSlot) {
+                    // Snap back to original
+                    itemSprite.x = this.slots[sourceIndex].x;
+                    itemSprite.y = this.slots[sourceIndex].y;
+                    if (countText) {
+                        countText.x = this.slots[sourceIndex].x + 7;
+                        countText.y = this.slots[sourceIndex].y + 4;
+                    }
+                    return;
+                }
+
+                const targetIndex = targetSlot.inventoryIndex;
+
+                if (this.inventory[targetIndex] === null) {
+                    // Move item to empty slot
+                    this.inventory[targetIndex] = this.inventory[sourceIndex];
+                    this.inventory[sourceIndex] = null;
+
+                    // Snap sprite + text to target slot
+                    itemSprite.x = targetSlot.x;
+                    itemSprite.y = targetSlot.y;
+                    if (countText) {
+                        countText.x = targetSlot.x + 7;
+                        countText.y = targetSlot.y + 4;
+                    }
+
+                    itemSprite.sourceSlot = targetIndex;
+                } else {
+                    // Target slot occupied → snap back
+                    itemSprite.x = this.slots[sourceIndex].x;
+                    itemSprite.y = this.slots[sourceIndex].y;
+                    if (countText) {
+                        countText.x = this.slots[sourceIndex].x + 7;
+                        countText.y = this.slots[sourceIndex].y + 4;
+                    }
+                }
+            });
     }
 
 }

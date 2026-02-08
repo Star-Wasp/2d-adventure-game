@@ -143,9 +143,9 @@ export default class Preload extends Phaser.Scene {
     });
 
     //loading in collectibles
-    this.load.spritesheet('life-potion', 'assets/collectibles/5PotionBottles.png', {
-      frameWidth: 16,
-      frameHeight: 16,
+    this.load.spritesheet('life-potion', 'assets/collectibles/potion-buttle.png', {
+      frameWidth: 32,
+      frameHeight: 32,
     })
 
     this.load.spritesheet('coin', 'assets/collectibles/Coin_One.png', {
