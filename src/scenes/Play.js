@@ -1052,7 +1052,7 @@ export default class Play extends BaseScene {
         potion.setDepth(5);
 
         potion.type = 'potion';
-        potion.healAmount = Phaser.Math.Between(1, 10);
+        potion.healAmount = 10;
 
         this.time.delayedCall(200, () => {
         if (potion.active) {
