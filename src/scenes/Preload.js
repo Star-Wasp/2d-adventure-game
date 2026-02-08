@@ -334,6 +334,8 @@ export default class Preload extends Phaser.Scene {
   preloadIcons() {
     // bag
     this.load.image('bag', 'assets/icons/bag.png');
+
+    // Inventory icons
     this.load.image('inventory-potion', 'assets/icons/inventory-potion.png');
   }
 

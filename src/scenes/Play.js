@@ -107,7 +107,7 @@ export default class Play extends BaseScene {
 
   setupBagMenuDisplay() {
     this.bagMenu = new BagMenu(this, 272, 240);
-    this.bagMenu.addItem('potion');
+    this.bagMenu.addItem('inventory-potion');
   }
 
   setupCamera(map) {

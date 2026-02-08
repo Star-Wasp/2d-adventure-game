@@ -51,27 +51,42 @@ export default class BagMenu {
     }
 
     createInventorySlots(rows = 4, cols = 4, startX = 262, startY = 272, spacing = 25) {
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-                const slot = this.scene.add.rectangle(
-                    startX + col * spacing,
-                    startY + row * spacing,
-                    22,
-                    22,
-                    0x00ff00,
-                    0
-                );
-                slot
+    let slotIndex = 0;
+
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+
+            const slot = this.scene.add.rectangle(
+                startX + col * spacing,
+                startY + row * spacing,
+                22,
+                22,
+                0x00ff00,
+                0
+            );
+
+            slot.inventoryIndex = slotIndex;
+
+            slot
                 .setScrollFactor(0)
                 .setDepth(1000)
-                .setInteractive({ useHandCursor: true})
+                .setInteractive({ useHandCursor: true })
                 .on('pointerdown', () => {
-                    alert(`slot clicked at row ${row + 1}, col ${col + 1}`);
-                })
-                this.slots.push(slot)
-            }
+                    const index = slot.inventoryIndex;
+                    const item = this.inventory[index];
+
+                    if (!item) {
+                        alert(`Slot ${index} is currently empty.`);
+                    } else {
+                        alert(`Slot ${index} contains a ${item.type}${item.count ? ` (x${item.count})` : ''}`);
+                    }
+                });
+
+            this.slots.push(slot);
+            slotIndex++;
         }
     }
+}
 
     hideInventory() {
         if (this.inventoryPanel) {
@@ -111,11 +126,11 @@ export default class BagMenu {
     addItemSpriteToSlot(slotIndex, itemType) {
         const slot = this.slots[slotIndex];
 
-        const itemSprite = this.scene.add.sprite(slot.x, slot.y, 'life-potion');
+        const itemSprite = this.scene.add.sprite(slot.x, slot.y, 'inventory-potion');
         itemSprite
             .setScrollFactor(0)
             .setDepth(1001)
-            .setScale(0.8)
+            .setScale(0.7)
 
             this.inventory[slotIndex].sprite = itemSprite;
     }
