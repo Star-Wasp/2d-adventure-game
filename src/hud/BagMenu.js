@@ -72,34 +72,6 @@ export default class BagMenu {
                 .setScrollFactor(0)
                 .setDepth(1000)
                 .setInteractive({ useHandCursor: true })
-                .on('pointerdown', () => {
-                    const index = slot.inventoryIndex;
-                    const item = this.inventory[index];
-
-                    if (!item) {
-                        alert(`Slot ${index} is currently empty.`);
-                        return;
-                    }
-
-                    item.count--;
-
-                    if (item.text) {
-                        item.text.setText(item.count);
-                    }
-
-                    if (item.count <= 0) {
-                        if (item.sprite) {
-                            item.sprite.destroy();
-                            item.sprite = null;
-                        }
-                        if (item.text) {
-                            item.text.destroy();
-                            item.text = null;
-                        }
-                        this.inventory[index] = null;
-                    }
-                });
-
             this.slots.push(slot);
             slotIndex++;
         }
@@ -154,6 +126,7 @@ export default class BagMenu {
             this.addItemSpriteToSlot(emptySlotIndex, itemType);
             return true;
         }
+        return true
     }
 
     addItemSpriteToSlot(slotIndex, itemType) {
@@ -164,7 +137,9 @@ export default class BagMenu {
             .setScrollFactor(0)
             .setDepth(1001)
             .setScale(0.7)
-            .setInteractive({draggable: true});
+            .setInteractive({draggable: true, useHandCursor: true});
+
+            
 
             this.scene.input.setDraggable(itemSprite);
             itemSprite.sourceSlot = slotIndex;
@@ -181,6 +156,37 @@ export default class BagMenu {
 
             this.inventory[slotIndex].sprite = itemSprite;
             this.inventory[slotIndex].text = countText;
+
+
+            itemSprite.on('pointerdown', () => {
+                const index = itemSprite.sourceSlot;
+                const item = this.inventory[index];
+
+                if (!item) {return;};
+                if (item.type !== 'potion') {return;};
+                if (this.scene.player.health >= 100) {return;};
+
+                this.scene.player.health = Math.min(this.scene.player.health + 10, 100);
+                this.scene.player.healthBar.setHealth(this.scene.player.health);
+
+                item.count--;
+
+                if (item.text) {
+                    item.text.setText(item.count);
+                }
+
+                if (item.count <= 0) {
+                    if (item.sprite) {
+                        item.sprite.destroy();
+                        item.sprite = null;
+                    }
+                    if (item.text) {
+                        item.text.destroy();
+                        item.text = null;
+                    }
+                    this.inventory[index] = null;
+                }
+            });
 
             itemSprite.on('dragstart', () => {
                 itemSprite.setDepth(1003);
