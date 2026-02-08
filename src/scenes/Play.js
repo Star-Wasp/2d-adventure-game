@@ -1051,24 +1051,33 @@ export default class Play extends BaseScene {
 
     handleCollectablePickup(player, item) {
         let coins = this.registry.get('coins') || 0;
+
         if (item.type === 'coin') {
             coins += 1;
             this.registry.set('coins', coins);
-            this.coinDisplay.addCoins(1)
-            this.sound.play('coin_collect', {volume: this.soundVolume});
+            this.coinDisplay.addCoins(1);
+            this.sound.play('coin_collect', { volume: this.soundVolume });
+        }
 
-        }
-        
         if (item.type === 'potion') {
-            player.health += item.healAmount;
-            player.health = Math.min(player.health, 100);
-            player.healthBar.setHealth(player.health);
-            this.sound.play('item_collect', {volume: this.soundVolume});
+            if (player.health < 100) {
+                player.health += item.healAmount;
+                player.health = Math.min(player.health, 100);
+                player.healthBar.setHealth(player.health);
+                this.sound.play('item_collect', { volume: this.soundVolume });
+            } else {
+                if (this.bagMenu) {
+                    this.bagMenu.addItem('inventory-potion');
+                    this.sound.play('item_collect', { volume: this.soundVolume });
+                }
+            }
         }
+
         savePlayerData(player.health, coins);
 
         item.destroy();
     }
+
 
     update() {
         this.player.update();
