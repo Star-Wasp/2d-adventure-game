@@ -3,7 +3,7 @@ import BaseScene from "./BaseScene";
 import Player from "../entities/Player";
 import LevelManager from "../utils/LevelManager";
 import CoinDisplay from "../hud/CoinDisplay";
-import { getSavedLevel, saveLevel, getSavedPlayerHealth, getSavedCoins, savePlayerData, saveCheckpoint, getSavedCheckpoint} from "../utils/StorageManager";
+import { getSavedLevel, saveLevel, getSavedPlayerHealth, getSavedCoins, savePlayerData, saveCheckpoint, getSavedCheckpoint, getSavedInventory, saveInventory} from "../utils/StorageManager";
 import Fury from "../entities/Fury";
 import Slime1 from "../entities/Slime1";
 import Slime2 from "../entities/Slime2";
@@ -107,7 +107,19 @@ export default class Play extends BaseScene {
 
   setupBagMenuDisplay() {
     this.bagMenu = new BagMenu(this, 272, 240);
-    this.bagMenu.addItem('inventory-potion');
+
+     const savedInventory = getSavedInventory();
+    if (savedInventory) {
+        this.bagMenu.inventory = savedInventory;
+
+        // Update the UI slots visually if you want
+        this.bagMenu.slots.forEach((slot, i) => {
+            if (savedInventory[i]) {
+                slot.setTexture(savedInventory[i].textureKey);
+                slot.amount = savedInventory[i].amount;
+            }
+        });
+    }
   }
 
   setupCamera(map) {
@@ -1073,7 +1085,7 @@ export default class Play extends BaseScene {
             }
         }
 
-        savePlayerData(player.health, coins);
+        savePlayerData(player.health, this.registry.get('coins'), this.bagMenu.inventory);
 
         item.destroy();
     }

@@ -21,9 +21,13 @@ export function getSavedCheckpoint() {
     return checkpointData ? JSON.parse(checkpointData) : null;
 }
 
-export function savePlayerData(health, coins) {
+export function savePlayerData(health, coins, inventory = null) {
     localStorage.setItem('playerHealth', health);
     localStorage.setItem('coins', coins);
+
+    if (inventory) {
+        saveInventory(inventory)
+    }
 }
 
 export function getSavedPlayerHealth() {
@@ -34,4 +38,23 @@ export function getSavedPlayerHealth() {
 export function getSavedCoins() {
     const coins = localStorage.getItem('coins');
     return coins ? parseInt(coins) : 0;
+}
+
+export function saveInventory(inventory) {
+    if (!inventory) return;
+    try {
+        localStorage.setItem('playerInventory', JSON.stringify(inventory));
+    } catch (e) {
+        console.error('Error saving inventory:', e);
+    }
+}
+
+export function getSavedInventory() {
+    try {
+        const data = localStorage.getItem('playerInventory');
+        return data ? JSON.parse(data) : null;
+    } catch (e) {
+        console.error('Error loading inventory:', e);
+        return null;
+    }
 }
