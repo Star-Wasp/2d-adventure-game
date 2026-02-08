@@ -22,6 +22,7 @@ export default class BagMenu {
         this.inventoryPanel = null;
 
         this.slots = [];
+        this.inventory = Array(16).fill(null);
 
     }
 
@@ -41,6 +42,12 @@ export default class BagMenu {
         this.inventoryPanel.setScale(1.5);
 
         this.createInventorySlots();
+
+        this.inventory.forEach((item, index) => {
+            if (item !== null) {
+                this.addItemSpriteToSlot(index, item.type);
+            }
+        })
     }
 
     createInventorySlots(rows = 4, cols = 4, startX = 262, startY = 272, spacing = 25) {
@@ -52,7 +59,7 @@ export default class BagMenu {
                     22,
                     22,
                     0x00ff00,
-                    0.3
+                    0
                 );
                 slot
                 .setScrollFactor(0)
@@ -76,6 +83,41 @@ export default class BagMenu {
             slot.destroy();
         })
         this.slots = [];
+
+        this.inventory.forEach(item => {
+            if (item && item.sprite) {
+                item.sprite.destroy();
+                item.sprite = null;
+            }
+        })
+    }
+
+    addItem(itemType) {
+        const emptySlotIndex = this.inventory.findIndex(slot => slot === null);
+
+        if (emptySlotIndex === -1) {
+            alert("inventory is full!")
+            return false;
+        }
+
+        this.inventory[emptySlotIndex] = { type: itemType };
+
+        if (this.isOpen) {
+            this.addItemSpriteToSlot(emptySlotIndex, itemType);
+            return true;
+        }
+    }
+
+    addItemSpriteToSlot(slotIndex, itemType) {
+        const slot = this.slots[slotIndex];
+
+        const itemSprite = this.scene.add.sprite(slot.x, slot.y, 'life-potion');
+        itemSprite
+            .setScrollFactor(0)
+            .setDepth(1001)
+            .setScale(0.8)
+
+            this.inventory[slotIndex].sprite = itemSprite;
     }
 
 }
