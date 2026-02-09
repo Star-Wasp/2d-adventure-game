@@ -22,6 +22,8 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     this.paseVelocityY = 0;
     this.speed = 15;
 
+    this.isShopping = false;
+
     this.setCollideWorldBounds();
 
     }

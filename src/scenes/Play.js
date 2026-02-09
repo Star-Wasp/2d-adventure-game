@@ -268,6 +268,9 @@ export default class Play extends BaseScene {
                 } else {
                   console.log("Fully rested! Lets go explore!");  
                 }
+            } else if (zone.interactionType === 'shop_potions') {
+                console.log("Shopping for potions");
+                this.healthMerchant.isShopping = true;
             }
         }
     })
@@ -492,8 +495,8 @@ export default class Play extends BaseScene {
 
         npcLayer.objects.forEach(obj => {
             if (obj.name === 'health_merchant') {
-                const healthMerchant = new HealthMerchant(this, obj.x, obj.y);
-                this.npcGroup.add(healthMerchant);
+                this.healthMerchant = new HealthMerchant(this, obj.x, obj.y);
+                this.npcGroup.add(this.healthMerchant);
             }
             if (this.collisionLayer) {
               this.physics.add.collider(this.npcGroup, this.collisionLayer);  
@@ -1121,8 +1124,12 @@ export default class Play extends BaseScene {
             const zoneBounds = zone.getBounds();
 
             if (!Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, zoneBounds)) {
+                if (zone.interactionType === 'shop_potions') {
+                    this.healthMerchant.isShopping = false;
+                }
                 this.currentInteractionZone = null;
             }
+            
         }
 
         const playerBounds = this.player.getBounds();
