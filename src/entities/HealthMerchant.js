@@ -290,6 +290,30 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
         this.potionText = [];
     }
 
+    potionAnims() {
+
+        scene.anims.create({
+            key: 'life-potion-20',
+            frames: scene.anims.generateFrameNumbers('slime1-idle', {start: 0, end: 1}),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        scene.anims.create({
+            key: 'life-potion-50',
+            frames: scene.anims.generateFrameNumbers('slime1-idle', {start: 0, end: 1}),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        scene.anims.create({
+            key: 'life-potion-100',
+            frames: scene.anims.generateFrameNumbers('slime1-idle', {start: 0, end: 1}),
+            frameRate: 2,
+            repeat: -1,
+        });
+    }
+
     update() {
         if (!this.isShopping) {
             this.handlePasing()  
