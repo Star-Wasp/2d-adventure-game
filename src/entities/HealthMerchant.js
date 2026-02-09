@@ -236,6 +236,7 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
                     const newCoins = coins - potion.cost;
 
                     savePlayerData(this.scene.player.health, newCoins);
+                    this.scene.registry.set('coins', newCoins);
 
                     if (this.scene.coinDisplay) {
                         this.scene.coinDisplay.removeCoins(potion.cost);
@@ -245,8 +246,8 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
 
                     const player = this.scene.player;
 
-                    const offsetY = Phaser.Math.Between(25, 35);
                     const offsetX = Phaser.Math.Between(10, 20);
+                    const offsetY = Phaser.Math.Between(25, 35);
 
                     const potionSprite = this.scene.physics.add.sprite(
                         player.x + offsetX,
@@ -262,6 +263,12 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
 
                     this.scene.physics.add.overlap(player, potionSprite, () => {
                         console.log("potion collected");
+
+                        if (this.scene.bagMenu) {
+                            const inventoryKey = 'inventory-' + potion.key;
+                            console.log(inventoryKey)
+                            this.scene.bagMenu.addItem(inventoryKey);
+                        }
                         potionSprite.destroy()
                     },
                     null,

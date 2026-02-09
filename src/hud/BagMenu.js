@@ -116,6 +116,11 @@ export default class BagMenu {
             if (this.isOpen && this.inventory[existingSlotIndex].text) {
                 this.inventory[existingSlotIndex].text.setText(this.inventory[existingSlotIndex].count);
             }
+            const inventoryToSave = this.inventory.map(item => {
+                if (!item || item.count <= 0) return null;
+                return {type: item.type, count: item.count}
+            })
+            saveInventory(inventoryToSave);
             return true;
         }
 
@@ -126,19 +131,29 @@ export default class BagMenu {
             return false;
         }
 
-        this.inventory[emptySlotIndex] = { type: itemType, count: 1, sprite: null, text: null };
+        this.inventory[emptySlotIndex] = {
+            type: itemType, 
+            count: 1, 
+            sprite: null, 
+            text: null 
+        };
 
         if (this.isOpen) {
             this.addItemSpriteToSlot(emptySlotIndex, itemType);
-            return true;
         }
+
+        const inventoryToSave = this.inventory.map(item => {
+            if (!item || item.count <= 0) return null;
+            return {type: item.type, count: item.count};
+        })
+        saveInventory(inventoryToSave);
         return true
     }
 
     addItemSpriteToSlot(slotIndex, itemType) {
         const slot = this.slots[slotIndex];
 
-        const itemSprite = this.scene.add.sprite(slot.x, slot.y, 'inventory-potion');
+        const itemSprite = this.scene.add.sprite(slot.x, slot.y, itemType);
         itemSprite
             .setScrollFactor(0)
             .setDepth(1001)
@@ -158,41 +173,52 @@ export default class BagMenu {
             this.inventory[slotIndex].sprite = itemSprite;
             this.inventory[slotIndex].text = countText;
 
-
             itemSprite.on('pointerdown', () => {
-                const item = this.inventory[slotIndex];
+        const item = this.inventory[slotIndex];
+        if (!item) return;
 
-                if (!item) {return;};
-                if (item.type !== 'inventory-potion') {return;};
+        const potionRules = {
+            'inventory-potion': {heal: 5, threshold: 95},
+            'inventory-potion-20': {heal: 20, threshold: 80},
+            'inventory-potion-50': {heal: 50, threshold: 50},
+            'inventory-potion-100': {heal: 100, threshold: 30},
+        };
 
-                if (this.scene.player.health >= 100) {return;};
+        const key = Object.keys(potionRules).find(k => item.type === k);
 
-                this.scene.player.health = Math.min(this.scene.player.health + 5, 100);
-                this.scene.player.healthBar.setHealth(this.scene.player.health);
+        if (!key) {
+            return;
+        }
 
-                item.count--;
+        const { heal, threshold } = potionRules[key];
 
-                if (item.count > 0) {
-                    if (item.text) {
-                        item.text.setText(item.count);
-                    }
-                } else {
-                    if (item.sprite) {
-                        item.sprite.destroy();
-                        item.sprite = null;
-                    }
-                    if (item.text) {
-                        item.text.destroy();
-                        item.text = null;
-                    }
-                    this.inventory[slotIndex] = null;
-                }
-                const inventoryToSave = this.inventory.map(item => {
-                    if (!item || item.count <= 0) {return null;}
-                    return {type: item.type, count: item.count};
-                })
-                saveInventory(inventoryToSave);
-            });
+        if (this.scene.player.health > threshold) {
+            console.log("Can't use potion yet");
+            return;
+        }
+
+        this.scene.player.health = Math.min(this.scene.player.health + heal, 100);
+        this.scene.player.healthBar.setHealth(this.scene.player.health);
+
+        item.count--;
+        if (item.count > 0) {
+            if (item.text) item.text.setText(item.count);
+        } else {
+            if (item.sprite) {
+                item.sprite.destroy();
+                item.sprite = null;
+            }
+            if (item.text) {
+                item.text.destroy();
+                item.text = null;
+            }
+            this.inventory[slotIndex] = null;
+        }
+
+        const inventoryToSave = this.inventory.map(i => i && i.count > 0 ? {type: i.type, count: i.count} : null);
+        saveInventory(inventoryToSave);
+    });
+
     }
 
 }
