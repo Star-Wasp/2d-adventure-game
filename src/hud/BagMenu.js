@@ -170,7 +170,7 @@ export default class BagMenu {
 
                 if (this.scene.player.health >= 100) {return;};
 
-                this.scene.player.health = Math.min(this.scene.player.health + 10, 100);
+                this.scene.player.health = Math.min(this.scene.player.health + 5, 100);
                 this.scene.player.healthBar.setHealth(this.scene.player.health);
 
                 item.count--;

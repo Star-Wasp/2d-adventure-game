@@ -1063,7 +1063,7 @@ export default class Play extends BaseScene {
         potion.setDepth(5);
 
         potion.type = 'potion';
-        potion.healAmount = 10;
+        potion.healAmount = 5;
 
         this.time.delayedCall(200, () => {
         if (potion.active) {
