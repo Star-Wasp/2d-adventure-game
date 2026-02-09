@@ -293,24 +293,25 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     }
 
     potionAnims() {
+        if (this.scene.anims.exists('life-potion-20') && this.scene.anims.exists('life-potion-50') && this.scene.anims.exists('life-potion-100')) {return;};
 
-        this.anims.create({
+        this.scene.anims.create({
             key: 'life-potion-20',
-            frames: this.anims.generateFrameNumbers('life-potion-20', {start: 0, end: 1}),
+            frames: this.scene.anims.generateFrameNumbers('life-potion-20', {start: 0, end: 1}),
             frameRate: 2,
             repeat: -1,
         });
 
-        this.anims.create({
+        this.scene.anims.create({
             key: 'life-potion-50',
-            frames: this.anims.generateFrameNumbers('life-potion-50', {start: 0, end: 1}),
+            frames: this.scene.anims.generateFrameNumbers('life-potion-50', {start: 0, end: 1}),
             frameRate: 2,
             repeat: -1,
         });
 
-        this.anims.create({
+        this.scene.anims.create({
             key: 'life-potion-100',
-            frames: this.anims.generateFrameNumbers('life-potion-100', {start: 0, end: 1}),
+            frames: this.scene.anims.generateFrameNumbers('life-potion-100', {start: 0, end: 1}),
             frameRate: 2,
             repeat: -1,
         });
