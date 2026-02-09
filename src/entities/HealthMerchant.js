@@ -24,8 +24,17 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
 
     this.isShopping = false;
     this.shopPanel = null;
+    this.shopSlots = [];
 
     this.setCollideWorldBounds();
+
+    this.forSale = [
+        {key: 'potion-20', heal: 20, cost: 20},
+        {key: 'potion-50', heal: 50, cost: 50},
+        {key: 'potion-100', heal: 100, cost: 100},
+    ];
+
+    this.potionIcons = [];
 
     }
 
@@ -143,7 +152,6 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     }
 
     sell() {
-        console.log(this.sellX, this.sellY, this.x, this.y);
         if (!this.sellX || !this.sellY) {return;};
 
         const distanceX = this.sellX - this.x;
@@ -170,11 +178,60 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     showMerchendice() {
         if (this.shopPanel) {return;};
 
-        this.shopPanel = this.scene.add.image(325, 240, 'potion-shop-menu')
+        if (!this.isShopping) {
+            this.hideMerchendice();
+        };
+
+        this.shopPanel = this.scene.add.image(330, 245, 'potion-shop-menu')
             .setScrollFactor(0)
             .setDepth(1000)
-            .setScale(1.3);
+            .setScale(1.5)            
+
+        this.createSlots()
+
+        this.forSale.forEach((potion, index) => {
+            const x = 305 + index * 25;
+            const y = 245;
+            const icon = this.scene.add.sprite(x, y, potion.key)
+                .setScrollFactor(0)
+                .setDepth(1002)
+                .setScale(0.7)
+                .setInteractive({useHandCursor: true});
+
+            this.potionIcons.push(icon);
             
+
+            icon.on('pointerdown', () => {
+                console.log('clickedPotion: ', potion.key)
+            })
+        })
+    }
+
+    createSlots(cols = 3, startX = 305, startY = 245, spacing = 25) {
+        let slotIndex = 0;
+
+        for (let col = 0; col < cols; col++) {
+            const slot = this.scene.add.rectangle(
+                startX + col * spacing,
+                startY,
+                22,
+                22,
+                0x00ff00,
+                0
+            );
+
+            slot.potionIndex = slotIndex;
+
+            slot
+                .setOrigin(0.5)
+                .setScrollFactor(0)
+                .setDepth(1001)
+                .setInteractive(false);
+                slot.input.enabled = false;
+            
+            this.shopSlots.push(slot);
+            slotIndex++;
+        }
     }
 
     hideMerchendice() {
@@ -182,6 +239,12 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
             this.shopPanel.destroy();
             this.shopPanel = null;
         }
+
+        this.shopSlots.forEach(slot => slot.destroy());
+        this.shopSlots = [];
+
+        this.potionIcons.forEach(icon => icon.destroy());
+        this.potionIcons = [];
     }
 
     update() {

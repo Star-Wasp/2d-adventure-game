@@ -255,21 +255,18 @@ export default class Play extends BaseScene {
             console.log("Staring at books");
             } else if (zone.interactionType === 'bed') {
                 if (this.player.health < 100) {
-                    console.log("I'm so tired...");
                     this.cameras.main.fadeOut(1000, 0, 0, 0);
 
                     this.cameras.main.once('camerafadeoutcomplete', () => {
                         this.player.health = 100;
                         this.player.healthBar.setHealth(this.player.health);
                         savePlayerData(this.player.health, this.registry.get('coins'));
-                        console.log('Health restored!');
                         this.cameras.main.fadeIn(1000, 0, 0, 0)
                     })
                 } else {
                   console.log("Fully rested! Lets go explore!");  
                 }
             } else if (zone.interactionType === 'shop_potions') {
-                console.log("Shopping for potions");
                 this.healthMerchant.isShopping = true;
             }
         }
@@ -284,7 +281,6 @@ export default class Play extends BaseScene {
             this.currentCheckpointY = checkpoint.y;
             const level = this.levelManager.getCurrentLevelKey();
             saveCheckpoint(checkpoint.x, checkpoint.y, level);
-            console.log("overlap with checkpoint, ", checkpoint.x, checkpoint.y);
             }
         })
 
@@ -492,7 +488,6 @@ export default class Play extends BaseScene {
 
     setupNpc(npcLayer) {
         if (!npcLayer) {return;};
-        console.log(npcLayer.objects)
 
         npcLayer.objects.forEach(obj => {
             if (obj.name === 'health_merchant') {

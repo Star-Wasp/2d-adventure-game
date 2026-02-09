@@ -145,9 +145,6 @@ export default class BagMenu {
             .setScale(0.7)
             .setInteractive({useHandCursor: true});
 
-            this.scene.input.setDraggable(itemSprite);
-            itemSprite.sourceSlot = slotIndex;
-
             const countText = this.scene.add.text(
                 slot.x + 7,
                 slot.y + 4,
