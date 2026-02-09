@@ -195,10 +195,30 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
             const icon = this.scene.add.sprite(x, y, potion.key)
                 .setScrollFactor(0)
                 .setDepth(1002)
-                .setScale(0.7)
+                .setScale(0.5)
                 .setInteractive({useHandCursor: true});
 
             this.potionIcons.push(icon);
+
+            const healText = this.scene.add.text(
+                icon.x - 6,
+                icon.y - 12,
+                `+${potion.heal}`,
+                { fontSize: '11px', fill: '#ffffff' }
+            )
+                .setScrollFactor(0)
+                .setDepth(1003)
+                .setScale(0.5)
+
+            const priceText = this.scene.add.text(
+                icon.x - 8,
+                icon.y + 6,
+                `🪙${potion.cost}`,
+                { fontSize: '11px', fill: '#ffffff' }
+            )
+                .setScrollFactor(0)
+                .setDepth(1003)
+                .setScale(0.5)
             
 
             icon.on('pointerdown', () => {
