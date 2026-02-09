@@ -245,11 +245,12 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
 
                     const player = this.scene.player;
 
-                    const offset = Phaser.Math.Between(10, 20);
+                    const offsetY = Phaser.Math.Between(25, 35);
+                    const offsetX = Phaser.Math.Between(10, 20);
 
-                    const potionSprite = this.scene.add.sprite(
-                        player.x,
-                        player.y + offset,
+                    const potionSprite = this.scene.physics.add.sprite(
+                        player.x + offsetX,
+                        player.y + offsetY,
                         potion.key
                     );
 
@@ -257,6 +258,15 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
                         .setDepth(player.depth - 1)
                         .setScale(0.4)
                     potionSprite.play('life-' + potion.key);
+                    potionSprite.setImmovable(true);
+
+                    this.scene.physics.add.overlap(player, potionSprite, () => {
+                        console.log("potion collected");
+                        potionSprite.destroy()
+                    },
+                    null,
+                    this
+                    );
                 } else {
                     console.log("not enough coins");
                 }
