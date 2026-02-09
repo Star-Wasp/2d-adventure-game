@@ -76,6 +76,7 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     }
 
     handlePasing() {    
+        if (this.isShopping) {return;};
         const currentTime = this.scene.time.now;
 
         if (currentTime - this.paseTimer > this.paseDirectionTimer) {
@@ -140,9 +141,40 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    update() {
+    sell() {
+        console.log(this.sellX, this.sellY, this.x, this.y);
+        if (!this.sellX || !this.sellY) {return;};
 
-        this.handlePasing()
+        const distanceX = this.sellX - this.x;
+        const distanceY = this.sellY - this.y;
+
+        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+        if (distance < 2) {
+            this.setVelocity(0, 0);
+            this.facing = 'down';
+            this.playIdle();
+            return;
+        }
+
+        const velX = (distanceX / distance) * this.speed;
+        const velY = (distanceY / distance) * this.speed;
+
+        this.setVelocity(velX, velY);
+
+        this.updateMovementAnimation();
+    }
+
+    update() {
+        if (!this.isShopping) {
+            this.handlePasing()  
+        }
+        
+
+        if (this.isShopping) {
+            this.sell();
+        }
+
     }
 
 }

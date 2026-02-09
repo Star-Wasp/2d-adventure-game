@@ -492,17 +492,25 @@ export default class Play extends BaseScene {
 
     setupNpc(npcLayer) {
         if (!npcLayer) {return;};
+        console.log(npcLayer.objects)
 
         npcLayer.objects.forEach(obj => {
             if (obj.name === 'health_merchant') {
                 this.healthMerchant = new HealthMerchant(this, obj.x, obj.y);
                 this.npcGroup.add(this.healthMerchant);
             }
-            if (this.collisionLayer) {
-              this.physics.add.collider(this.npcGroup, this.collisionLayer);  
+        });
+
+        npcLayer.objects.forEach(obj => {
+            if (obj.name === 'health-merchant-sell' && this.healthMerchant) {
+                this.healthMerchant.sellX = obj.x;
+                this.healthMerchant.sellY = obj.y;
             }
-            
-        })
+        });
+        
+        if (this.collisionLayer) {
+            this.physics.add.collider(this.npcGroup, this.collisionLayer);  
+            }
     }
 
     setupEnemyZoneLayer(enemyZoneLayer) {
@@ -1128,6 +1136,7 @@ export default class Play extends BaseScene {
                     this.healthMerchant.isShopping = false;
                 }
                 this.currentInteractionZone = null;
+
             }
             
         }
