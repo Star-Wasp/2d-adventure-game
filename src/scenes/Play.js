@@ -1134,6 +1134,7 @@ export default class Play extends BaseScene {
             if (!Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, zoneBounds)) {
                 if (zone.interactionType === 'shop_potions') {
                     this.healthMerchant.isShopping = false;
+                    this.healthMerchant.hideMerchendice();
                 }
                 this.currentInteractionZone = null;
 

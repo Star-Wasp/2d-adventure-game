@@ -23,6 +23,7 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     this.speed = 15;
 
     this.isShopping = false;
+    this.shopPanel = null;
 
     this.setCollideWorldBounds();
 
@@ -154,6 +155,7 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
             this.setVelocity(0, 0);
             this.facing = 'down';
             this.playIdle();
+            this.showMerchendice();
             return;
         }
 
@@ -163,6 +165,23 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
         this.setVelocity(velX, velY);
 
         this.updateMovementAnimation();
+    }
+
+    showMerchendice() {
+        if (this.shopPanel) {return;};
+
+        this.shopPanel = this.scene.add.image(325, 240, 'potion-shop-menu')
+            .setScrollFactor(0)
+            .setDepth(1000)
+            .setScale(1.3);
+            
+    }
+
+    hideMerchendice() {
+        if (this.shopPanel) {
+            this.shopPanel.destroy();
+            this.shopPanel = null;
+        }
     }
 
     update() {
