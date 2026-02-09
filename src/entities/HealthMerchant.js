@@ -38,6 +38,8 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     this.potionIcons = [];
     this.potionText = [];
 
+    this.potionAnims();
+
     }
 
     createAnimations(scene) {
@@ -292,23 +294,23 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
 
     potionAnims() {
 
-        scene.anims.create({
+        this.anims.create({
             key: 'life-potion-20',
-            frames: scene.anims.generateFrameNumbers('slime1-idle', {start: 0, end: 1}),
+            frames: this.anims.generateFrameNumbers('life-potion-20', {start: 0, end: 1}),
             frameRate: 2,
             repeat: -1,
         });
 
-        scene.anims.create({
+        this.anims.create({
             key: 'life-potion-50',
-            frames: scene.anims.generateFrameNumbers('slime1-idle', {start: 0, end: 1}),
+            frames: this.anims.generateFrameNumbers('life-potion-50', {start: 0, end: 1}),
             frameRate: 2,
             repeat: -1,
         });
 
-        scene.anims.create({
+        this.anims.create({
             key: 'life-potion-100',
-            frames: scene.anims.generateFrameNumbers('slime1-idle', {start: 0, end: 1}),
+            frames: this.anims.generateFrameNumbers('life-potion-100', {start: 0, end: 1}),
             frameRate: 2,
             repeat: -1,
         });
