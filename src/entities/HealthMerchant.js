@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { getSavedCoins, savePlayerData } from "../utils/StorageManager";
 
 export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, texture = 'health-merchant') {
@@ -35,6 +36,7 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
     ];
 
     this.potionIcons = [];
+    this.potionText = [];
 
     }
 
@@ -219,10 +221,28 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
                 .setScrollFactor(0)
                 .setDepth(1003)
                 .setScale(0.5)
+
+            this.potionText.push(healText, priceText);
             
 
             icon.on('pointerdown', () => {
-                console.log('clickedPotion: ', potion.key)
+                const coins = getSavedCoins();
+
+                if (coins >= potion.cost) {
+                    console.log('Potion purchased');
+
+                    const newCoins = coins - potion.cost;
+
+                    savePlayerData(this.scene.player.health, newCoins);
+
+                    if (this.scene.coinDisplay) {
+                        this.scene.coinDisplay.removeCoins(potion.cost);
+                    }
+
+                    console.log('Coins remaining: ', newCoins)
+                } else {
+                    console.log("not enough coins");
+                }
             })
         })
     }
@@ -265,6 +285,9 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
 
         this.potionIcons.forEach(icon => icon.destroy());
         this.potionIcons = [];
+
+        this.potionText.forEach(text => text.destroy());
+        this.potionText = [];
     }
 
     update() {
