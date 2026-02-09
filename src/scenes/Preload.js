@@ -148,10 +148,26 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 32,
     })
 
+    this.load.spritesheet('life-potion-20', 'assets/collectibles/potion-buttle-20.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+
+    this.load.spritesheet('life-potion-50', 'assets/collectibles/potion-buttle-50.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+
+    this.load.spritesheet('life-potion-100', 'assets/collectibles/potion-buttle-100.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+
     this.load.spritesheet('coin', 'assets/collectibles/Coin_One.png', {
       frameWidth: 16,
       frameHeight: 16,
     })
+
   }
 
   preloadUI() {
@@ -164,8 +180,9 @@ export default class Preload extends Phaser.Scene {
     this.load.image('half-heart', 'assets/hud/Half_a_heart.png');
     this.load.image('empty-heart', 'assets/hud/Heart0.png');
 
-    // Inventory menu
+    // menus
     this.load.image('inventory-menu', 'assets/hud/inverntory-menu.png');
+    this.load.image('potion-shop-menu', 'assets/hud/shop-menu.png');
   }
 
   preloadSounds() {
@@ -337,6 +354,14 @@ export default class Preload extends Phaser.Scene {
 
     // Inventory icons
     this.load.image('inventory-potion', 'assets/icons/inventory-potion.png');
+    this.load.image('inventory-potion-20', 'assets/icons/inventory-potion-20.png');
+    this.load.image('inventory-potion-50', 'assets/icons/inventory-potion-50.png');
+    this.load.image('inventory-potion-100', 'assets/icons/inventory-potion-100.png');
+
+    // Shop icons
+    this.load.image('potion-20', 'assets/icons/shop-potion-20.png');
+    this.load.image('potion-50', 'assets/icons/shop-potion-50.png');
+    this.load.image('potion-100', 'assets/icons/shop-potion-100.png');
   }
 
   create() {
