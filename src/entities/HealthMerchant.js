@@ -242,6 +242,21 @@ export default class HealthMerchant extends Phaser.Physics.Arcade.Sprite {
                     }
 
                     console.log('Coins remaining: ', newCoins)
+
+                    const player = this.scene.player;
+
+                    const offset = Phaser.Math.Between(10, 20);
+
+                    const potionSprite = this.scene.add.sprite(
+                        player.x,
+                        player.y + offset,
+                        potion.key
+                    );
+
+                    potionSprite
+                        .setDepth(player.depth - 1)
+                        .setScale(0.4)
+                    potionSprite.play('life-' + potion.key);
                 } else {
                     console.log("not enough coins");
                 }
