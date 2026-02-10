@@ -310,6 +310,12 @@
                  "id":14,
                  "name":"info-controls",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"move-controls"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

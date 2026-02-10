@@ -11,6 +11,7 @@ import Slime3 from "../entities/Slime3";
 import HealthMerchant from "../entities/HealthMerchant";
 import BagMenu from "../hud/BagMenu";
 import BackHome from "../hud/BackHome";
+import TextManager from "../utils/TextManager";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -158,8 +159,10 @@ export default class Play extends BaseScene {
     // Overlap with infoboards
     this.physics.add.overlap(
         this.player,
-        this.infoGroup, () => {
-            console.log("READING INFO BOARD")
+        this.infoGroup, (player, board) => {
+            if (!board.type.value) {return;};
+            const textManager = new TextManager(this, board.type.value);
+            textManager.showMessage(player.x, player.y);
         }
     )
 
@@ -247,11 +250,13 @@ export default class Play extends BaseScene {
               this.scene.restart();  
             } else {
                 const popup = this.add.text(player.x, player.y - 20, "Not accessible yet", {
-                    font: '10px Arial',
+                    font: '20px Arial',
                     fill: '#070707',
                     backgroundColor: '#fbfbfbaa',
                     padding: {x: 5, y: 3},
-                }).setOrigin(0.5);
+                })
+                    .setOrigin(0.5)
+                    .setScale(0.5)
 
                 this.time.delayedCall(1500, () => popup.destroy())
             }   
@@ -510,6 +515,14 @@ export default class Play extends BaseScene {
                 const infoBoard = this.add.sprite(obj.x, obj.y, 'info-board')
                     .setScale(0.8)
                     .setDepth(obj.y - 1);
+                
+                    if (obj.properties) {
+
+            const typeProp = obj.properties.find(p => p.name === "type");
+            if (typeProp) {
+                infoBoard.type = typeProp;
+            }
+        }
 
                 this.infoGroup.add(infoBoard);
             }
