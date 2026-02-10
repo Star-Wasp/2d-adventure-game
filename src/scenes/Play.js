@@ -80,6 +80,8 @@ export default class Play extends BaseScene {
 
     this.currentInteractionZone = null;
     this.currentCheckpoint = null;
+
+    this.textManager = new TextManager(this);
   }
 
   playLevelMusic() {
@@ -160,11 +162,14 @@ export default class Play extends BaseScene {
     this.physics.add.overlap(
         this.player,
         this.infoGroup, (player, board) => {
-            if (!board.type.value) {return;};
-            const textManager = new TextManager(this, board.type.value);
-            textManager.showMessage(player.x, player.y);
+            if (!board.type?.value) {return;};
+            if (!board.isPlayerOverlapping) {
+                board.isPlayerOverlapping = true;
+
+                this.textManager.showMessage(board.x, board.y, board.type.value)
+            }
         }
-    )
+    );
 
     // Breakables overlap
      this.physics.add.overlap(
@@ -1220,6 +1225,20 @@ export default class Play extends BaseScene {
         if (this.jumpableCollider && this.jumpableColliders) {
             this.jumpableCollider.active = !this.player.isJumping;
         }
-        
+
+        if (this.infoGroup) {
+            this.infoGroup.getChildren().forEach(board => {
+            const playerBounds = this.player.getBounds();
+            const boardBounds = board.getBounds();
+
+            if (!Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, boardBounds)) {
+                if (board.isPlayerOverlapping) {
+                    board.isPlayerOverlapping = false;
+                    this.textManager.hideMessage();
+                }
+            }
+        })
+        }
+
     }
 }

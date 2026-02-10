@@ -371,6 +371,9 @@ export default class Preload extends Phaser.Scene {
   preloadTextItems() {
     // Info board
     this.load.image('info-board', 'assets/text/info-board.png');
+
+    // Info board panel
+    this.load.image('board-panel', 'assets/text/board-panel.png');
   }
 
   create() {
