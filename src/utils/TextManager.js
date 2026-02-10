@@ -20,9 +20,18 @@ export default class TextManager {
 
         if (this.panelKey === 'move-controls') {
             message = " ↑  MOVE UP\n← MOVE LEFT\n→ MOVE RIGHT\n ↓  MOVE DOWN";
+        } else if (this.panelKey === 'jump') {
+            message = "D - JUMP\n\nA - SWING SWARD";
+        } else if (this.panelKey === 'home') {
+            message = "HOME\nSWEET\nHOME";
+        } else if (this.panelKey === 'flag') {
+            message = "FLAGS SAVE\nYOUR PROGRESS";
+        } else if (this.panelKey === 'potion-shop') {
+            message = 'POTION SHOP\nGREAT DEALS\nEVERY DAY!'
         } else {
-            message = "Unknown board"
+            message = "Unknown board";
         }
+        
 
             this.isShowing = true;
 

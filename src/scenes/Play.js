@@ -516,7 +516,7 @@ export default class Play extends BaseScene {
         if (!infoLayer) {return;};
 
         infoLayer.objects.forEach(obj => {
-            if (obj.name === 'info-controls') {
+            if (obj.name === 'info') {
                 const infoBoard = this.add.sprite(obj.x, obj.y, 'info-board')
                     .setScale(0.8)
                     .setDepth(obj.y - 1);
