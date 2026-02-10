@@ -162,6 +162,49 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         frameRate: 15,
         repeat: 0,
     });
+
+    scene.anims.create({
+        key: 'player-shoot-attack-down',
+        frames: scene.anims.generateFrameNumbers('player-shoot-attack', {start: 0, end: 3}),
+        frameRate: 15,
+        repeat: 0,
+    });
+
+    scene.anims.create({
+        key: 'player-shoot-attack-up',
+        frames: scene.anims.generateFrameNumbers('player-shoot-attack', {start: 8, end: 11}),
+        frameRate: 15,
+        repeat: 0,
+    });
+
+    scene.anims.create({
+        key: 'player-shoot-attack-side',
+        frames: scene.anims.generateFrameNumbers('player-shoot-attack', {start: 4, end: 7}),
+        frameRate: 15,
+        repeat: 0,
+    });
+
+    // Shoot attack projectile
+    scene.anims.create({
+        key: 'projectile-up',
+        frames: scene.anims.generateFrameNumbers('projectile', {start: 3, end: 5}),
+        frameRate: 15,
+        repeat: -1,
+    });
+
+    scene.anims.create({
+        key: 'projectile-down',
+        frames: scene.anims.generateFrameNumbers('projectile', {start: 6, end: 8}),
+        frameRate: 15,
+        repeat: -1,
+    });
+
+    scene.anims.create({
+        key: 'projectile-side',
+        frames: scene.anims.generateFrameNumbers('projectile', {start: 0, end: 2}),
+        frameRate: 15,
+        repeat: -1,
+    });
     }
 
     checkTrapOverlap(spikeGroup) {
