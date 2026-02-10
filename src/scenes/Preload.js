@@ -201,6 +201,7 @@ export default class Preload extends Phaser.Scene {
   preloadMusic() {
     this.load.audio('overground-music', 'assets/sounds/no_action_bg_sound.ogg');
     this.load.audio('dungeon-music', 'assets/sounds/dungeon_bg_sound.ogg');
+    this.load.audio('interior-music', 'assets/sounds/interior_bg_sound.ogg');
 }
 
   preloadTraps() {
