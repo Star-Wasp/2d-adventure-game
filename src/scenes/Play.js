@@ -155,6 +155,14 @@ export default class Play extends BaseScene {
 
   setupPlayerOverlaps() {
 
+    // Overlap with infoboards
+    this.physics.add.overlap(
+        this.player,
+        this.infoGroup, () => {
+            console.log("READING INFO BOARD")
+        }
+    )
+
     // Breakables overlap
      this.physics.add.overlap(
         this.player.swardHitbox,
@@ -500,8 +508,8 @@ export default class Play extends BaseScene {
         infoLayer.objects.forEach(obj => {
             if (obj.name === 'info-controls') {
                 const infoBoard = this.add.sprite(obj.x, obj.y, 'info-board')
-                .setScale(0.8)
-                .setDepth(obj.y - 1)
+                    .setScale(0.8)
+                    .setDepth(obj.y - 1);
 
                 this.infoGroup.add(infoBoard);
             }
