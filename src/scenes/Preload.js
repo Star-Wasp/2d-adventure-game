@@ -21,6 +21,7 @@ export default class Preload extends Phaser.Scene {
     this.preloadEnemies();
     this.preloadNPCs();
     this.preloadIcons();
+    this.preloadTextItems();
   }
 
   preloadAnims() {
@@ -350,8 +351,9 @@ export default class Preload extends Phaser.Scene {
   }
 
   preloadIcons() {
-    // bag
+    // hud icons
     this.load.image('bag', 'assets/icons/bag.png');
+    this.load.image('home', 'assets/icons/hero-house-icon.png');
 
     // Inventory icons
     this.load.image('inventory-potion', 'assets/icons/inventory-potion.png');
@@ -363,6 +365,12 @@ export default class Preload extends Phaser.Scene {
     this.load.image('potion-20', 'assets/icons/shop-potion-20.png');
     this.load.image('potion-50', 'assets/icons/shop-potion-50.png');
     this.load.image('potion-100', 'assets/icons/shop-potion-100.png');
+
+  }
+
+  preloadTextItems() {
+    // Info board
+    this.load.image('info-board', 'assets/text/info-board.png');
   }
 
   create() {

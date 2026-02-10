@@ -12,7 +12,7 @@ export default class BagMenu {
         this.bagIcon = scene.add.sprite(this.x, this.y, 'bag');
         this.bagIcon.setScrollFactor(0);
         this.bagIcon.setDepth(1000);
-        this.bagIcon.setScale(0.7);
+        this.bagIcon.setScale(0.5);
         this.bagIcon.setInteractive({ useHandCursor: true});
 
         this.bagIcon.on('pointerdown', () => {

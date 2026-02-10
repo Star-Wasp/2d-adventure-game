@@ -10,6 +10,7 @@ import Slime2 from "../entities/Slime2";
 import Slime3 from "../entities/Slime3";
 import HealthMerchant from "../entities/HealthMerchant";
 import BagMenu from "../hud/BagMenu";
+import BackHome from "../hud/BackHome";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -61,6 +62,8 @@ export default class Play extends BaseScene {
 
     this.setupBagMenuDisplay();
 
+    this.setupBackHomeButton();
+
     this.player.checkTrapOverlap(this.spikeGroup);
 
     this.setupJumpableColliders();
@@ -106,13 +109,12 @@ export default class Play extends BaseScene {
   }
 
   setupBagMenuDisplay() {
-    this.bagMenu = new BagMenu(this, 272, 240);
+    this.bagMenu = new BagMenu(this, 272, 242);
 
      const savedInventory = getSavedInventory();
     if (savedInventory) {
         this.bagMenu.inventory = savedInventory;
 
-        // Update the UI slots visually if you want
         this.bagMenu.slots.forEach((slot, i) => {
             if (savedInventory[i]) {
                 slot.setTexture(savedInventory[i].textureKey);
@@ -120,6 +122,10 @@ export default class Play extends BaseScene {
             }
         });
     }
+  }
+
+  setupBackHomeButton() {
+    this.backHome = new BackHome(this, 272, 227);
   }
 
   setupCamera(map) {
@@ -440,10 +446,12 @@ export default class Play extends BaseScene {
         this.setupSpikes(trapLayer);
 
         // Object Layers
+        const infoLayer = map.getObjectLayer('info_board');
+        this.infoGroup = this.physics.add.group();
+        this.setupInfoBoards(infoLayer);
+
         const npcLayer = map.getObjectLayer('npc');
-
         this.npcGroup = this.physics.add.group();
-
         this.setupNpc(npcLayer);
 
         const zoneLayer = map.getObjectLayer('player_zones');
@@ -484,6 +492,20 @@ export default class Play extends BaseScene {
         this.handleRespawn();
 
         return map
+    }
+
+    setupInfoBoards(infoLayer) {
+        if (!infoLayer) {return;};
+
+        infoLayer.objects.forEach(obj => {
+            if (obj.name === 'info-controls') {
+                const infoBoard = this.add.sprite(obj.x, obj.y, 'info-board')
+                .setScale(0.8)
+                .setDepth(obj.y - 1)
+
+                this.infoGroup.add(infoBoard);
+            }
+        })
     }
 
     setupNpc(npcLayer) {
