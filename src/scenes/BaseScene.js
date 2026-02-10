@@ -50,7 +50,7 @@ class BaseScene extends Phaser.Scene {
                 this.screenCenter[0],
                 this.screenCenter[1] + lastMenuPositionY
             ]
-            menuItem.textGO = this.add.text(...menuPosition, menuItem.text, this.fontOptions).setOrigin(0.5, 1);
+            menuItem.textGO = this.add.text(...menuPosition, menuItem.text, this.fontOptions).setOrigin(0.5, 1).setScale(0.5);
             lastMenuPositionY += this.lineHeight;
             setUpMenuEvents(menuItem)
         })

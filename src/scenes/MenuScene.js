@@ -5,8 +5,8 @@ class MenuScene extends BaseScene {
         super('MenuScene', {
             width: 600,
             height: 600,
-            fontSize: 40,
-            fontColor: 'rgb(107, 85, 18)',
+            fontSize: 160,
+            fontColor: 'rgb(18, 107, 18)',
             canGoBack: false,
             backgroundKey: 'menu-bg',
             backgroundScale: 1
@@ -30,7 +30,7 @@ class MenuScene extends BaseScene {
 
         textGO.on('pointerover', () => {
             textGO.setStyle({
-                fill: 'rgb(244, 195, 47)'
+                fill: 'rgb(4, 193, 4)'
             })
         })
 

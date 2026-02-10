@@ -125,6 +125,17 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 48,
   });
 
+  this.load.spritesheet('player-shoot-attack', 'assets/player/shoot-attack.png', {
+      frameWidth: 48,
+      frameHeight: 48,
+  })
+
+  // Projectile
+  this.load.spritesheet('projectile', 'assets/player/projectile.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+  })
+
   }
 
   preloadItems() {
