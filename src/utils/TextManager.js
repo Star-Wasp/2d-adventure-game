@@ -32,7 +32,6 @@ export default class TextManager {
             message = "Unknown board";
         }
         
-
             this.isShowing = true;
 
             this.messagePanel = this.scene.add.sprite(x, y - 13, 'board-panel')
