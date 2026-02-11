@@ -21,13 +21,15 @@ export default class TextManager {
         if (this.panelKey === 'move-controls') {
             message = " ↑  MOVE UP\n← MOVE LEFT\n→ MOVE RIGHT\n ↓  MOVE DOWN";
         } else if (this.panelKey === 'jump') {
-            message = "D - JUMP\n\nA - SWING SWARD";
+            message = "W - JUMP\nA - SWING SWARD\nD - SHOOT\n  PROJECTILE";
         } else if (this.panelKey === 'home') {
             message = "HOME\nSWEET\nHOME";
         } else if (this.panelKey === 'flag') {
             message = "FLAGS SAVE\nYOUR PROGRESS";
         } else if (this.panelKey === 'potion-shop') {
             message = 'POTION SHOP\nGREAT DEALS\nEVERY DAY!'
+        } else if (this.panelKey === 'blacksmith') {
+            message = "BLACKSMITHS\nWORKSHOP"
         } else {
             message = "Unknown board";
         }
