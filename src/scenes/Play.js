@@ -68,6 +68,8 @@ export default class Play extends BaseScene {
     this.player.checkTrapOverlap(this.spikeGroup);
 
     this.setupJumpableColliders();
+
+    this.projectiles = this.physics.add.group()
     
     this.setupPlayerOverlaps();
 
@@ -82,6 +84,58 @@ export default class Play extends BaseScene {
     this.currentCheckpoint = null;
 
     this.textManager = new TextManager(this);
+  }
+
+  spawnProjectile(x, y, facing, flipX) {
+    let offsetX = 0;
+    let offsetY = 0;
+    const spawnOffset = 14;
+
+    if (facing === 'up') {
+        offsetY = -spawnOffset;
+    } else if (facing === 'down') {
+        offsetY = spawnOffset; 
+    } else if (facing === 'side') {
+        offsetX = flipX ? -spawnOffset : spawnOffset;
+    }
+
+    const sideOffsetY = 18;
+    if (facing === 'side') {
+        offsetY = sideOffsetY;
+    }
+
+    const projectile = this.projectiles.create(x + offsetX, y + offsetY, 'projectile');
+    projectile
+        .setDepth(y + 1)
+        .setScale(0.6)
+        .setCollideWorldBounds(true);
+    projectile.body.onWorldBounds = true;
+
+    const speed = 250;
+
+    if (facing === 'up') {
+        projectile.setVelocity(0, -speed);
+        projectile.play('projectile-up');
+    } else if (facing === 'down') {
+        projectile.setVelocity(0, speed);
+        projectile.play('projectile-down');
+    } else {
+        if (flipX) {
+            projectile.setVelocity(-speed, 0);
+            projectile.setFlipX(true);
+        } else {
+            projectile.setVelocity(speed, 0);
+            projectile.setFlipX(false);
+        }
+        projectile.play('projectile-side');
+    }
+
+    this.time.delayedCall(800, () => {
+        if (projectile.active) {
+            projectile.destroy();
+        }
+    })
+    
   }
 
   playLevelMusic() {
@@ -157,6 +211,71 @@ export default class Play extends BaseScene {
   }
 
   setupPlayerOverlaps() {
+
+    // Projectile overlaps
+    this.physics.add.overlap(
+        this.projectiles,
+        this.EnemyGroup,
+        (projectile, enemy) => {
+            const damageAmount = Phaser.Math.Between(5, 15);
+            enemy.takeDamage(damageAmount);
+            projectile.destroy();
+        }
+    )
+
+    if (this.collisionLayer) {
+        this.physics.add.collider(
+            this.projectiles,
+            this.collisionLayer,
+            (projectile) => {
+                projectile.destroy();
+            }
+        )
+    }
+
+    this.physics.add.overlap(
+        this.projectiles,
+        this.breakablesGroup,
+        (projectile, item) => {
+            if (item.isBroken) {return;};
+
+            item.isBroken = true;
+            projectile.destroy();
+
+            if (item.type === 'box') {
+                item.play('box-break');
+                item.on('animationcomplete-box-break', () => {
+                    for (let i = 0; i < 3; i++) {
+                        this.itemSpawnDrop(item.x, item.y);
+                    }
+                })
+            }
+        },
+        null,
+        this
+    )
+
+    this.physics.add.overlap(
+        this.projectiles,
+        this.chestGroup,
+        (projectile, chest) => {
+            if (chest.isOpened) {return;};
+
+            chest.isOpened = true;
+            projectile.destroy();
+
+            chest.play('chest-opening');
+            chest.on('animationcomplete', () => {
+                for (let i = 0; i < 4; i++) {
+                    const offsetX = Phaser.Math.Between(-20, 20);
+                    const offsetY = Phaser.Math.Between(-22, 22);
+                    this.itemSpawnDrop(chest.x + offsetX, chest.y + offsetY);
+                }
+            })
+        },
+        null,
+        this
+    )
 
     // Overlap with infoboards
     this.physics.add.overlap(

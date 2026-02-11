@@ -195,21 +195,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene.anims.create({
         key: 'projectile-up',
         frames: scene.anims.generateFrameNumbers('projectile', {start: 3, end: 5}),
-        frameRate: 15,
+        frameRate: 5,
         repeat: -1,
     });
 
     scene.anims.create({
         key: 'projectile-down',
         frames: scene.anims.generateFrameNumbers('projectile', {start: 6, end: 8}),
-        frameRate: 15,
+        frameRate: 5,
         repeat: -1,
     });
 
     scene.anims.create({
         key: 'projectile-side',
         frames: scene.anims.generateFrameNumbers('projectile', {start: 0, end: 2}),
-        frameRate: 15,
+        frameRate: 5,
         repeat: -1,
     });
 
@@ -302,7 +302,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleMovementInput() {
-        if (this.isShooting || this.isSwinging || this.isJumping) {
+        if (this.isShooting || this.isSwinging) {
             this.setVelocity(0);
             return;
         }
@@ -407,6 +407,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if(Phaser.Input.Keyboard.JustDown(this.shootKey) && !this.isSwinging && !this.isShooting && !this.isJumping) {
             this.isShooting = true;
             this.lastShootTime = now;
+
+            this.scene.spawnProjectile(this.x, this.y, this.facing, this.flipX)
 
             if (this.facing === 'up') {
                 this.anims.play('player-shoot-up');

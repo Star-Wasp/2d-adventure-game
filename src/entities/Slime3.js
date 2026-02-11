@@ -42,6 +42,12 @@ export default class Slime3 extends Phaser.Physics.Arcade.Sprite {
         this.health = this.maxHealth;
         this.isDead = false;
 
+        this.soundVolume = 0.02;
+
+        this.enemyMoveSound = scene.sound.add('enemy_move');
+        this.enemyAttackSound = scene.sound.add('enemy_hit');
+        this.enemyDieSound = scene.sound.add('enemy_die');
+
         }
 
     createAnimations(scene) {
@@ -386,7 +392,7 @@ export default class Slime3 extends Phaser.Physics.Arcade.Sprite {
             const distance = Math.hypot(distanceX, distanceY);
             const now = this.scene.time.now;
 
-            if (distance <= this.attackRange && now - this.lastAttackTime > this.attackCooldown && this.facing === playerDirection) {
+            if (distance <= this.attackRange && now - this.lastAttackTime > this.attackCooldown && this.facing === playerDirection && !this.target.isJumping) {
                 this.lastAttackTime = now;
                 this.attackPlayer();
                 const damageAmount = Phaser.Math.Between(1, 5);
