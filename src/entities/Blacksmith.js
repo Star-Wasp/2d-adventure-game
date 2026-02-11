@@ -254,6 +254,16 @@ export default class Blacksmith extends Phaser.Physics.Arcade.Sprite {
             icon.on('pointerdown', () => {
                 const coins = getSavedCoins();
 
+                const inventoryKey = 'inventory-' + item.key.replace('shop-', '');
+                const hasItem = this.scene.bagMenu?.inventory?.some(
+                    slot => slot && slot.type === inventoryKey && slot.count > 0
+                );
+
+                if (hasItem) {
+                    console.log("Already owned");
+                    return;
+                }
+
                 if (coins >= item.cost) {
                     console.log('Armory items purchased');
 
@@ -289,8 +299,6 @@ export default class Blacksmith extends Phaser.Physics.Arcade.Sprite {
                         console.log("item collected");
 
                         if (this.scene.bagMenu) {
-                            const inventoryKey = 'inventory-' + item.key.replace('shop-', '');
-                            console.log(inventoryKey)
                             this.scene.bagMenu.addItem(inventoryKey);
                         }
                         armorySprite.destroy()
