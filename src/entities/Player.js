@@ -27,6 +27,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.isSwinging = false;
     this.isJumping = false;
     this.isStunned = false;
+    this.isShooting = false;
 
     // Animation setup
     this.createAnimations(scene);
@@ -57,7 +58,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.SwingKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
-    this.Jumpkey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    this.Jumpkey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+
+    this.shootKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
     }
 
@@ -164,23 +167,23 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     });
 
     scene.anims.create({
-        key: 'player-shoot-attack-down',
+        key: 'player-shoot-down',
         frames: scene.anims.generateFrameNumbers('player-shoot-attack', {start: 0, end: 3}),
-        frameRate: 15,
+        frameRate: 10,
         repeat: 0,
     });
 
     scene.anims.create({
-        key: 'player-shoot-attack-up',
+        key: 'player-shoot-up',
         frames: scene.anims.generateFrameNumbers('player-shoot-attack', {start: 8, end: 11}),
-        frameRate: 15,
+        frameRate: 10,
         repeat: 0,
     });
 
     scene.anims.create({
-        key: 'player-shoot-attack-side',
+        key: 'player-shoot-side',
         frames: scene.anims.generateFrameNumbers('player-shoot-attack', {start: 4, end: 7}),
-        frameRate: 15,
+        frameRate: 10,
         repeat: 0,
     });
 
@@ -294,6 +297,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleMovementInput() {
+        if (this.isShooting || this.isSwinging || this.isJumping) {
+            this.setVelocity(0);
+            return;
+        }
+        
         this.setVelocity(0);
 
         if (this.cursors.left.isDown){
@@ -323,6 +331,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     updateMovementAnimation() {
         if (this.isSwinging) { return; };
         if (this.isJumping) {return; };
+        if (this.isShooting) {return; };
         if (this.body.velocity.y < 0) {
             this.anims.play('player-walk-up', true);
         } else if (this.body.velocity.y > 0) {
@@ -335,9 +344,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleJumping() {
-        if(Phaser.Input.Keyboard.JustDown(this.Jumpkey) && !this.isSwinging && !this.isJumping) {
+        if(Phaser.Input.Keyboard.JustDown(this.Jumpkey) && !this.isSwinging && !this.isJumping && !this.isShooting) {
             this.isJumping = true;
-            this.isSwinging = true;
 
             if (this.facing === 'up') {
                 this.anims.play('player-jump-up');
@@ -354,7 +362,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.once('animationcomplete', (anim) => {
                 if (anim.key.startsWith('player-jump')) {
                     this.isJumping = false;
-                    this.isSwinging = false;
                     this.playIdle();
                     this.jumpSound.stop();
                 }
@@ -363,7 +370,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 }
 
     handleSwinging() {
-        if(Phaser.Input.Keyboard.JustDown(this.SwingKey) && !this.isSwinging) {
+        if(Phaser.Input.Keyboard.JustDown(this.SwingKey) && !this.isSwinging && !this.isShooting) {
             this.isSwinging = true;
 
             if (this.facing === 'up') {
@@ -383,6 +390,30 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 }
             })
         }
+    }
+
+    handleShooting() {
+        if(Phaser.Input.Keyboard.JustDown(this.shootKey) && !this.isSwinging && !this.isShooting && !this.isJumping) {
+            this.isShooting = true;
+
+            if (this.facing === 'up') {
+                this.anims.play('player-shoot-up');
+                this.swardSound.play({volume: this.soundVolume});
+            } else if (this.facing === 'down') {
+                this.anims.play('player-shoot-down');
+                this.swardSound.play({volume: this.soundVolume});
+            } else if (this.facing === 'side') {
+                this.anims.play('player-shoot-side');
+                this.swardSound.play({volume: this.soundVolume});
+            }
+            this.once('animationcomplete', (anim) => {
+                if (anim.key.startsWith('player-shoot')) {
+                    this.isShooting = false;
+                    this.playIdle();
+                }
+            })
+        }
+
     }
 
     updateSwardHitbox() {
@@ -415,10 +446,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         const velX = this.body.velocity.x;
         const velY = this.body.velocity.y;
 
-        this.updateMovementAnimation();
-
         this.handleSwinging();
         this.handleJumping();
+        this.handleShooting();
+
+        this.updateMovementAnimation();
 
         this.updateSwardHitbox();
         this.setDepth(this.y + 1)

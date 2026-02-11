@@ -631,6 +631,7 @@ export default class Play extends BaseScene {
             this.cameras.main.once('camerafadeincomplete', () => {
                 this.player.body.enable = true;
                 this.player.isSwinging = false;
+                this.player.isShooting = false;
             });
         }
     }
