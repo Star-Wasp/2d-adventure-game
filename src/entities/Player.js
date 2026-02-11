@@ -48,6 +48,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.swardSound = scene.sound.add('sward');
     this.hurtSound = scene.sound.add('hurt');
     this.jumpSound = scene.sound.add('jump');
+    this.shootSound = scene.sound.add('shoot');
     // End setting player properties and sound
 
     this.init();
@@ -301,7 +302,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocity(0);
             return;
         }
-        
+
         this.setVelocity(0);
 
         if (this.cursors.left.isDown){
@@ -398,13 +399,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             if (this.facing === 'up') {
                 this.anims.play('player-shoot-up');
-                this.swardSound.play({volume: this.soundVolume});
+                this.shootSound.play({volume: this.soundVolume});
             } else if (this.facing === 'down') {
                 this.anims.play('player-shoot-down');
-                this.swardSound.play({volume: this.soundVolume});
+                this.shootSound.play({volume: this.soundVolume});
             } else if (this.facing === 'side') {
                 this.anims.play('player-shoot-side');
-                this.swardSound.play({volume: this.soundVolume});
+                this.shootSound.play({volume: this.soundVolume});
             }
             this.once('animationcomplete', (anim) => {
                 if (anim.key.startsWith('player-shoot')) {
