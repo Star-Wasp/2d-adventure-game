@@ -452,8 +452,10 @@ export default class Play extends BaseScene {
         (hitbox, item) => {
             const now = this.time.now;
             if (this.player.isSwinging && now - item.lastHitTime > item.hitCooldown && !this.player.isJumping) {
-                const damageAmount = Phaser.Math.Between(0, 10);
-                item.takeDamage(damageAmount)
+                const baseDamage = Phaser.Math.Between(0, 10);
+                const bonus = this.player.attackBonus || 0;
+                const damageAmount = baseDamage + bonus;
+                item.takeDamage(damageAmount);
                 item.lastHitTime = now;
             }
         })

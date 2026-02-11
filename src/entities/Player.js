@@ -47,6 +47,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.shootCooldown = 300;
 
     this.speed = 100;
+    this.attackBonus = 0;
 
     this.soundVolume = 0.02;
 
