@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { saveInventory, getSavedInventory } from "../utils/StorageManager"
+import { saveInventory, getSavedInventory, savePlayerData } from "../utils/StorageManager"
 
 export default class BagMenu {
     constructor(scene, x, y) {
@@ -207,6 +207,8 @@ export default class BagMenu {
 
         this.scene.player.health = Math.min(this.scene.player.health + heal, this.scene.player.maxHealth || 100);
         this.scene.player.healthBar.setHealth(this.scene.player.health);
+
+        savePlayerData(this.scene.player.health, this.scene.registry.get('coins'));
 
         item.count--;
         if (item.count > 0) {

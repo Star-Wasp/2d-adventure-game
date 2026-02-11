@@ -85,6 +85,13 @@ export default class Play extends BaseScene {
     this.currentCheckpoint = null;
 
     this.textManager = new TextManager(this);
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+    if (this.player) {
+        const inventory = this.bagMenu ? this.bagMenu.inventory : null;
+        savePlayerData(this.player.health, this.registry.get('coins'), inventory);
+        }
+    });
   }
 
   spawnProjectile(x, y, facing, flipX) {

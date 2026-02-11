@@ -245,6 +245,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.health -= amount;
         this.healthBar.decrease(this.health);
 
+        savePlayerData(this.health, this.scene.registry.get('coins'));
+
         const flashTimes = 6;
         const flashDuration = 100;
 
