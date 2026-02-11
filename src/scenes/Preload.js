@@ -183,6 +183,22 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 16,
     })
 
+    // Load in armory item anims
+    this.load.spritesheet('wood-shield-anim', 'assets/collectibles/wood-shield-anim.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+
+    this.load.spritesheet('leather-boots-anim', 'assets/collectibles/leather-boots-anim.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+
+    this.load.spritesheet('wood-sward-anim', 'assets/collectibles/wood-sward-anim.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+
   }
 
   preloadUI() {
@@ -198,6 +214,7 @@ export default class Preload extends Phaser.Scene {
     // menus
     this.load.image('inventory-menu', 'assets/hud/inverntory-menu.png');
     this.load.image('potion-shop-menu', 'assets/hud/shop-menu.png');
+    this.load.image('armory-shop-menu', 'assets/hud/shop-menu.png');
   }
 
   preloadSounds() {
@@ -387,11 +404,19 @@ export default class Preload extends Phaser.Scene {
     this.load.image('inventory-potion-20', 'assets/icons/inventory-potion-20.png');
     this.load.image('inventory-potion-50', 'assets/icons/inventory-potion-50.png');
     this.load.image('inventory-potion-100', 'assets/icons/inventory-potion-100.png');
+    this.load.image('inventory-wood-sward', 'assets/icons/wood-sward.png');
+    this.load.image('inventory-wood-shield', 'assets/icons/wood-shield.png');
+    this.load.image('inventory-leather-boots', 'assets/icons/leather-boots.png');
 
-    // Shop icons
+    // Health shop icons
     this.load.image('potion-20', 'assets/icons/shop-potion-20.png');
     this.load.image('potion-50', 'assets/icons/shop-potion-50.png');
     this.load.image('potion-100', 'assets/icons/shop-potion-100.png');
+
+    // Blacksmith shop icons
+    this.load.image('shop-wood-sward', 'assets/icons/shop-wood-sward.png');
+    this.load.image('shop-wood-shield', 'assets/icons/shop-wood-shield.png');
+    this.load.image('shop-leather-boots', 'assets/icons/shop-leather-boots.png');
 
   }
 

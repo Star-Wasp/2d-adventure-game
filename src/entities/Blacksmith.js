@@ -29,20 +29,20 @@ export default class Blacksmith extends Phaser.Physics.Arcade.Sprite {
 
     this.setCollideWorldBounds();
 
-    // this.forSale = [
-    //     {key: 'potion-20', heal: 20, cost: 20},
-    //     {key: 'potion-50', heal: 50, cost: 50},
-    //     {key: 'potion-100', heal: 100, cost: 100},
-    // ];
+    this.forSale = [
+        {key: 'shop-wood-sward', bonus: 5, cost: 300, animKey: 'wood-sward-anim'}, // +5 attack
+        {key: 'shop-wood-shield', bonus: 10, cost: 300, animKey: 'wood-shield-anim'}, // +10 health
+        {key: 'shop-leather-boots', bonus: 10, cost: 250, animKey: 'leather-boots-anim'}, // +10 speed
+    ];
 
-    // this.potionIcons = [];
-    // this.potionText = [];
+    this.armoryIcons = [];
+    this.armoryText = [];
 
-    // this.potionAnims();
+    this.armorAnims();
 
   }
 
-  createAnimations(scene) {
+      createAnimations(scene) {
     // Idle
         scene.anims.create({
             key: 'blacksmith-idle-down',
@@ -86,7 +86,32 @@ export default class Blacksmith extends Phaser.Physics.Arcade.Sprite {
             frameRate: 2,
             repeat: -1,
         });
-  }
+      }
+
+      armorAnims() {
+        if (this.scene.anims.exists('wood-sward-anim') && this.scene.anims.exists('leather-boots-anim') && this.scene.anims.exists('wood-shield-anim')) {return;};
+
+        this.scene.anims.create({
+            key: 'wood-sward-anim',
+            frames: this.scene.anims.generateFrameNumbers('wood-sward-anim', {start: 0, end: 1}),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.scene.anims.create({
+            key: 'leather-boots-anim',
+            frames: this.scene.anims.generateFrameNumbers('leather-boots-anim', {start: 0, end: 1}),
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.scene.anims.create({
+            key: 'wood-shield-anim',
+            frames: this.scene.anims.generateFrameNumbers('wood-shield-anim', {start: 0, end: 1}),
+            frameRate: 2,
+            repeat: -1,
+        });
+      }
 
       handlePasing() {    
           if (this.isShopping) {return;};
@@ -154,8 +179,184 @@ export default class Blacksmith extends Phaser.Physics.Arcade.Sprite {
           }
       }
 
-      update() {
-        this.handlePasing();
+    sell() {
+        if (!this.sellX || !this.sellY) {return;};
+
+        const distanceX = this.sellX - this.x;
+        const distanceY = this.sellY - this.y;
+
+        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+        if (distance < 2) {
+            this.setVelocity(0, 0);
+            this.facing = 'down';
+            this.playIdle();
+            this.showMerchendice();
+            return;
+        }
+
+        const velX = (distanceX / distance) * this.speed;
+        const velY = (distanceY / distance) * this.speed;
+
+        this.setVelocity(velX, velY);
+
+        this.updateMovementAnimation();
+    }
+      
+    showMerchendice() {
+        if (this.shopPanel) {return;};
+
+        if (!this.isShopping) {
+            this.hideMerchendice();
+        };
+
+        this.shopPanel = this.scene.add.image(330, 245, 'armory-shop-menu')
+            .setScrollFactor(0)
+            .setDepth(1000)
+            .setScale(1.5)            
+
+        this.createSlots()
+
+        this.forSale.forEach((item, index) => {
+            const x = 305 + index * 25;
+            const y = 245;
+            const icon = this.scene.add.sprite(x, y, item.key)
+                .setScrollFactor(0)
+                .setDepth(1002)
+                .setScale(0.5)
+                .setInteractive({useHandCursor: true});
+
+            this.armoryIcons.push(icon);
+
+            const armorText = this.scene.add.text(
+                icon.x - 6,
+                icon.y - 12,
+                `+${item.bonus}`,
+                { fontSize: '11px', fill: '#ffffff' }
+            )
+                .setScrollFactor(0)
+                .setDepth(1003)
+                .setScale(0.5)
+
+            const priceText = this.scene.add.text(
+                icon.x - 8,
+                icon.y + 6,
+                `🪙${item.cost}`,
+                { fontSize: '11px', fill: '#ffffff' }
+            )
+                .setScrollFactor(0)
+                .setDepth(1003)
+                .setScale(0.5)
+
+            this.armoryText.push(armorText, priceText);
+            
+
+            icon.on('pointerdown', () => {
+                const coins = getSavedCoins();
+
+                if (coins >= item.cost) {
+                    console.log('Armory items purchased');
+
+                    const newCoins = coins - item.cost;
+
+                    savePlayerData(this.scene.player.health, newCoins);
+                    this.scene.registry.set('coins', newCoins);
+
+                    if (this.scene.coinDisplay) {
+                        this.scene.coinDisplay.removeCoins(item.cost);
+                    }
+
+                    console.log('Coins remaining: ', newCoins)
+
+                    const player = this.scene.player;
+
+                    const offsetX = Phaser.Math.Between(10, 20);
+                    const offsetY = Phaser.Math.Between(25, 35);
+
+                    const armorySprite = this.scene.physics.add.sprite(
+                        player.x + offsetX,
+                        player.y + offsetY,
+                        item.animKey
+                    );
+
+                    armorySprite
+                        .setDepth(player.depth - 1)
+                        .setScale(0.4)
+                    armorySprite.play(item.animKey);
+                    armorySprite.setImmovable(true);
+
+                    this.scene.physics.add.overlap(player, armorySprite, () => {
+                        console.log("item collected");
+
+                        if (this.scene.bagMenu) {
+                            const inventoryKey = 'inventory-' + item.key.replace('shop-', '');
+                            console.log(inventoryKey)
+                            this.scene.bagMenu.addItem(inventoryKey);
+                        }
+                        armorySprite.destroy()
+                    },
+                    null,
+                    this
+                    );
+                } else {
+                    console.log("not enough coins");
+                }
+            })
+        })
+    }
+      
+    createSlots(cols = 3, startX = 305, startY = 245, spacing = 25) {
+        let slotIndex = 0;
+
+        for (let col = 0; col < cols; col++) {
+            const slot = this.scene.add.rectangle(
+                startX + col * spacing,
+                startY,
+                22,
+                22,
+                0x00ff00,
+                0
+            );
+
+            slot.armoryIndex = slotIndex;
+
+            slot
+                .setOrigin(0.5)
+                .setScrollFactor(0)
+                .setDepth(1001)
+                .setInteractive(false);
+                slot.input.enabled = false;
+            
+            this.shopSlots.push(slot);
+            slotIndex++;
+        }
+    }
+      
+    hideMerchendice() {
+        if (this.shopPanel) {
+            this.shopPanel.destroy();
+            this.shopPanel = null;
+        }
+
+        this.shopSlots.forEach(slot => slot.destroy());
+        this.shopSlots = [];
+
+        this.armoryIcons.forEach(icon => icon.destroy());
+        this.armoryIcons = [];
+
+        this.armoryText.forEach(text => text.destroy());
+        this.armoryText = [];
+    }
+
+    update() {
+        if (!this.isShopping) {
+            this.handlePasing()  
+        }
+        
+
+        if (this.isShopping) {
+            this.sell();
+        }
       }
 
 }

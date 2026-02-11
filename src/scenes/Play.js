@@ -412,6 +412,8 @@ export default class Play extends BaseScene {
                 }
             } else if (zone.interactionType === 'shop_potions') {
                 this.healthMerchant.isShopping = true;
+            } else if (zone.interactionType === 'shop_weapons') {
+                this.blacksmith.isShopping = true;
             }
         }
     })
@@ -673,6 +675,9 @@ export default class Play extends BaseScene {
             if (obj.name === 'health-merchant-sell' && this.healthMerchant) {
                 this.healthMerchant.sellX = obj.x;
                 this.healthMerchant.sellY = obj.y;
+            } else if (obj.name === 'weapon-merchant-sell' && this.blacksmith) {
+                this.blacksmith.sellX = obj.x;
+                this.blacksmith.sellY = obj.y;
             }
         });
         
