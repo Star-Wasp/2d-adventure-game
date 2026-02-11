@@ -413,11 +413,12 @@ export default class Play extends BaseScene {
             if (zone.interactionType === 'bookshelf') {
             console.log("Staring at books");
             } else if (zone.interactionType === 'bed') {
-                if (this.player.health < 100) {
+                const maxHealth = this.player.maxHealth || 100;
+                if (this.player.health < maxHealth) {
                     this.cameras.main.fadeOut(1000, 0, 0, 0);
 
                     this.cameras.main.once('camerafadeoutcomplete', () => {
-                        this.player.health = 100;
+                        this.player.health = maxHealth;
                         this.player.healthBar.setHealth(this.player.health);
                         savePlayerData(this.player.health, this.registry.get('coins'));
                         this.cameras.main.fadeIn(1000, 0, 0, 0)

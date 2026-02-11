@@ -58,3 +58,7 @@ export function getSavedInventory() {
         return null;
     }
 }
+
+export function clearCheckpoint() {
+    localStorage.removeItem('checkpoint');
+}
