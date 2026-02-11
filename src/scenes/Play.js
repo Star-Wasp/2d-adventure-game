@@ -788,6 +788,20 @@ export default class Play extends BaseScene {
                 .setOffset(33, 33)
 
                 health_shop.buildingType = type;
+            } else if (type === 'armery-shop') {
+                const armor_shop = this.add.sprite(obj.x, obj.y, 'armery_shop_closed')
+                    .setOrigin(0.5, 1)
+                    .setDepth(obj.y -16)
+                    .setScale(1)
+                    
+                this.physics.world.enable(armor_shop);
+                this.buildingsGroup.add(armor_shop);
+
+                armor_shop.body
+                .setSize(20, 30)
+                .setOffset(53, 100)
+
+                armor_shop.buildingType = type;
             }
         })
     }
@@ -1187,6 +1201,29 @@ export default class Play extends BaseScene {
             {key: 'health_shop_open'},
             {key: 'health_shop_halfopen'},
             {key: 'health_shop_closed'},
+        ],
+        frameRate: 2,
+        repeat: 0,
+        });
+
+        // Armery shop anims
+        this.anims.create({
+        key: 'armery_shop_opening_anim',
+        frames: [
+            {key: 'armery_shop_closed'},
+            {key: 'armery_shop_halfopen'},
+            {key: 'armery_shop_open'},
+        ],
+        frameRate: 2,
+        repeat: 0,
+        });
+
+        this.anims.create({
+        key: 'armery_shop_closing_anim',
+        frames: [
+            {key: 'armery_shop_open'},
+            {key: 'armery_shop_halfopen'},
+            {key: 'armery_shop_closed'},
         ],
         frameRate: 2,
         repeat: 0,

@@ -173,7 +173,25 @@
          "draworder":"topdown",
          "id":15,
          "name":"buildings",
-         "objects":[],
+         "objects":[
+                {
+                 "height":0,
+                 "id":43,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"armery-shop"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":128
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -192,7 +210,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":43,
+ "nextobjectid":44,
  "orientation":"orthogonal",
  "properties":[
         {
