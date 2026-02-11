@@ -281,7 +281,7 @@ export default class Blacksmith extends Phaser.Physics.Arcade.Sprite {
 
                     armorySprite
                         .setDepth(player.depth - 1)
-                        .setScale(0.4)
+                        .setScale(0.8)
                     armorySprite.play(item.animKey);
                     armorySprite.setImmovable(true);
 

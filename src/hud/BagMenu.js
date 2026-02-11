@@ -121,6 +121,9 @@ export default class BagMenu {
                 return {type: item.type, count: item.count}
             })
             saveInventory(inventoryToSave);
+            if (this.scene.player?.applyEquipmentBonuses) {
+                this.scene.player.applyEquipmentBonuses(this.inventory);
+            }
             return true;
         }
 
@@ -147,6 +150,9 @@ export default class BagMenu {
             return {type: item.type, count: item.count};
         })
         saveInventory(inventoryToSave);
+        if (this.scene.player?.applyEquipmentBonuses) {
+                this.scene.player.applyEquipmentBonuses(this.inventory);
+            }
         return true
     }
 
@@ -192,12 +198,14 @@ export default class BagMenu {
 
         const { heal, threshold } = potionRules[key];
 
-        if (this.scene.player.health > threshold) {
+        const maxHealth = this.scene.player.maxHealth || 100;
+
+        if (this.scene.player.health >= maxHealth) {
             console.log("Can't use potion yet");
             return;
         }
 
-        this.scene.player.health = Math.min(this.scene.player.health + heal, 100);
+        this.scene.player.health = Math.min(this.scene.player.health + heal, this.scene.player.maxHealth || 100);
         this.scene.player.healthBar.setHealth(this.scene.player.health);
 
         item.count--;

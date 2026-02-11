@@ -180,6 +180,7 @@ export default class Play extends BaseScene {
             }
         });
     }
+    this.player.applyEquipmentBonuses(this.bagMenu.inventory);
   }
 
   setupBackHomeButton() {
@@ -246,6 +247,13 @@ export default class Play extends BaseScene {
             if (item.type === 'box') {
                 item.play('box-break');
                 item.on('animationcomplete-box-break', () => {
+                    for (let i = 0; i < 3; i++) {
+                        this.itemSpawnDrop(item.x, item.y);
+                    }
+                })
+            } else if (item.type === 'pot') {
+                item.play('pot-break');
+                item.on('animationcomplete-pot-break', () => {
                     for (let i = 0; i < 3; i++) {
                         this.itemSpawnDrop(item.x, item.y);
                     }

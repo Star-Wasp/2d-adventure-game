@@ -194,7 +194,7 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 32,
     })
 
-    this.load.spritesheet('wood-sward-anim', 'assets/collectibles/wood-sward-anim.png', {
+    this.load.spritesheet('wood-sward-anim', 'assets/collectibles/wood-sword-anim.png', {
       frameWidth: 32,
       frameHeight: 32,
     })

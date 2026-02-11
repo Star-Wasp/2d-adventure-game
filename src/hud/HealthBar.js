@@ -36,6 +36,13 @@ class HealthBar {
         this.draw();
     }
 
+    setMaxHealth(maxHealth, currentHealth = this.value) {
+        this.maxHealth = maxHealth;
+        this.pixelPerHealth = this.size.width / this.maxHealth;
+        this.value = Math.min(currentHealth, maxHealth);
+        this.draw();
+    }
+
     draw(x, y, scale) {
 
         this.bar.clear();
@@ -50,18 +57,36 @@ class HealthBar {
         this.bar.fillRect(this.x + margin, this.y + margin, width - margin, height - margin);
         this.bar.setDepth(1000)
 
-         const healthWidth = Math.floor(this.value * this.pixelPerHealth);
-        if (healthWidth <= width / 1.5 && healthWidth > width / 3) {
+        const innerWidth = width - margin;
+        const healthWidth = Math.min(
+            innerWidth,
+            Math.ceil((this.value / this.maxHealth) * innerWidth)
+        );
+
+        if (healthWidth <= innerWidth / 1.5 && healthWidth > innerWidth / 3) {
             this.bar.fillStyle(0xfc6703);
-        } else if (healthWidth <= width / 3) {
+        } else if (healthWidth <= innerWidth / 3) {
             this.bar.fillStyle(0xeb0000);
         } else {
             this.bar.fillStyle(0x41ba09);
         }
 
         if (healthWidth > 0) {
-            this.bar.fillRect(this.x + margin, this.y + margin, healthWidth - margin, height - margin);
+            this.bar.fillRect(this.x + margin, this.y + margin, healthWidth, height - margin);
         }
+
+        //  const healthWidth = Math.floor(this.value * this.pixelPerHealth);
+        // if (healthWidth <= width / 1.5 && healthWidth > width / 3) {
+        //     this.bar.fillStyle(0xfc6703);
+        // } else if (healthWidth <= width / 3) {
+        //     this.bar.fillStyle(0xeb0000);
+        // } else {
+        //     this.bar.fillStyle(0x41ba09);
+        // }
+
+        // if (healthWidth > 0) {
+        //     this.bar.fillRect(this.x + margin, this.y + margin, healthWidth - margin, height - margin);
+        // }
 
         this.bar.setScrollFactor(0, 0).setScale(this.scale);
     }

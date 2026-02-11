@@ -34,8 +34,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.anims.play('player-idle');
     // End animation setup
 
+    this.baseMaxHealth = 100;
+    this.maxHealth = this.baseMaxHealth;
+
     // Setting player properties and sound
-    this.healthBar = new HealthBar(scene, 220, 220, 1, 100, this.health);
+    this.healthBar = new HealthBar(scene, 220, 220, 1, this.maxHealth, this.health);
 
     this.lastTrapHitTime = 0;
     this.trapCooldown = 1000;
@@ -287,6 +290,25 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             case 'side':
                 this.anims.play('player-idle-side', true);
                 break;
+        }
+    }
+
+    applyEquipmentBonuses(inventory = []) {
+        const has = (type) => inventory.some(item => item && item.type === type && item.count > 0);
+
+        const bonusAttack = has('inventory-wood-sward') ? 5 : 0;
+        const bonusHealth = has('inventory-wood-shield') ? 10 : 0;
+        const bonusSpeed = has('inventory-leather-boots') ? 10 : 0;
+
+        this.attackBonus = bonusAttack;
+        this.maxHealth = this.baseMaxHealth + bonusHealth;
+        this.speed = 100 + bonusSpeed;
+
+        if (this.health > this.maxHealth) {
+            this.health = this.maxHealth;
+        }
+        if (this.healthBar && this.healthBar.setMaxHealth) {
+            this.healthBar.setMaxHealth(this.maxHealth, this.health);
         }
     }
 
