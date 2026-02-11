@@ -82,6 +82,7 @@ export default class Preload extends Phaser.Scene {
 
     // Interiors tilesheets
     this.load.image('interiors', 'assets/Interiors.png');
+    this.load.image('blacksmith_interior', 'assets/blacksmith.png' );
   }
 
   preloadMaps() {
@@ -102,6 +103,7 @@ export default class Preload extends Phaser.Scene {
     //hero house
     this.load.tilemapTiledJSON('level7', 'assets/map_level_7.json');
     this.load.tilemapTiledJSON('level10', 'assets/map_level_10.json');
+    this.load.tilemapTiledJSON('level12', 'assets/map_level_12.json');
   }
 
   preloadCharacters() {
@@ -361,8 +363,14 @@ export default class Preload extends Phaser.Scene {
 
   preloadNPCs() {
 
-    // Preloading merchant spritesheet
+    // Preloading health merchant spritesheet
     this.load.spritesheet('health-merchant', 'assets/npc/merchant1.png', {
+      frameWidth: 32,
+      frameHeight: 48,
+    })
+
+    // Preloading blacksmith spritesheet
+    this.load.spritesheet('blacksmith', 'assets/npc/blacksmith.png', {
       frameWidth: 32,
       frameHeight: 48,
     })

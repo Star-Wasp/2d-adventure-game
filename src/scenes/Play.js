@@ -12,6 +12,7 @@ import HealthMerchant from "../entities/HealthMerchant";
 import BagMenu from "../hud/BagMenu";
 import BackHome from "../hud/BackHome";
 import TextManager from "../utils/TextManager";
+import Blacksmith from "../entities/Blacksmith";
 
 export default class Play extends BaseScene {
   constructor() {
@@ -524,6 +525,8 @@ export default class Play extends BaseScene {
         // Interiors tileset
         const interiorsTileset = map.addTilesetImage('Interiors', 'interiors');
 
+        const blacksmithInterior = map.addTilesetImage('blacksmith_interior', 'blacksmith_interior');
+
         // Tilesets
         const mainTileset = map.addTilesetImage('tileset', 'tiles');
 
@@ -574,7 +577,7 @@ export default class Play extends BaseScene {
 
         const higherLayer = map.createStaticLayer('higher_ground', [mainTileset, groundDecorTileset, waterTileset, mainTileset2, dungeonTileset, doorTileset, interiorsTileset], 0, 0).setDepth(0);
 
-        const decorLayer = map.createStaticLayer('decor', interiorsTileset, 0, 0);
+        const decorLayer = map.createStaticLayer('decor', [interiorsTileset, blacksmithInterior], 0, 0);
 
         const trapLayer = map.createStaticLayer('traps', trapTileset, 0, 0);
 
@@ -660,6 +663,9 @@ export default class Play extends BaseScene {
             if (obj.name === 'health_merchant') {
                 this.healthMerchant = new HealthMerchant(this, obj.x, obj.y);
                 this.npcGroup.add(this.healthMerchant);
+            } else if (obj.name === 'weapon_merchant') {
+                this.blacksmith = new Blacksmith(this, obj.x, obj.y);
+                this.npcGroup.add(this.blacksmith);
             }
         });
 
