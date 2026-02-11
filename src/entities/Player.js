@@ -40,6 +40,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.lastTrapHitTime = 0;
     this.trapCooldown = 1000;
 
+    this.lastShootTime = 0;
+    this.shootCooldown = 300;
+
     this.speed = 100;
 
     this.soundVolume = 0.02;
@@ -209,6 +212,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         frameRate: 15,
         repeat: -1,
     });
+
     }
 
     checkTrapOverlap(spikeGroup) {
@@ -394,8 +398,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleShooting() {
+
+        const now = this.scene.time.now;
+        if (now - this.lastShootTime < this.shootCooldown) {
+            return;
+        }
+
         if(Phaser.Input.Keyboard.JustDown(this.shootKey) && !this.isSwinging && !this.isShooting && !this.isJumping) {
             this.isShooting = true;
+            this.lastShootTime = now;
 
             if (this.facing === 'up') {
                 this.anims.play('player-shoot-up');
